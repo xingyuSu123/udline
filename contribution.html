@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>6班班刊 · 投稿</title>
+<style>
+:root{
+  --paper:#f3ece0;
+  --paper-2:#ece2d0;
+  --card:#fbf7ef;
+  --card-hi:#fffdf8;
+  --ink:#2c2416;
+  --ink-dim:#6b5c44;
+  --ink-mute:#a1907a;
+  --line:#e0d3ba;
+  --line-hi:#c7b08a;
+  --accent:#b8762e;
+  --accent-2:#8a5420;
+  --accent-soft:#f6e7d0;
+  --ok:#5c7a3a;
+  --ok-soft:#e8f0dc;
+  --warn:#c8892a;
+  --warn-soft:#faedd5;
+  --err:#a8423a;
+  --err-soft:#f8e0de;
+  --shadow:0 20px 48px -32px rgba(80,55,20,.4);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --nav-h:64px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Inter","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.65;
+}
+::selection{background:var(--accent);color:#fff}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit}
+
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(184,118,46,.06),transparent 45%),
+    radial-gradient(circle at 85% 80%,rgba(138,84,32,.05),transparent 40%),
+    repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(120,90,50,.012) 3px,rgba(120,90,50,.012) 4px);
+}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--paper-2)}
+::-webkit-scrollbar-thumb{background:var(--line-hi);border-radius:99px;border:3px solid var(--paper-2)}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* 加载动画 */
+.loader{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--paper);
+  display:grid;place-items:center;
+  opacity:1;visibility:visible;
+  transition:opacity .7s var(--ease),visibility .7s;
+}
+.loader.done{opacity:0;visibility:hidden}
+.loader-inner{display:flex;flex-direction:column;align-items:center;gap:20px}
+.loader-mark{
+  font-size:clamp(1.3rem,3.6vw,1.8rem);
+  font-family:"Songti SC","Noto Serif SC",serif;
+  font-weight:700;letter-spacing:.05em;
+  color:var(--ink);
+  animation:softPulse 2s ease-in-out infinite;
+}
+@keyframes softPulse{0%,100%{opacity:1}50%{opacity:.55}}
+.loader-track{
+  width:160px;height:2px;border-radius:99px;
+  background:var(--line);overflow:hidden;position:relative;
+}
+.loader-track i{
+  position:absolute;inset:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  transform-origin:left;
+  animation:loadBar 1.4s var(--ease) infinite;
+}
+@keyframes loadBar{0%{transform:scaleX(0) translateX(0)}50%{transform:scaleX(.7) translateX(20%)}100%{transform:scaleX(1) translateX(130%)}}
+
+/* 顶栏 */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(243,236,224,.88);
+  -webkit-backdrop-filter:blur(14px) saturate(180%);
+  backdrop-filter:blur(14px) saturate(180%);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:1200px;margin:0 auto;
+  padding:0 clamp(18px,4vw,32px);
+  height:var(--nav-h);
+  display:flex;align-items:center;gap:20px;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  font-family:"Songti SC","Noto Serif SC",serif;
+  font-weight:700;font-size:1rem;letter-spacing:.02em;
+  flex-shrink:0;
+}
+.brand-mark{
+  width:30px;height:30px;border-radius:8px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#fff;font-weight:800;font-size:.9rem;
+  box-shadow:0 6px 16px -6px rgba(184,118,46,.6);
+  transition:transform .5s var(--ease);
+}
+.brand:hover .brand-mark{transform:rotate(-8deg) scale(1.06)}
+.brand .sub{
+  font-family:inherit;font-size:.72rem;
+  color:var(--ink-mute);letter-spacing:.14em;
+  text-transform:uppercase;font-weight:600;
+  margin-left:2px;
+}
+
+.tabs{
+  display:flex;gap:4px;margin-left:auto;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:4px;
+}
+.tab{
+  position:relative;
+  padding:8px 16px;border-radius:9px;
+  font-size:.85rem;font-weight:600;
+  color:var(--ink-dim);
+  letter-spacing:.01em;
+  transition:all .4s var(--ease);
+  white-space:nowrap;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{
+  color:#fff;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  box-shadow:0 8px 20px -10px rgba(184,118,46,.7);
+}
+.tab.hidden{display:none}
+
+.top-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.user-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 14px;border-radius:99px;
+  font-size:.78rem;font-weight:600;
+  background:var(--accent-soft);
+  border:1px solid var(--line-hi);
+  color:var(--accent-2);
+}
+.user-chip .role{
+  font-size:.65rem;font-weight:700;
+  padding:2px 7px;border-radius:99px;
+  background:var(--accent);color:#fff;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.user-chip .logout{
+  width:18px;height:18px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(184,118,46,.2);
+  color:var(--accent-2);
+  font-size:.7rem;line-height:1;
+  transition:all .3s;
+}
+.user-chip .logout:hover{background:var(--err);color:#fff}
+.user-chip.hidden{display:none}
+
+.btn-login{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 16px;border-radius:10px;
+  font-size:.82rem;font-weight:600;
+  color:var(--ink);
+  background:var(--card);
+  border:1px solid var(--line-hi);
+  transition:all .35s var(--ease);
+}
+.btn-login:hover{
+  background:var(--card-hi);
+  border-color:var(--accent);
+  color:var(--accent-2);
+  transform:translateY(-1px);
+}
+.btn-login.hidden{display:none}
+
+@media (max-width:980px){
+  .brand .sub{display:none}
+  .tabs{order:3;margin-left:0;width:100%;overflow-x:auto;padding:6px}
+  .topbar-inner{flex-wrap:wrap;padding-top:8px;padding-bottom:8px;height:auto;gap:12px}
+}
+
+/* 主内容 */
+main{
+  max-width:1200px;margin:0 auto;
+  padding:40px clamp(18px,4vw,32px) 80px;
+  min-height:calc(100vh - var(--nav-h) - 140px);
+}
+.panel{display:none;animation:fadeUp .5s var(--ease)}
+.panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.panel-head{
+  margin-bottom:28px;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--line);
+}
+.panel-head h1{
+  font-family:"Songti SC","Noto Serif SC",serif;
+  font-size:clamp(1.7rem,4vw,2.3rem);
+  font-weight:700;letter-spacing:.02em;
+  margin-bottom:8px;
+  display:flex;align-items:center;gap:12px;
+}
+.panel-head h1::before{
+  content:"";display:inline-block;
+  width:6px;height:.9em;
+  border-radius:2px;
+  background:linear-gradient(180deg,var(--accent),var(--accent-2));
+}
+.panel-head p{
+  font-size:.9rem;color:var(--ink-dim);
+  max-width:640px;line-height:1.8;
+}
+
+/* 表单 */
+.form-card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:clamp(24px,4vw,40px);
+  box-shadow:var(--shadow);
+}
+.form-grid{display:flex;flex-direction:column;gap:22px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:640px){.field-row{grid-template-columns:1fr}}
+
+.field-label{
+  font-size:.8rem;font-weight:600;
+  letter-spacing:.03em;color:var(--ink-dim);
+  display:flex;align-items:center;gap:8px;
+  text-transform:uppercase;
+}
+.field-label .req{color:var(--accent);font-weight:800;font-size:.9rem}
+.field-label .hint{margin-left:auto;font-weight:400;font-size:.72rem;color:var(--ink-mute);text-transform:none;letter-spacing:0}
+
+.input, .textarea, .select{
+  width:100%;
+  background:var(--card-hi);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:12px 16px;
+  font-size:.94rem;
+  color:var(--ink);
+  outline:none;
+  transition:border-color .3s var(--ease),box-shadow .3s var(--ease),background .3s var(--ease);
+}
+.input::placeholder, .textarea::placeholder{color:var(--ink-mute)}
+.input:focus, .textarea:focus, .select:focus{
+  border-color:var(--accent);
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(184,118,46,.13);
+}
+.textarea{
+  min-height:260px;resize:vertical;line-height:1.9;
+  font-family:"Songti SC","Noto Serif SC",Georgia,serif;
+  font-size:1rem;
+}
+
+.char-counter{
+  display:flex;align-items:center;gap:8px;
+  font-size:.74rem;color:var(--ink-mute);
+  font-variant-numeric:tabular-nums;
+}
+.char-counter .count{color:var(--ink-dim);font-weight:600}
+.char-counter.over .count{color:var(--err)}
+
+.check-row{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;
+  border-radius:12px;
+  background:var(--card-hi);
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:all .3s var(--ease);
+}
+.check-row:hover{border-color:var(--line-hi)}
+.check-row input{display:none}
+.check-box{
+  width:20px;height:20px;flex-shrink:0;
+  border-radius:6px;
+  border:1.5px solid var(--line-hi);
+  background:#fff;
+  display:grid;place-items:center;
+  transition:all .3s var(--ease);
+  margin-top:1px;
+}
+.check-box::after{
+  content:"";width:10px;height:6px;
+  border-left:2px solid #fff;
+  border-bottom:2px solid #fff;
+  transform:rotate(-45deg) scale(0);
+  transition:transform .25s var(--ease);
+  margin-top:-3px;
+}
+.check-row input:checked + .check-box{background:var(--accent);border-color:var(--accent)}
+.check-row input:checked + .check-box::after{transform:rotate(-45deg) scale(1)}
+.check-text{font-size:.86rem;color:var(--ink-dim);line-height:1.65}
+.check-text b{color:var(--ink);font-weight:600}
+
+.form-msg{
+  display:none;align-items:center;gap:10px;
+  padding:12px 16px;border-radius:10px;
+  font-size:.86rem;font-weight:500;
+  animation:fadeUp .3s var(--ease);
+}
+.form-msg.show{display:flex}
+.form-msg.error{color:var(--err);background:var(--err-soft);border:1px solid rgba(168,66,58,.25)}
+.form-msg.success{color:var(--ok);background:var(--ok-soft);border:1px solid rgba(92,122,58,.25)}
+
+.form-actions{
+  display:flex;gap:12px;flex-wrap:wrap;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 26px;border-radius:11px;
+  font-size:.9rem;font-weight:600;letter-spacing:.01em;
+  transition:all .35s var(--ease);
+}
+.btn-primary{
+  color:#fff;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  box-shadow:0 12px 28px -14px rgba(184,118,46,.75);
+  flex:1;min-width:180px;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 36px -14px rgba(184,118,46,.9)}
+.btn-primary:active{transform:translateY(0) scale(.98)}
+.btn-primary:disabled{opacity:.55;cursor:not-allowed;transform:none !important;box-shadow:none}
+.btn-ghost{
+  color:var(--ink-dim);
+  background:var(--card-hi);
+  border:1px solid var(--line);
+}
+.btn-ghost:hover{border-color:var(--line-hi);color:var(--ink);transform:translateY(-2px)}
+.btn-ghost:active{transform:translateY(0) scale(.98)}
+
+/* ============================================================
+   我的投稿
+============================================================ */
+.my-section{margin-bottom:36px}
+.my-section:last-of-type{margin-bottom:0}
+.my-section-title{
+  font-family:"Songti SC","Noto Serif SC",serif;
+  font-size:1.1rem;font-weight:700;
+  letter-spacing:.03em;
+  color:var(--ink);
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.my-section-title::before{
+  content:"";display:inline-block;
+  width:4px;height:1em;
+  border-radius:2px;
+  background:linear-gradient(180deg,var(--accent),var(--accent-2));
+}
+.my-section-title .count{
+  font-family:inherit;
+  font-size:.78rem;font-weight:600;
+  color:var(--ink-mute);
+  letter-spacing:0;
+  margin-left:auto;
+}
+.my-section.history .my-section-title::before{
+  background:var(--line-hi);
+}
+.my-section.history .my-section-title{
+  color:var(--ink-dim);
+}
+
+.my-list{display:flex;flex-direction:column;gap:12px}
+.my-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:20px 22px;
+  transition:all .35s var(--ease);
+}
+.my-card:hover{
+  border-color:var(--line-hi);
+  box-shadow:var(--shadow);
+  transform:translateY(-2px);
+}
+.my-card[data-status="pending"]{border-left:4px solid var(--warn)}
+.my-card[data-status="approved"]{border-left:4px solid var(--ok)}
+.my-card[data-status="rejected"]{border-left:4px solid var(--err)}
+
+/* 历史投稿卡片：更淡一些，但仍保留状态色 */
+.my-card.archived{
+  background:var(--paper-2);
+  border-color:var(--line);
+  opacity:.85;
+}
+.my-card.archived:hover{opacity:1}
+
+.my-head{
+  display:flex;align-items:flex-start;gap:14px;
+  margin-bottom:10px;
+}
+.my-head h3{
+  font-family:"Songti SC","Noto Serif SC",serif;
+  font-size:1.05rem;font-weight:700;
+  letter-spacing:.01em;
+  flex:1;min-width:0;
+  word-break:break-word;
+}
+.my-badge{
+  font-size:.72rem;font-weight:700;
+  padding:4px 12px;border-radius:99px;
+  letter-spacing:.04em;
+  flex-shrink:0;
+  white-space:nowrap;
+}
+.my-badge.pending{color:var(--warn);background:var(--warn-soft);border:1px solid rgba(200,137,42,.3)}
+.my-badge.approved{color:var(--ok);background:var(--ok-soft);border:1px solid rgba(92,122,58,.3)}
+.my-badge.rejected{color:var(--err);background:var(--err-soft);border:1px solid rgba(168,66,58,.3)}
+
+.my-meta{
+  display:flex;gap:14px;flex-wrap:wrap;
+  font-size:.78rem;color:var(--ink-mute);
+  margin-bottom:12px;
+}
+.my-meta span{display:flex;align-items:center;gap:5px}
+
+.my-preview{
+  font-size:.86rem;color:var(--ink-dim);line-height:1.75;
+  padding:12px 14px;border-radius:9px;
+  background:var(--card-hi);
+  border:1px solid var(--line);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;
+  font-family:"Songti SC","Noto Serif SC",Georgia,serif;
+}
+.my-card.archived .my-preview{
+  background:var(--paper);
+}
+.my-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn-sm{
+  padding:7px 14px;border-radius:8px;
+  font-size:.78rem;font-weight:600;
+  transition:all .3s var(--ease);
+}
+.btn-sm.view{background:var(--card-hi);border:1px solid var(--line);color:var(--ink-dim)}
+.btn-sm.view:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm.approve{background:var(--ok-soft);border:1px solid rgba(92,122,58,.3);color:var(--ok)}
+.btn-sm.approve:hover{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btn-sm.reject{background:var(--err-soft);border:1px solid rgba(168,66,58,.3);color:var(--err)}
+.btn-sm.reject:hover{background:var(--err);color:#fff;border-color:var(--err)}
+.btn-sm.del{background:var(--card-hi);border:1px solid var(--line);color:var(--ink-mute)}
+.btn-sm.del:hover{background:var(--err);color:#fff;border-color:var(--err)}
+
+.my-empty{
+  text-align:center;padding:50px 20px;
+  border:1px dashed var(--line-hi);border-radius:14px;
+  color:var(--ink-mute);
+}
+.my-empty .ico{font-size:2.4rem;display:block;margin-bottom:12px;filter:grayscale(.35)}
+.my-empty p{font-size:.9rem;color:var(--ink-dim);margin-bottom:4px}
+.my-empty small{font-size:.78rem}
+
+.my-hint{
+  margin-top:28px;padding:16px 20px;
+  background:var(--card-hi);border:1px solid var(--line);
+  border-radius:12px;
+  font-size:.8rem;color:var(--ink-dim);line-height:1.75;
+}
+.my-hint b{color:var(--ink);font-weight:700;display:block;margin-bottom:4px}
+
+/* ============================================================
+   管理员：查看投稿
+============================================================ */
+.toolbar{
+  display:flex;gap:12px;flex-wrap:wrap;
+  margin-bottom:20px;
+  align-items:center;
+}
+.toolbar .search{
+  flex:1;min-width:220px;
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:10px;
+  background:var(--card);
+  border:1px solid var(--line);
+  transition:all .3s var(--ease);
+}
+.toolbar .search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(184,118,46,.13)}
+.toolbar .search svg{width:16px;height:16px;color:var(--ink-mute);flex-shrink:0}
+.toolbar .search input{
+  flex:1;background:none;border:none;outline:none;
+  color:var(--ink);font-size:.88rem;min-width:0;
+}
+.toolbar .search input::placeholder{color:var(--ink-mute)}
+.filter-chip{
+  padding:9px 16px;border-radius:99px;
+  font-size:.8rem;font-weight:600;
+  background:var(--card);border:1px solid var(--line);
+  color:var(--ink-dim);
+  transition:all .3s var(--ease);
+}
+.filter-chip:hover{border-color:var(--line-hi);color:var(--ink)}
+.filter-chip.active{
+  background:var(--accent);color:#fff;border-color:var(--accent);
+  box-shadow:0 8px 18px -10px rgba(184,118,46,.7);
+}
+
+.btn-refresh{
+  padding:9px 16px;border-radius:10px;
+  background:var(--card);border:1px solid var(--line);
+  font-size:.8rem;font-weight:600;color:var(--ink-dim);
+  transition:all .3s var(--ease);
+}
+.btn-refresh:hover{border-color:var(--line-hi);color:var(--accent);transform:rotate(90deg)}
+
+.stat-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:12px;margin-bottom:24px;
+}
+.stat-box{
+  padding:16px 18px;border-radius:12px;
+  background:var(--card);border:1px solid var(--line);
+  text-align:center;
+  transition:all .3s var(--ease);
+}
+.stat-box:hover{border-color:var(--line-hi);transform:translateY(-2px)}
+.stat-box b{
+  display:block;font-size:1.5rem;font-weight:800;
+  color:var(--ink);letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;
+}
+.stat-box span{font-size:.72rem;color:var(--ink-mute);letter-spacing:.05em}
+
+.sub-list{display:flex;flex-direction:column;gap:12px}
+.sub-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:20px 22px;
+  transition:all .35s var(--ease);
+}
+.sub-card:hover{
+  border-color:var(--line-hi);
+  box-shadow:var(--shadow);
+  transform:translateY(-2px);
+}
+.sub-card[data-status="pending"]{border-left:4px solid var(--warn)}
+.sub-card[data-status="approved"]{border-left:4px solid var(--ok)}
+.sub-card[data-status="rejected"]{border-left:4px solid var(--err)}
+
+.sub-head{
+  display:flex;align-items:flex-start;gap:14px;
+  margin-bottom:12px;
+}
+.sub-head h3{
+  font-family:"Songti SC","Noto Serif SC",serif;
+  font-size:1.05rem;font-weight:700;
+  letter-spacing:.01em;
+  flex:1;min-width:0;
+  word-break:break-word;
+}
+.status-badge{
+  font-size:.68rem;font-weight:700;
+  padding:4px 10px;border-radius:99px;
+  letter-spacing:.06em;text-transform:uppercase;
+  flex-shrink:0;
+}
+.status-badge.pending{color:var(--warn);background:var(--warn-soft)}
+.status-badge.approved{color:var(--ok);background:var(--ok-soft)}
+.status-badge.rejected{color:var(--err);background:var(--err-soft)}
+
+.sub-meta{
+  display:flex;gap:14px;flex-wrap:wrap;
+  font-size:.78rem;color:var(--ink-mute);
+  margin-bottom:14px;
+}
+.sub-meta span{display:flex;align-items:center;gap:5px}
+.sub-meta b{color:var(--ink-dim);font-weight:600}
+
+.sub-preview{
+  font-size:.86rem;color:var(--ink-dim);line-height:1.75;
+  padding:12px 14px;border-radius:9px;
+  background:var(--card-hi);
+  border:1px solid var(--line);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+  overflow:hidden;
+  margin-bottom:14px;
+  font-family:"Songti SC","Noto Serif SC",Georgia,serif;
+}
+.sub-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+.empty-state{
+  text-align:center;padding:60px 20px;
+  border:1px dashed var(--line-hi);border-radius:14px;
+  color:var(--ink-mute);
+}
+.empty-state .ico{font-size:2.4rem;display:block;margin-bottom:12px;filter:grayscale(.4)}
+.empty-state p{font-size:.94rem;color:var(--ink-dim);margin-bottom:4px}
+.empty-state small{font-size:.8rem}
+
+/* ============================================================
+   管理员：账号管理
+============================================================ */
+.admin-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.admin-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;border-radius:12px;
+  background:var(--card);border:1px solid var(--line);
+  transition:all .3s var(--ease);
+}
+.admin-row:hover{border-color:var(--line-hi)}
+.admin-avatar{
+  width:38px;height:38px;border-radius:10px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--accent-soft),#f9f1e2);
+  color:var(--accent-2);font-weight:800;font-size:1rem;
+  border:1px solid var(--line-hi);
+  flex-shrink:0;
+  font-family:"Songti SC","Noto Serif SC",serif;
+}
+.admin-info{flex:1;min-width:0}
+.admin-info b{font-size:.9rem;font-weight:700;display:block}
+.admin-info small{font-size:.72rem;color:var(--ink-mute);display:block;margin-top:2px}
+.admin-tag{
+  font-size:.66rem;font-weight:700;
+  padding:3px 8px;border-radius:99px;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.admin-tag.super{background:var(--accent);color:#fff}
+.admin-tag.normal{background:var(--card-hi);color:var(--ink-dim);border:1px solid var(--line)}
+.btn-del{
+  width:32px;height:32px;border-radius:9px;
+  display:grid;place-items:center;
+  background:var(--card-hi);border:1px solid var(--line);
+  color:var(--ink-mute);font-size:.9rem;
+  transition:all .3s var(--ease);
+}
+.btn-del:hover{color:var(--err);border-color:var(--err);transform:scale(1.08)}
+.btn-del:disabled{opacity:.35;cursor:not-allowed;transform:none}
+
+.add-admin{
+  margin-top:16px;padding:22px;
+  background:var(--card-hi);border:1px dashed var(--line-hi);
+  border-radius:14px;
+}
+.add-admin h4{
+  font-family:"Songti SC","Noto Serif SC",serif;
+  font-size:1rem;font-weight:700;margin-bottom:14px;
+}
+.add-admin .row{
+  display:grid;grid-template-columns:1fr 1fr auto;
+  gap:10px;align-items:end;
+}
+@media (max-width:640px){.add-admin .row{grid-template-columns:1fr}}
+
+.bin-info{
+  margin-top:24px;padding:18px 20px;
+  background:var(--card-hi);border:1px solid var(--line);
+  border-radius:12px;
+  font-size:.8rem;color:var(--ink-dim);
+}
+.bin-info b{display:block;font-weight:700;color:var(--ink);margin-bottom:6px}
+.bin-info code{
+  display:inline-block;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:6px;padding:3px 8px;
+  font-size:.76rem;color:var(--accent-2);
+  word-break:break-all;
+  font-family:ui-monospace,Menlo,monospace;
+}
+.bin-info .copy{
+  margin-left:6px;padding:2px 8px;
+  border-radius:6px;background:var(--accent);color:#fff;
+  font-size:.68rem;font-weight:600;
+  transition:all .3s;
+}
+.bin-info .copy:hover{background:var(--accent-2)}
+
+/* 弹层 */
+.login-mask, .detail-mask{
+  position:fixed;inset:0;z-index:9997;
+  background:rgba(44,36,22,.55);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  display:grid;place-items:center;padding:24px;
+  opacity:0;visibility:hidden;
+  transition:opacity .3s var(--ease),visibility .3s;
+}
+.login-mask.show, .detail-mask.show{opacity:1;visibility:visible}
+.login-modal{
+  width:min(400px,100%);
+  background:var(--card);
+  border:1px solid var(--line-hi);
+  border-radius:16px;
+  padding:32px 28px;
+  box-shadow:0 40px 90px -40px rgba(80,55,20,.6);
+  transform:scale(.96) translateY(10px);
+  transition:transform .35s var(--ease);
+}
+.login-mask.show .login-modal{transform:none}
+.login-modal h2{
+  font-family:"Songti SC","Noto Serif SC",serif;
+  font-size:1.4rem;font-weight:700;letter-spacing:.03em;
+  margin-bottom:6px;
+}
+.login-modal .desc{font-size:.82rem;color:var(--ink-mute);margin-bottom:22px}
+.login-modal .field{margin-bottom:16px}
+.login-error{font-size:.78rem;color:var(--err);min-height:1.2em;margin-bottom:12px}
+.login-actions{display:flex;gap:10px}
+.login-actions .btn{flex:1;padding:11px 20px;font-size:.86rem}
+
+.detail-modal{
+  width:min(720px,100%);max-height:88vh;overflow-y:auto;
+  background:var(--card);
+  border:1px solid var(--line-hi);
+  border-radius:16px;
+  padding:32px clamp(24px,4vw,36px);
+  box-shadow:0 40px 90px -40px rgba(80,55,20,.6);
+  transform:scale(.96) translateY(10px);
+  transition:transform .35s var(--ease);
+}
+.detail-mask.show .detail-modal{transform:none}
+.detail-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px}
+.detail-head h3{
+  font-family:"Songti SC","Noto Serif SC",serif;
+  font-size:1.3rem;font-weight:700;letter-spacing:.01em;
+  line-height:1.4;flex:1;
+}
+.close-btn{
+  width:34px;height:34px;border-radius:10px;
+  display:grid;place-items:center;flex-shrink:0;
+  background:var(--card-hi);border:1px solid var(--line);
+  color:var(--ink-mute);font-size:1rem;
+  transition:all .3s var(--ease);
+}
+.close-btn:hover{color:var(--err);border-color:var(--err);transform:rotate(90deg)}
+.detail-meta{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-bottom:20px;padding-bottom:18px;
+  border-bottom:1px solid var(--line);
+}
+.detail-meta .tag{
+  font-size:.75rem;padding:4px 10px;border-radius:99px;
+  background:var(--card-hi);border:1px solid var(--line);
+  color:var(--ink-dim);
+}
+.detail-body{
+  font-family:"Songti SC","Noto Serif SC",Georgia,serif;
+  font-size:1rem;line-height:2;color:var(--ink);
+  white-space:pre-wrap;word-break:break-word;
+}
+
+/* Toast */
+.toast{
+  position:fixed;left:50%;bottom:36px;z-index:9998;
+  transform:translate(-50%,20px) scale(.94);
+  display:flex;align-items:center;gap:9px;
+  padding:11px 20px;border-radius:99px;
+  font-size:.83rem;font-weight:600;color:#fff;
+  background:var(--ink);
+  box-shadow:0 18px 44px -18px rgba(80,55,20,.6);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .3s var(--ease),transform .4s var(--ease),visibility .3s;
+}
+.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1)}
+.toast .tick{
+  width:17px;height:17px;flex-shrink:0;border-radius:50%;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#fff;font-size:.62rem;font-weight:900;
+}
+
+/* 页脚 */
+.footer{
+  border-top:1px solid var(--line);
+  padding:32px clamp(18px,4vw,32px);
+  max-width:1200px;margin:0 auto;
+  display:flex;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;align-items:center;
+  font-size:.78rem;color:var(--ink-mute);
+}
+.footer a{transition:color .3s}
+.footer a:hover{color:var(--accent)}
+
+@media (max-width:640px){
+  .topbar-inner{gap:10px}
+  .brand span:not(.brand-mark){font-size:.92rem}
+  main{padding:28px 16px 60px}
+  .toast{bottom:22px;font-size:.78rem;padding:10px 16px}
+  .btn-primary{min-width:0}
+  .form-actions{flex-direction:column}
+  .footer{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+
+<!-- 加载动画 -->
+<div class="loader" id="loader">
+  <div class="loader-inner">
+    <div class="loader-mark" id="loaderMark">6班班刊 · 投稿</div>
+    <div class="loader-track"><i></i></div>
+  </div>
+</div>
+
+<!-- 顶栏 -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#" data-back-to-library>
+      <span class="brand-mark">6</span>
+      <span>6班班刊</span>
+      <span class="sub">Journal</span>
+    </a>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-panel="submit">投稿</button>
+      <button class="tab" data-panel="mine">我的投稿</button>
+      <button class="tab hidden" data-panel="submissions" data-admin-only>查看投稿</button>
+      <button class="tab hidden" data-panel="accounts" data-super-only>管理账号</button>
+    </nav>
+
+    <div class="top-actions">
+      <button class="btn-login" id="loginBtn" type="button">
+        <span>🔒</span><span>管理员登录</span>
+      </button>
+      <div class="user-chip hidden" id="userChip">
+        <span id="userName">—</span>
+        <span class="role" id="userRole">admin</span>
+        <button class="logout" id="logoutBtn" type="button" title="退出登录">✕</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ==================== 投稿 ==================== -->
+  <section class="panel active" id="panel-submit">
+    <div class="panel-head">
+      <h1>投稿</h1>
+      <p>投给六班的班刊。稿件会由编辑部审核后收录。</p>
+    </div>
+
+    <div class="form-card">
+      <form class="form-grid" id="submitForm" novalidate>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="title">
+              <span>标题</span><span class="req">*</span>
+              <span class="hint"><span id="titleCount">0</span>/60</span>
+            </label>
+            <input class="input" type="text" id="title" maxlength="60" placeholder="给这篇作品起一个名字" autocomplete="off">
+          </div>
+          <div class="field">
+            <label class="field-label" for="author">
+              <span>作者 / 笔名</span><span class="req">*</span>
+              <span class="hint"><span id="authorCount">0</span>/20</span>
+            </label>
+            <input class="input" type="text" id="author" maxlength="20" placeholder="希望署名的名字" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="content">
+            <span>正文</span><span class="req">*</span>
+            <span class="hint">不少于 30 字</span>
+          </label>
+          <textarea class="textarea" id="content" placeholder="在这里写下你的作品……&#10;&#10;可以直接换行分段。"></textarea>
+          <div class="char-counter" id="charCounter">
+            <span class="count" id="charCount">0</span>
+            <span>字</span>
+            <span style="margin-left:auto">草稿自动保存在本机</span>
+          </div>
+        </div>
+
+        <label class="check-row">
+          <input type="checkbox" id="anonymous">
+          <span class="check-box"></span>
+          <span class="check-text"><b>匿名投稿</b> · 班刊上只显示笔名，不展示真实身份</span>
+        </label>
+
+        <label class="check-row">
+          <input type="checkbox" id="agree">
+          <span class="check-box"></span>
+          <span class="check-text"><b>确认原创</b> · 本稿件为本人原创，未侵犯他人版权</span>
+        </label>
+
+        <div class="form-msg" id="formMsg"></div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit" id="submitBtn">
+            <span>✈ 提交稿件</span>
+          </button>
+          <button class="btn btn-ghost" type="button" id="clearBtn">
+            <span>清空</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ==================== 我的投稿 ==================== -->
+  <section class="panel" id="panel-mine">
+    <div class="panel-head">
+      <h1>我的投稿</h1>
+      <p>这里是你在这个浏览器上投过的所有稿件。审核状态会实时更新。</p>
+    </div>
+
+    <!-- 当前投稿 -->
+    <div class="my-section" id="myActiveSection">
+      <h2 class="my-section-title">
+        <span>当前投稿</span>
+        <span class="count" id="myActiveCount">0 篇</span>
+      </h2>
+      <div class="my-list" id="myActiveList"></div>
+    </div>
+
+    <!-- 历史投稿 -->
+    <div class="my-section history" id="myHistorySection" style="display:none">
+      <h2 class="my-section-title">
+        <span>历史投稿</span>
+        <span class="count" id="myHistoryCount">0 篇</span>
+      </h2>
+      <div class="my-list" id="myHistoryList"></div>
+    </div>
+
+    <div class="my-hint">
+      <b>📌 关于状态</b>
+      <div>· <b>审核中</b>：编辑部还在看，稍等一会</div>
+      <div>· <b>已采纳</b>：作品会出现在本期班刊上</div>
+      <div>· <b>未采纳</b>：本期不收录，下次可以再试</div>
+      <div>· <b>历史投稿</b>：编辑部已归档的稿件会移到这里，状态仍然保留</div>
+    </div>
+  </section>
+
+  <!-- ==================== 查看投稿（管理员） ==================== -->
+  <section class="panel" id="panel-submissions">
+    <div class="panel-head">
+      <h1>查看投稿</h1>
+      <p>所有学生投稿都会出现在这里。你可以查看全文、通过或拒绝稿件；审核之后可以选择删除，学生那一侧会保留最终状态，并把它移到「历史投稿」。</p>
+    </div>
+
+    <div class="stat-row" id="statRow">
+      <div class="stat-box"><b id="stTotal">0</b><span>全部</span></div>
+      <div class="stat-box"><b id="stPending">0</b><span>待审核</span></div>
+      <div class="stat-box"><b id="stApproved">0</b><span>已采纳</span></div>
+      <div class="stat-box"><b id="stRejected">0</b><span>未采纳</span></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+        </svg>
+        <input type="text" id="subSearch" placeholder="搜索标题、作者、正文…" autocomplete="off">
+      </div>
+      <button class="filter-chip active" data-filter="all">全部</button>
+      <button class="filter-chip" data-filter="pending">待审核</button>
+      <button class="filter-chip" data-filter="approved">已采纳</button>
+      <button class="filter-chip" data-filter="rejected">未采纳</button>
+      <button class="btn-refresh" id="refreshBtn" title="刷新">↻</button>
+    </div>
+
+    <div class="sub-list" id="subList"></div>
+  </section>
+
+  <!-- ==================== 管理账号（主管理员） ==================== -->
+  <section class="panel" id="panel-accounts">
+    <div class="panel-head">
+      <h1>管理账号</h1>
+      <p>添加或删除普通管理员。主管理员拥有最高权限，不可被删除。</p>
+    </div>
+
+    <div class="admin-list" id="adminList"></div>
+
+    <div class="add-admin">
+      <h4>➕ 添加管理员</h4>
+      <div class="row">
+        <div class="field" style="gap:6px">
+          <label class="field-label" style="font-size:.75rem">用户名</label>
+          <input class="input" type="text" id="newAdminUser" placeholder="例如：张三" autocomplete="off">
+        </div>
+        <div class="field" style="gap:6px">
+          <label class="field-label" style="font-size:.75rem">密码</label>
+          <input class="input" type="text" id="newAdminPass" placeholder="至少 6 位" autocomplete="off">
+        </div>
+        <button class="btn btn-primary" type="button" id="addAdminBtn" style="min-width:auto;padding:12px 22px;flex:0 0 auto">
+          <span>添加</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="bin-info">
+      <b>📦 数据存储（jsonbin.io）</b>
+      <div>当前 bin ID：<code id="binIdText">加载中…</code>
+        <button class="copy" id="copyBinBtn" type="button">复制</button>
+      </div>
+      <div style="margin-top:8px;color:var(--ink-mute);font-size:.74rem">
+        所有用户的投稿都保存在这个 bin 里。把它分享给其他管理员，就能同步「查看投稿」里的数据。
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span>© 2026 6班班刊 · My_Underline</span>
+  <span><a href="#" data-back-to-library>返回资源库</a></span>
+</footer>
+
+<!-- 登录弹层 -->
+<div class="login-mask" id="loginMask">
+  <div class="login-modal">
+    <h2>管理员登录</h2>
+    <p class="desc">请输入管理员账号以继续。</p>
+    <div class="field">
+      <label class="field-label" for="loginUser"><span>用户名</span></label>
+      <input class="input" type="text" id="loginUser" placeholder="请输入用户名" autocomplete="off">
+    </div>
+    <div class="field">
+      <label class="field-label" for="loginPass"><span>密码</span></label>
+      <input class="input" type="password" id="loginPass" placeholder="请输入密码" autocomplete="off">
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-actions">
+      <button class="btn btn-ghost" type="button" id="loginCancel">取消</button>
+      <button class="btn btn-primary" type="button" id="loginSubmit">登录</button>
+    </div>
+  </div>
+</div>
+
+<!-- 详情弹层 -->
+<div class="detail-mask" id="detailMask">
+  <div class="detail-modal" id="detailModal"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="tick">✓</span>
+  <span id="toastText">已完成</span>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ==========================================================
+     配置
+  ========================================================== */
+  const FIXED_BIN_ID = ''; // 想固定 bin 就填这里，否则留空
+
+  const JSONBIN_KEY = '$2a$10$8a1mjO5sFu4ZZetBfd6Npu5FC8s50I36xx70DBUjKenDK1AasAVOO';
+  const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
+  const BIN_STORE_KEY = 'mu-journal-bin-id';
+
+  const SUPER_ADMIN = { username: 'My_Underline', password: 'kk20140119' };
+
+  const DRAFT_KEY = 'mu-journal-draft';
+  const SESSION_KEY = 'mu-journal-session';
+  const MY_SUBS_KEY = 'mu-journal-my-subs';
+
+  const MIN_CHARS = 30;
+  const MAX_CHARS = 8000;
+
+  /* ==========================================================
+     DOM
+  ========================================================== */
+  const $ = id => document.getElementById(id);
+  const loaderEl = $('loader');
+  const tabsEl = $('tabs');
+  const toastEl = $('toast');
+  const toastText = $('toastText');
+
+  /* ==========================================================
+     Toast
+  ========================================================== */
+  let toastTimer = null;
+  function showToast(text) {
+    toastText.textContent = text || '已完成';
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
+  }
+
+  /* ==========================================================
+     加载动画
+  ========================================================== */
+  function hideLoader() { loaderEl.classList.add('done'); }
+  window.addEventListener('load', () => setTimeout(hideLoader, 600));
+  setTimeout(hideLoader, 2600);
+
+  /* ==========================================================
+     返回资源库
+  ========================================================== */
+  let transitioning = false;
+  document.querySelectorAll('[data-back-to-library]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (transitioning) return;
+      transitioning = true;
+      try { sessionStorage.setItem('mu-transition', 'to-library'); } catch (err) {}
+      $('loaderMark').textContent = 'My_Underline';
+      loaderEl.classList.remove('done');
+      setTimeout(() => { window.location.href = 'index.html'; }, 800);
+    });
+  });
+
+  /* ==========================================================
+     工具
+  ========================================================== */
+  function escapeHtml(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+  function encodePass(s) {
+    try { return btoa(unescape(encodeURIComponent(s))); } catch (e) { return s; }
+  }
+  function decodePass(s) {
+    try { return decodeURIComponent(escape(atob(s))); } catch (e) { return s; }
+  }
+  function formatTime(ts) {
+    const d = new Date(ts);
+    const p = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+  function uid(prefix) {
+    return (prefix || 'id') + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  const USER_STATUS_TEXT = {
+    pending: '审核中',
+    approved: '已采纳',
+    rejected: '未采纳'
+  };
+
+  /* ==========================================================
+     我的投稿 ID 列表（本机）
+  ========================================================== */
+  function getMySubIds() {
+    try {
+      const raw = localStorage.getItem(MY_SUBS_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+  function addMySubId(id) {
+    const list = getMySubIds();
+    if (!list.includes(id)) {
+      list.push(id);
+      try { localStorage.setItem(MY_SUBS_KEY, JSON.stringify(list)); } catch (e) {}
+    }
+  }
+
+  /* ==========================================================
+     jsonbin 数据层
+  ========================================================== */
+  const Store = {
+    binId: null,
+    data: null,
+
+    async init() {
+      const urlParams = new URLSearchParams(location.search);
+      const urlBin = urlParams.get('bin');
+
+      if (FIXED_BIN_ID) {
+        this.binId = FIXED_BIN_ID;
+      } else if (urlBin) {
+        this.binId = urlBin;
+        try { localStorage.setItem(BIN_STORE_KEY, urlBin); } catch (e) {}
+      } else {
+        this.binId = localStorage.getItem(BIN_STORE_KEY);
+      }
+
+      if (this.binId && this.binId !== 'local-only') {
+        try {
+          const data = await this.read(this.binId);
+          if (data) { this.data = data; return true; }
+        } catch (e) {
+          console.warn('读取 bin 失败，尝试新建', e);
+        }
+      }
+
+      try {
+        this.data = await this.create();
+        return true;
+      } catch (e) {
+        console.error('创建 bin 失败，将回退到本地模式', e);
+        this.data = { submissions: [], admins: [], createdAt: Date.now(), updatedAt: Date.now() };
+        this.binId = 'local-only';
+        return false;
+      }
+    },
+
+    async create() {
+      const initial = { submissions: [], admins: [], createdAt: Date.now(), updatedAt: Date.now() };
+      const res = await fetch(`${JSONBIN_BASE}/b`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': JSONBIN_KEY,
+          'X-Bin-Private': 'true',
+          'X-Bin-Name': 'Class6-Journal'
+        },
+        body: JSON.stringify(initial)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      const id = json.metadata && json.metadata.id;
+      if (!id) throw new Error('无效的 bin ID');
+      this.binId = id;
+      try { localStorage.setItem(BIN_STORE_KEY, id); } catch (e) {}
+      return initial;
+    },
+
+    async read(id) {
+      const res = await fetch(`${JSONBIN_BASE}/b/${id}/latest`, {
+        headers: { 'X-Master-Key': JSONBIN_KEY }
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      return json.record || null;
+    },
+
+    async write(data) {
+      if (!this.binId || this.binId === 'local-only') {
+        this.data = data;
+        return true;
+      }
+      data.updatedAt = Date.now();
+      const res = await fetch(`${JSONBIN_BASE}/b/${this.binId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': JSONBIN_KEY
+        },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      this.data = data;
+      return true;
+    },
+
+    async refresh() {
+      if (!this.binId || this.binId === 'local-only') return this.data;
+      try {
+        const data = await this.read(this.binId);
+        if (data) this.data = data;
+      } catch (e) { console.warn(e); }
+      return this.data;
+    }
+  };
+
+  /* ==========================================================
+     会话
+  ========================================================== */
+  let session = null;
+  function loadSession() {
+    try {
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      if (raw) session = JSON.parse(raw);
+    } catch (e) {}
+  }
+  function saveSession() {
+    try {
+      if (session) sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      else sessionStorage.removeItem(SESSION_KEY);
+    } catch (e) {}
+  }
+  function checkLogin(username, password) {
+    if (username === SUPER_ADMIN.username && password === SUPER_ADMIN.password) {
+      return { username, role: 'super' };
+    }
+    if (Store.data && Array.isArray(Store.data.admins)) {
+      const found = Store.data.admins.find(a => a.username === username);
+      if (found && decodePass(found.passwordHash) === password) {
+        return { username, role: 'admin' };
+      }
+    }
+    return null;
+  }
+  function applySession() {
+    const loginBtn = $('loginBtn');
+    const userChip = $('userChip');
+    const userName = $('userName');
+    const userRole = $('userRole');
+
+    if (session) {
+      loginBtn.classList.add('hidden');
+      userChip.classList.remove('hidden');
+      userName.textContent = session.username;
+      userRole.textContent = session.role === 'super' ? '主管理员' : '管理员';
+    } else {
+      loginBtn.classList.remove('hidden');
+      userChip.classList.add('hidden');
+    }
+
+    document.querySelectorAll('[data-admin-only]').forEach(el => {
+      el.classList.toggle('hidden', !session);
+    });
+    document.querySelectorAll('[data-super-only]').forEach(el => {
+      el.classList.toggle('hidden', !session || session.role !== 'super');
+    });
+
+    const activeTab = tabsEl.querySelector('.tab.active');
+    if (activeTab && activeTab.classList.contains('hidden')) {
+      switchPanel('submit');
+    }
+  }
+
+  /* ==========================================================
+     面板切换
+  ========================================================== */
+  function switchPanel(name) {
+    tabsEl.querySelectorAll('.tab').forEach(t => {
+      t.classList.toggle('active', t.getAttribute('data-panel') === name);
+    });
+    document.querySelectorAll('.panel').forEach(p => {
+      p.classList.toggle('active', p.id === 'panel-' + name);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (name === 'mine') {
+      refreshMySubs();
+    } else if (name === 'submissions' && session) {
+      renderSubmissions();
+    } else if (name === 'accounts' && session && session.role === 'super') {
+      renderAdmins();
+    }
+  }
+
+  tabsEl.addEventListener('click', (e) => {
+    const tab = e.target.closest('.tab');
+    if (!tab || tab.classList.contains('hidden')) return;
+    switchPanel(tab.getAttribute('data-panel'));
+  });
+
+  /* ==========================================================
+     登录 / 登出
+  ========================================================== */
+  const loginMask = $('loginMask');
+  const loginUser = $('loginUser');
+  const loginPass = $('loginPass');
+  const loginError = $('loginError');
+
+  function openLogin() {
+    loginUser.value = '';
+    loginPass.value = '';
+    loginError.textContent = '';
+    loginMask.classList.add('show');
+    setTimeout(() => loginUser.focus(), 100);
+  }
+  function closeLogin() { loginMask.classList.remove('show'); }
+
+  $('loginBtn').addEventListener('click', openLogin);
+  $('loginCancel').addEventListener('click', closeLogin);
+  loginMask.addEventListener('click', (e) => { if (e.target === loginMask) closeLogin(); });
+
+  function doLogin() {
+    const u = loginUser.value.trim();
+    const p = loginPass.value;
+    if (!u || !p) { loginError.textContent = '请输入用户名和密码'; return; }
+    const s = checkLogin(u, p);
+    if (!s) { loginError.textContent = '用户名或密码错误'; return; }
+    session = s;
+    saveSession();
+    applySession();
+    closeLogin();
+    showToast(`欢迎回来，${u}`);
+    switchPanel('submissions');
+  }
+  $('loginSubmit').addEventListener('click', doLogin);
+  loginPass.addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
+  loginUser.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginPass.focus(); });
+
+  $('logoutBtn').addEventListener('click', () => {
+    session = null;
+    saveSession();
+    applySession();
+    switchPanel('submit');
+    showToast('已退出登录');
+  });
+
+  /* ==========================================================
+     投稿表单
+  ========================================================== */
+  const form = $('submitForm');
+  const titleEl = $('title');
+  const authorEl = $('author');
+  const contentEl = $('content');
+  const anonEl = $('anonymous');
+  const agreeEl = $('agree');
+  const submitBtn = $('submitBtn');
+  const formMsg = $('formMsg');
+  const titleCount = $('titleCount');
+  const authorCount = $('authorCount');
+  const charCount = $('charCount');
+  const charWrap = $('charCounter');
+
+  function updateCounts() {
+    titleCount.textContent = titleEl.value.length;
+    authorCount.textContent = authorEl.value.length;
+    const len = contentEl.value.length;
+    charCount.textContent = len;
+    charWrap.classList.toggle('over', len > MAX_CHARS);
+  }
+  [titleEl, authorEl, contentEl].forEach(el => el.addEventListener('input', () => {
+    updateCounts();
+    saveDraftSoon();
+  }));
+
+  let draftTimer = null;
+  function saveDraftSoon() {
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(() => {
+      const data = {
+        title: titleEl.value,
+        author: authorEl.value,
+        content: contentEl.value,
+        anonymous: anonEl.checked,
+        savedAt: Date.now()
+      };
+      try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e) {}
+    }, 700);
+  }
+  function loadDraft() {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      titleEl.value = d.title || '';
+      authorEl.value = d.author || '';
+      contentEl.value = d.content || '';
+      anonEl.checked = !!d.anonymous;
+      updateCounts();
+    } catch (e) {}
+  }
+
+  function showFormMsg(text, kind) {
+    formMsg.className = 'form-msg show ' + (kind || 'error');
+    formMsg.textContent = text;
+  }
+  function hideFormMsg() { formMsg.className = 'form-msg'; formMsg.textContent = ''; }
+
+  function validate() {
+    if (!titleEl.value.trim()) return '请填写标题';
+    if (!authorEl.value.trim()) return '请填写作者 / 笔名';
+    const content = contentEl.value.trim();
+    if (content.length < MIN_CHARS) return `正文至少需要 ${MIN_CHARS} 字（当前 ${content.length} 字）`;
+    if (content.length > MAX_CHARS) return `正文超过 ${MAX_CHARS} 字上限`;
+    if (!agreeEl.checked) return '请勾选「确认原创」';
+    return null;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideFormMsg();
+    const err = validate();
+    if (err) { showFormMsg('✕ ' + err); return; }
+
+    submitBtn.disabled = true;
+    const btnText = submitBtn.querySelector('span');
+    const originalText = btnText.textContent;
+    btnText.textContent = '提交中…';
+
+    try {
+      await Store.refresh();
+      if (!Store.data) throw new Error('数据未就绪');
+      if (!Array.isArray(Store.data.submissions)) Store.data.submissions = [];
+
+      const item = {
+        id: uid('sub'),
+        title: titleEl.value.trim(),
+        author: authorEl.value.trim(),
+        content: contentEl.value.trim(),
+        anonymous: anonEl.checked,
+        status: 'pending',
+        archived: false,
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      };
+
+      Store.data.submissions.push(item);
+      await Store.write(Store.data);
+
+      addMySubId(item.id);
+
+      form.reset();
+      updateCounts();
+      try { localStorage.removeItem(DRAFT_KEY); } catch (e2) {}
+
+      showFormMsg('✓ 投稿成功，稿件已送达编辑部。', 'success');
+      showToast('投稿成功');
+    } catch (err2) {
+      console.error(err2);
+      showFormMsg('✕ 提交失败，请检查网络后重试。');
+    } finally {
+      submitBtn.disabled = false;
+      btnText.textContent = originalText;
+    }
+  });
+
+  $('clearBtn').addEventListener('click', () => {
+    if (!confirm('确定清空当前内容吗？')) return;
+    form.reset();
+    updateCounts();
+    hideFormMsg();
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+    showToast('已清空');
+  });
+
+  /* ==========================================================
+     我的投稿
+  ========================================================== */
+  const myActiveList = $('myActiveList');
+  const myHistoryList = $('myHistoryList');
+  const myActiveSection = $('myActiveSection');
+  const myHistorySection = $('myHistorySection');
+  const myActiveCount = $('myActiveCount');
+  const myHistoryCount = $('myHistoryCount');
+
+  async function refreshMySubs() {
+    await Store.refresh();
+    renderMySubs();
+  }
+
+  function buildEmptyState(text, small) {
+    return `
+      <div class="my-empty">
+        <span class="ico">📝</span>
+        <p>${text}</p>
+        <small>${small}</small>
+      </div>`;
+  }
+
+  function buildMyCard(item, isArchived) {
+    const statusText = USER_STATUS_TEXT[item.status] || '审核中';
+    const preview = (item.content || '').slice(0, 140).replace(/\s+/g, ' ');
+    const el = document.createElement('div');
+    el.className = 'my-card' + (isArchived ? ' archived' : '');
+    el.setAttribute('data-status', item.status);
+    el.innerHTML = `
+      <div class="my-head">
+        <h3>${escapeHtml(item.title)}</h3>
+        <span class="my-badge ${item.status}">${statusText}</span>
+      </div>
+      <div class="my-meta">
+        <span>✍ ${escapeHtml(item.anonymous ? item.author + '（匿名）' : item.author)}</span>
+        <span>🕐 ${formatTime(item.createdAt)}</span>
+        <span>📝 ${item.content.length} 字</span>
+        ${isArchived ? '<span>📦 已归档</span>' : ''}
+      </div>
+      <div class="my-preview">${escapeHtml(preview)}${item.content.length > 140 ? '…' : ''}</div>
+      <div class="my-actions">
+        <button class="btn-sm view" data-act="view" data-id="${item.id}">查看全文</button>
+      </div>
+    `;
+    return el;
+  }
+
+  function renderMySubs() {
+    const ids = getMySubIds();
+
+    if (!ids.length) {
+      myActiveList.innerHTML = buildEmptyState(
+        '你还没有投过稿',
+        '在「投稿」页面写下你的作品，就能在这里看到状态'
+      );
+      myHistorySection.style.display = 'none';
+      myActiveCount.textContent = '0 篇';
+      myHistoryCount.textContent = '0 篇';
+      return;
+    }
+
+    const allSubs = (Store.data && Store.data.submissions) || [];
+    const mine = [];
+    ids.forEach(id => {
+      const found = allSubs.find(s => s.id === id);
+      if (found) mine.push(found);
+    });
+    mine.sort((a, b) => b.createdAt - a.createdAt);
+
+    const active = mine.filter(x => !x.archived);
+    const history = mine.filter(x => x.archived);
+
+    // 渲染「当前投稿」
+    myActiveList.innerHTML = '';
+    if (active.length) {
+      active.forEach(item => myActiveList.appendChild(buildMyCard(item, false)));
+    } else {
+      myActiveList.innerHTML = buildEmptyState(
+        '暂时没有正在审核的稿件',
+        '你投过的稿件要么还在等结果，要么已经归档到「历史投稿」'
+      );
+    }
+    myActiveCount.textContent = active.length + ' 篇';
+
+    // 渲染「历史投稿」
+    if (history.length) {
+      myHistorySection.style.display = '';
+      myHistoryList.innerHTML = '';
+      history.forEach(item => myHistoryList.appendChild(buildMyCard(item, true)));
+      myHistoryCount.textContent = history.length + ' 篇';
+    } else {
+      myHistorySection.style.display = 'none';
+      myHistoryList.innerHTML = '';
+      myHistoryCount.textContent = '0 篇';
+    }
+  }
+
+  // 两个列表共用同一个点击处理
+  function handleMyListClick(e) {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const id = btn.getAttribute('data-id');
+    const subs = (Store.data && Store.data.submissions) || [];
+    const item = subs.find(s => s.id === id);
+    if (item) openDetail(item, true);
+  }
+  myActiveList.addEventListener('click', handleMyListClick);
+  myHistoryList.addEventListener('click', handleMyListClick);
+
+  /* ==========================================================
+     管理员：查看投稿
+  ========================================================== */
+  const subList = $('subList');
+  const subSearch = $('subSearch');
+  let currentFilter = 'all';
+
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentFilter = chip.getAttribute('data-filter');
+      renderSubmissions();
+    });
+  });
+  subSearch.addEventListener('input', renderSubmissions);
+
+  $('refreshBtn').addEventListener('click', async () => {
+    try {
+      await Store.refresh();
+      renderSubmissions();
+      showToast('已刷新');
+    } catch (e) { showToast('刷新失败'); }
+  });
+
+  function renderStatRow() {
+    const subs = ((Store.data && Store.data.submissions) || []).filter(s => !s.archived);
+    $('stTotal').textContent = subs.length;
+    $('stPending').textContent = subs.filter(s => s.status === 'pending').length;
+    $('stApproved').textContent = subs.filter(s => s.status === 'approved').length;
+    $('stRejected').textContent = subs.filter(s => s.status === 'rejected').length;
+  }
+
+  function renderSubmissions() {
+    if (!session) return;
+    renderStatRow();
+
+    const all = ((Store.data && Store.data.submissions) || []).filter(s => !s.archived);
+    const q = (subSearch.value || '').trim().toLowerCase();
+
+    let list = all.filter(item => {
+      const matchStatus = currentFilter === 'all' || item.status === currentFilter;
+      const hay = (item.title + ' ' + item.author + ' ' + item.content).toLowerCase();
+      const matchQ = !q || hay.includes(q);
+      return matchStatus && matchQ;
+    });
+    list.sort((a, b) => b.createdAt - a.createdAt);
+
+    if (!list.length) {
+      subList.innerHTML = `
+        <div class="empty-state">
+          <span class="ico">📭</span>
+          <p>${all.length ? '没有匹配的投稿' : '还没有收到任何投稿'}</p>
+          <small>${all.length ? '换个筛选条件试试' : '学生投稿后会出现在这里'}</small>
+        </div>`;
+      return;
+    }
+
+    const statusText = { pending: '待审核', approved: '已采纳', rejected: '未采纳' };
+
+    subList.innerHTML = '';
+    list.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'sub-card';
+      el.setAttribute('data-status', item.status);
+      const preview = (item.content || '').slice(0, 160).replace(/\s+/g, ' ');
+
+      let actionBtns = `<button class="btn-sm view" data-act="view" data-id="${item.id}">查看全文</button>`;
+      if (item.status !== 'approved') {
+        actionBtns += `<button class="btn-sm approve" data-act="approve" data-id="${item.id}">通过</button>`;
+      }
+      if (item.status !== 'rejected') {
+        actionBtns += `<button class="btn-sm reject" data-act="reject" data-id="${item.id}">拒绝</button>`;
+      }
+      if (item.status === 'approved' || item.status === 'rejected') {
+        actionBtns += `<button class="btn-sm del" data-act="delete" data-id="${item.id}">删除</button>`;
+      }
+
+      el.innerHTML = `
+        <div class="sub-head">
+          <h3>${escapeHtml(item.title)}</h3>
+          <span class="status-badge ${item.status}">${statusText[item.status] || item.status}</span>
+        </div>
+        <div class="sub-meta">
+          <span>✍ <b>${escapeHtml(item.anonymous ? item.author + '（匿名）' : item.author)}</b></span>
+          <span>🕐 ${formatTime(item.createdAt)}</span>
+          <span>📝 ${item.content.length} 字</span>
+        </div>
+        <div class="sub-preview">${escapeHtml(preview)}${item.content.length > 160 ? '…' : ''}</div>
+        <div class="sub-actions">${actionBtns}</div>
+      `;
+      subList.appendChild(el);
+    });
+  }
+
+  subList.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const act = btn.getAttribute('data-act');
+    const id = btn.getAttribute('data-id');
+    const subs = (Store.data && Store.data.submissions) || [];
+    const item = subs.find(s => s.id === id);
+    if (!item) return;
+
+    if (act === 'view') { openDetail(item); return; }
+
+    if (act === 'approve' || act === 'reject') {
+      const label = act === 'approve' ? '已采纳' : '未采纳';
+      if (!confirm(`确定将《${item.title}》标记为「${label}」吗？`)) return;
+      try {
+        item.status = act === 'approve' ? 'approved' : 'rejected';
+        item.updatedAt = Date.now();
+        await Store.write(Store.data);
+        renderSubmissions();
+        // 如果用户端列表也开着（同一浏览器），顺手刷新
+        renderMySubs();
+        showToast('状态已更新');
+      } catch (err) {
+        console.error(err);
+        showToast('更新失败，请重试');
+      }
+      return;
+    }
+
+    if (act === 'delete') {
+      if (!confirm(
+        `确定要归档《${item.title}》吗？\n\n` +
+        `· 它会从你的列表中消失；\n` +
+        `· 学生那一侧会看到它移动到「历史投稿」，状态保持不变。`
+      )) return;
+      try {
+        item.archived = true;
+        item.updatedAt = Date.now();
+        await Store.write(Store.data);
+        renderSubmissions();
+        renderMySubs();
+        showToast('已归档，学生端会移入历史投稿');
+      } catch (err) {
+        console.error(err);
+        showToast('删除失败，请重试');
+      }
+      return;
+    }
+  });
+
+  /* ==========================================================
+     详情弹层
+  ========================================================== */
+  const detailMask = $('detailMask');
+  const detailModal = $('detailModal');
+
+  function openDetail(item, isUserView) {
+    const statusText = isUserView
+      ? (USER_STATUS_TEXT[item.status] || '审核中')
+      : ({ pending: '待审核', approved: '已采纳', rejected: '未采纳' }[item.status] || item.status);
+
+    detailModal.innerHTML = `
+      <div class="detail-head">
+        <h3>${escapeHtml(item.title)}</h3>
+        <button class="close-btn" data-close type="button">✕</button>
+      </div>
+      <div class="detail-meta">
+        <span class="tag">✍ ${escapeHtml(item.anonymous ? item.author + '（匿名）' : item.author)}</span>
+        <span class="tag">🕐 ${formatTime(item.createdAt)}</span>
+        <span class="tag">📝 ${item.content.length} 字</span>
+        <span class="tag">${statusText}</span>
+        ${isUserView && item.archived ? '<span class="tag">📦 历史投稿</span>' : ''}
+      </div>
+      <div class="detail-body">${escapeHtml(item.content)}</div>
+    `;
+    detailMask.classList.add('show');
+    detailModal.querySelector('[data-close]').addEventListener('click', closeDetail);
+  }
+  function closeDetail() { detailMask.classList.remove('show'); }
+  detailMask.addEventListener('click', (e) => { if (e.target === detailMask) closeDetail(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (detailMask.classList.contains('show')) closeDetail();
+      if (loginMask.classList.contains('show')) closeLogin();
+    }
+  });
+
+  /* ==========================================================
+     管理账号（主管理员）
+  ========================================================== */
+  const adminList = $('adminList');
+
+  function renderAdmins() {
+    if (!session || session.role !== 'super') return;
+
+    const admins = (Store.data && Store.data.admins) || [];
+
+    let html = `
+      <div class="admin-row">
+        <div class="admin-avatar">M</div>
+        <div class="admin-info">
+          <b>${escapeHtml(SUPER_ADMIN.username)}</b>
+          <small>主管理员 · 拥有网站所有权</small>
+        </div>
+        <span class="admin-tag super">主管理员</span>
+        <button class="btn-del" disabled title="主管理员不可删除">🔒</button>
+      </div>
+    `;
+
+    admins.forEach(a => {
+      html += `
+        <div class="admin-row">
+          <div class="admin-avatar">${escapeHtml(a.username.charAt(0).toUpperCase())}</div>
+          <div class="admin-info">
+            <b>${escapeHtml(a.username)}</b>
+            <small>创建于 ${a.createdAt ? formatTime(a.createdAt) : '—'}</small>
+          </div>
+          <span class="admin-tag normal">管理员</span>
+          <button class="btn-del" data-del="${escapeHtml(a.username)}" title="删除该管理员">✕</button>
+        </div>
+      `;
+    });
+
+    adminList.innerHTML = html;
+
+    adminList.querySelectorAll('[data-del]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const uname = btn.getAttribute('data-del');
+        if (!confirm(`确定要删除管理员「${uname}」吗？`)) return;
+        try {
+          Store.data.admins = (Store.data.admins || []).filter(a => a.username !== uname);
+          await Store.write(Store.data);
+          renderAdmins();
+          showToast('已删除');
+        } catch (e) { showToast('删除失败'); }
+      });
+    });
+
+    const binText = $('binIdText');
+    if (Store.binId && Store.binId !== 'local-only') {
+      binText.textContent = Store.binId;
+    } else {
+      binText.textContent = '本地模式（未连接 jsonbin）';
+    }
+  }
+
+  $('addAdminBtn').addEventListener('click', async () => {
+    if (!session || session.role !== 'super') return;
+
+    const uname = $('newAdminUser').value.trim();
+    const pass = $('newAdminPass').value;
+
+    if (!uname || !pass) { showToast('请填写用户名和密码'); return; }
+    if (uname.length < 2) { showToast('用户名至少 2 个字符'); return; }
+    if (pass.length < 6) { showToast('密码至少 6 位'); return; }
+    if (uname === SUPER_ADMIN.username) { showToast('该用户名已被占用'); return; }
+
+    try {
+      await Store.refresh();
+      if (!Array.isArray(Store.data.admins)) Store.data.admins = [];
+      if (Store.data.admins.find(a => a.username === uname)) {
+        showToast('该用户名已存在');
+        return;
+      }
+      Store.data.admins.push({
+        username: uname,
+        passwordHash: encodePass(pass),
+        createdAt: Date.now()
+      });
+      await Store.write(Store.data);
+      $('newAdminUser').value = '';
+      $('newAdminPass').value = '';
+      renderAdmins();
+      showToast('管理员已添加');
+    } catch (e) {
+      console.error(e);
+      showToast('添加失败');
+    }
+  });
+
+  $('copyBinBtn').addEventListener('click', async () => {
+    if (!Store.binId || Store.binId === 'local-only') {
+      showToast('当前没有可复制的 bin ID');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(Store.binId);
+      showToast('已复制 bin ID');
+    } catch (e) { showToast('复制失败'); }
+  });
+
+  /* ==========================================================
+     初始化
+  ========================================================== */
+  async function init() {
+    loadSession();
+    const ok = await Store.init();
+
+    applySession();
+    loadDraft();
+    updateCounts();
+    renderMySubs();
+
+    if (session && session.role === 'super') {
+      renderAdmins();
+    }
+
+    if (!ok) {
+      showToast('无法连接云端，数据将仅保存在本地');
+    }
+  }
+
+  init();
+
+})();
+</script>
+</body>
+</html>
