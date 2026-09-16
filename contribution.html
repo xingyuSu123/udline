@@ -609,6 +609,7 @@ main{
   border:1px solid var(--line-hi);
   flex-shrink:0;
   font-family:"Songti SC","Noto Serif SC",serif;
+  text-transform:uppercase;
 }
 .admin-info{flex:1;min-width:0}
 .admin-info b{font-size:.9rem;font-weight:700;display:block}
@@ -619,6 +620,7 @@ main{
   letter-spacing:.06em;text-transform:uppercase;
 }
 .admin-tag.super{background:var(--accent);color:#fff}
+.admin-tag.builtin{background:var(--accent-soft);color:var(--accent-2);border:1px solid var(--line-hi)}
 .admin-tag.normal{background:var(--card-hi);color:var(--ink-dim);border:1px solid var(--line)}
 .btn-del{
   width:32px;height:32px;border-radius:9px;
@@ -644,96 +646,6 @@ main{
   gap:10px;align-items:end;
 }
 @media (max-width:640px){.add-admin .row{grid-template-columns:1fr}}
-
-/* 数据存储面板（改版：显示 bin 状态 + 分享链接 + 手动切换） */
-.bin-info{
-  margin-top:24px;padding:20px 22px;
-  background:var(--card-hi);border:1px solid var(--line);
-  border-radius:14px;
-  font-size:.8rem;color:var(--ink-dim);
-}
-.bin-info > b{
-  display:block;font-weight:700;color:var(--ink);
-  margin-bottom:14px;font-size:.92rem;
-}
-.bin-row{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:8px;
-  min-width:0;
-}
-.bin-row .bin-label{
-  flex-shrink:0;
-  width:76px;
-  color:var(--ink-mute);
-  font-size:.74rem;
-  letter-spacing:.04em;
-}
-.bin-row code{
-  flex:1;min-width:0;
-  display:inline-block;
-  background:var(--card);border:1px solid var(--line);
-  border-radius:6px;padding:5px 9px;
-  font-size:.72rem;color:var(--accent-2);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  font-family:ui-monospace,Menlo,monospace;
-}
-.bin-row .copy{
-  flex-shrink:0;
-  padding:5px 11px;
-  border-radius:6px;background:var(--accent);color:#fff;
-  font-size:.68rem;font-weight:600;
-  transition:all .3s;
-}
-.bin-row .copy:hover{background:var(--accent-2)}
-.bin-status{
-  display:flex;align-items:center;gap:8px;
-  margin-top:14px;padding-top:14px;
-  border-top:1px dashed var(--line);
-  font-size:.78rem;
-}
-.bin-status .dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--ink-mute);
-  flex-shrink:0;
-  box-shadow:0 0 0 3px rgba(0,0,0,.03);
-}
-.bin-status.online .dot{background:var(--ok);box-shadow:0 0 0 3px rgba(92,122,58,.15)}
-.bin-status.offline .dot{background:var(--err);box-shadow:0 0 0 3px rgba(168,66,58,.15)}
-.bin-status.online #binStatusText{color:var(--ok)}
-.bin-status.offline #binStatusText{color:var(--err)}
-.bin-help{
-  margin-top:10px;font-size:.74rem;
-  color:var(--ink-mute);line-height:1.7;
-}
-.bin-advanced{
-  margin-top:14px;padding-top:12px;
-  border-top:1px dashed var(--line);
-}
-.bin-advanced summary{
-  cursor:pointer;font-size:.76rem;
-  color:var(--ink-dim);font-weight:600;
-  user-select:none;
-  transition:color .3s;
-  list-style:none;
-}
-.bin-advanced summary::-webkit-details-marker{display:none}
-.bin-advanced summary::before{
-  content:"▸ ";display:inline-block;
-  transition:transform .3s;
-  margin-right:2px;
-}
-.bin-advanced[open] summary::before{content:"▾ "}
-.bin-advanced summary:hover{color:var(--accent)}
-.bin-set-row{
-  display:flex;gap:8px;margin-top:10px;
-}
-.bin-set-row .input{
-  flex:1;font-size:.82rem;padding:9px 12px;
-}
-.bin-adv-hint{
-  margin-top:8px;font-size:.72rem;
-  color:var(--ink-mute);line-height:1.65;
-}
 
 /* 弹层 */
 .login-mask, .detail-mask{
@@ -847,8 +759,6 @@ main{
   .btn-primary{min-width:0}
   .form-actions{flex-direction:column}
   .footer{flex-direction:column;align-items:flex-start}
-  .bin-row{flex-wrap:wrap}
-  .bin-row .bin-label{width:100%}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
@@ -1028,7 +938,7 @@ main{
   <section class="panel" id="panel-accounts">
     <div class="panel-head">
       <h1>管理账号</h1>
-      <p>添加或删除普通管理员。主管理员拥有最高权限，不可被删除。</p>
+      <p>查看现有管理员，或添加新的普通管理员。内置的 8 位管理员不可删除。</p>
     </div>
 
     <div class="admin-list" id="adminList"></div>
@@ -1048,40 +958,6 @@ main{
           <span>添加</span>
         </button>
       </div>
-    </div>
-
-    <div class="bin-info">
-      <b>📦 数据存储（jsonbin.io）</b>
-
-      <div class="bin-row">
-        <span class="bin-label">当前 bin ID</span>
-        <code id="binIdText">加载中…</code>
-        <button class="copy" id="copyBinBtn" type="button">复制</button>
-      </div>
-
-      <div class="bin-row">
-        <span class="bin-label">分享链接</span>
-        <code id="shareUrlText">加载中…</code>
-        <button class="copy" id="copyShareBtn" type="button">复制</button>
-      </div>
-
-      <div class="bin-status" id="binStatus">
-        <span class="dot"></span>
-        <span id="binStatusText">正在检查…</span>
-      </div>
-
-      <div class="bin-help">
-        <p>把<b>分享链接</b>发给你要协作的管理员，他们打开后就能使用同一份数据、登录同一个后端。建议把链接发给每一个需要登录的管理员，确保大家的账号同步。</p>
-      </div>
-
-      <details class="bin-advanced">
-        <summary>手动设置 bin ID</summary>
-        <div class="bin-set-row">
-          <input class="input" type="text" id="manualBinId" placeholder="粘贴已有的 bin ID">
-          <button class="btn btn-ghost" id="setBinBtn" type="button" style="min-width:auto;padding:10px 18px">切换</button>
-        </div>
-        <p class="bin-adv-hint">如果你已经有一个 bin（例如从别处复制过 ID），粘贴到上面再切换。切换后页面会重新加载。</p>
-      </details>
     </div>
   </section>
 
@@ -1128,15 +1004,27 @@ main{
   /* ==========================================================
      配置
   ========================================================== */
-  // 想固定 bin（推荐部署后使用），把 ID 填到这里。
-  // 留空时，第一次打开会自动创建一个新 bin，并显示在「管理账号」面板里。
   const FIXED_BIN_ID = '';
 
   const JSONBIN_KEY = '$2a$10$8a1mjO5sFu4ZZetBfd6Npu5FC8s50I36xx70DBUjKenDK1AasAVOO';
   const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
   const BIN_STORE_KEY = 'mu-journal-bin-id';
 
+  // 主管理员（拥有网站所有权）
   const SUPER_ADMIN = { username: 'My_Underline', password: 'kk20140119' };
+
+  // 内置的 8 位普通管理员（密码统一为 202506）
+  // 这些账号直接内置在页面里，所以任何设备打开页面都能用它们登录
+  const BUILTIN_ADMINS = [
+    { username: 'cyj', password: '202506' },
+    { username: 'ldl', password: '202506' },
+    { username: 'qyh', password: '202506' },
+    { username: 'yjh', password: '202506' },
+    { username: 'zyy', password: '202506' },
+    { username: 'zcy', password: '202506' },
+    { username: 'xy',  password: '202506' },
+    { username: 'wyh', password: '202506' }
+  ];
 
   const DRAFT_KEY = 'mu-journal-draft';
   const SESSION_KEY = 'mu-journal-session';
@@ -1237,11 +1125,6 @@ main{
 
   /* ==========================================================
      jsonbin 数据层
-     关键修复：
-     1. 优先使用 FIXED_BIN_ID
-     2. 其次使用 URL 上的 ?bin= 参数（分享链接会带上它）
-     3. 再次使用 localStorage 里保存的
-     4. 都没有时，才创建新 bin（并显示在管理面板里，方便分享）
   ========================================================== */
   const Store = {
     binId: null,
@@ -1263,7 +1146,6 @@ main{
         this.binId = localStorage.getItem(BIN_STORE_KEY);
       }
 
-      // 尝试读取已有 bin
       if (this.binId && this.binId !== 'local-only') {
         try {
           const data = await this.read(this.binId);
@@ -1274,14 +1156,10 @@ main{
         } catch (e) {
           console.warn('读取 bin 失败', e);
           this.lastError = e.message || String(e);
-          // 读取失败：如果是 URL 指定的 bin，不要悄悄新建，让用户知道
-          if (urlBin) {
-            return false;
-          }
+          if (urlBin) return false;
         }
       }
 
-      // 创建新 bin
       try {
         this.data = await this.create();
         return true;
@@ -1326,7 +1204,6 @@ main{
 
     async write(data) {
       if (!this.binId || this.binId === 'local-only') {
-        // 本地模式：更新内存，但不写云端。返回 false 让调用方知道没有真正同步
         this.data = data;
         return false;
       }
@@ -1358,7 +1235,6 @@ main{
     }
   };
 
-  // 标准化 bin 结构，防止字段缺失导致报错
   function normalizeBin(data) {
     if (!data || typeof data !== 'object') data = {};
     if (!Array.isArray(data.submissions)) data.submissions = [];
@@ -1382,10 +1258,19 @@ main{
       else sessionStorage.removeItem(SESSION_KEY);
     } catch (e) {}
   }
+
+  // 登录校验：依次检查主管理员 → 内置管理员 → bin 里添加的管理员
   function checkLogin(username, password) {
+    // 1. 主管理员
     if (username === SUPER_ADMIN.username && password === SUPER_ADMIN.password) {
       return { username, role: 'super' };
     }
+    // 2. 内置的 8 位管理员
+    const builtin = BUILTIN_ADMINS.find(a => a.username === username && a.password === password);
+    if (builtin) {
+      return { username, role: 'admin', builtin: true };
+    }
+    // 3. bin 里主管理员后来添加的管理员
     if (Store.data && Array.isArray(Store.data.admins)) {
       const found = Store.data.admins.find(a => a.username === username);
       if (found && decodePass(found.passwordHash) === password) {
@@ -1394,6 +1279,7 @@ main{
     }
     return null;
   }
+
   function applySession() {
     const loginBtn = $('loginBtn');
     const userChip = $('userChip');
@@ -1476,11 +1362,9 @@ main{
     const p = loginPass.value;
     if (!u || !p) { loginError.textContent = '请输入用户名和密码'; return; }
 
-    // 登录前先拉一次云端数据，确保拿到的管理员账号是最新的
+    // 登录前拉一次云端数据，确保 bin 里添加的管理员是最新的
     if (Store.isOnline()) {
-      try {
-        await Store.refresh();
-      } catch (e) { /* 拉取失败就用本地缓存 */ }
+      try { await Store.refresh(); } catch (e) {}
     }
 
     const s = checkLogin(u, p);
@@ -1604,10 +1488,7 @@ main{
       };
 
       Store.data.submissions.push(item);
-
-      // 关键：write 返回 false 说明是本地模式，没有真正同步
       const synced = await Store.write(Store.data);
-
       addMySubId(item.id);
 
       form.reset();
@@ -1936,9 +1817,10 @@ main{
   function renderAdmins() {
     if (!session || session.role !== 'super') return;
 
-    const admins = (Store.data && Store.data.admins) || [];
+    let html = '';
 
-    let html = `
+    // 主管理员
+    html += `
       <div class="admin-row">
         <div class="admin-avatar">M</div>
         <div class="admin-info">
@@ -1950,6 +1832,23 @@ main{
       </div>
     `;
 
+    // 内置的 8 位管理员（不可删除）
+    BUILTIN_ADMINS.forEach(a => {
+      html += `
+        <div class="admin-row">
+          <div class="admin-avatar">${escapeHtml(a.username.charAt(0))}</div>
+          <div class="admin-info">
+            <b>${escapeHtml(a.username)}</b>
+            <small>内置管理员 · 任何设备均可登录</small>
+          </div>
+          <span class="admin-tag builtin">内置</span>
+          <button class="btn-del" disabled title="内置管理员不可删除">🔒</button>
+        </div>
+      `;
+    });
+
+    // bin 里后来添加的管理员
+    const admins = (Store.data && Store.data.admins) || [];
     admins.forEach(a => {
       html += `
         <div class="admin-row">
@@ -1977,80 +1876,16 @@ main{
           renderAdmins();
           showToast(synced ? '已删除' : '已删除（仅本地）');
         } catch (e) {
-          // 失败则回滚
           Store.data.admins = prev;
           console.error(e);
           showToast('删除失败：' + (e.message || '网络错误'));
         }
       });
     });
-
-    updateBinStatus();
   }
-
-  /* ==========================================================
-     数据存储面板状态
-  ========================================================== */
-  function updateBinStatus() {
-    const binText = $('binIdText');
-    const shareText = $('shareUrlText');
-    const statusWrap = $('binStatus');
-    const statusText = $('binStatusText');
-
-    if (Store.isOnline()) {
-      binText.textContent = Store.binId;
-      const url = new URL(location.href);
-      url.searchParams.set('bin', Store.binId);
-      url.hash = '';
-      shareText.textContent = url.toString();
-
-      statusWrap.classList.add('online');
-      statusWrap.classList.remove('offline');
-      statusText.textContent = '已连接云端，所有管理员共享同一份数据';
-    } else {
-      binText.textContent = '本地模式';
-      shareText.textContent = '无法生成分享链接';
-
-      statusWrap.classList.add('offline');
-      statusWrap.classList.remove('online');
-      statusText.textContent = '未连接云端，数据仅保存在本机，其他管理员看不到';
-    }
-  }
-
-  $('copyBinBtn').addEventListener('click', async () => {
-    if (!Store.isOnline()) { showToast('当前没有可复制的 bin ID'); return; }
-    try {
-      await navigator.clipboard.writeText(Store.binId);
-      showToast('已复制 bin ID');
-    } catch (e) { showToast('复制失败'); }
-  });
-
-  $('copyShareBtn').addEventListener('click', async () => {
-    if (!Store.isOnline()) { showToast('当前未连接云端，无法生成分享链接'); return; }
-    const url = new URL(location.href);
-    url.searchParams.set('bin', Store.binId);
-    url.hash = '';
-    try {
-      await navigator.clipboard.writeText(url.toString());
-      showToast('已复制分享链接，发给其他管理员即可');
-    } catch (e) { showToast('复制失败'); }
-  });
-
-  $('setBinBtn').addEventListener('click', () => {
-    const id = $('manualBinId').value.trim();
-    if (!id) { showToast('请输入 bin ID'); return; }
-    if (id === Store.binId) { showToast('已经是当前 bin'); return; }
-    try { localStorage.setItem(BIN_STORE_KEY, id); } catch (e) {}
-    const url = new URL(location.href);
-    url.searchParams.set('bin', id);
-    location.href = url.toString();
-  });
 
   /* ==========================================================
      添加管理员
-     关键修复：
-     - 添加前检查是否在线，离线则警告
-     - 写入失败时回滚内存数据，避免出现"看着成功其实没同步"
   ========================================================== */
   $('addAdminBtn').addEventListener('click', async () => {
     if (!session || session.role !== 'super') return;
@@ -2062,11 +1897,11 @@ main{
     if (uname.length < 2) { showToast('用户名至少 2 个字符'); return; }
     if (pass.length < 6) { showToast('密码至少 6 位'); return; }
     if (uname === SUPER_ADMIN.username) { showToast('该用户名已被占用'); return; }
+    if (BUILTIN_ADMINS.find(a => a.username === uname)) { showToast('该用户名已被内置管理员占用'); return; }
 
     const wasOnline = Store.isOnline();
 
     try {
-      // 拉最新数据，避免覆盖别人的操作
       await Store.refresh();
       if (!Store.data) throw new Error('数据未就绪');
 
@@ -2081,7 +1916,6 @@ main{
         createdAt: Date.now()
       };
 
-      // 备份当前状态用于回滚
       const prevAdmins = Store.data.admins.slice();
       Store.data.admins.push(newAdmin);
 
@@ -2089,7 +1923,6 @@ main{
       try {
         synced = await Store.write(Store.data);
       } catch (writeErr) {
-        // 云端写入失败：回滚内存，抛出
         Store.data.admins = prevAdmins;
         throw writeErr;
       }
@@ -2121,19 +1954,13 @@ main{
     loadDraft();
     updateCounts();
     renderMySubs();
-    updateBinStatus();
 
     if (session && session.role === 'super') {
       renderAdmins();
     }
 
-    if (!ok) {
-      // 数据层失败时给出更明确的提示
-      if (Store.lastError) {
-        showToast('云端连接失败：' + Store.lastError);
-      } else {
-        showToast('无法连接云端，数据将仅保存在本地');
-      }
+    if (!ok && Store.lastError) {
+      showToast('云端连接失败：' + Store.lastError);
     }
   }
 
