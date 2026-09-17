@@ -99,6 +99,54 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
 .field-label .req{color:var(--accent);font-weight:800;font-size:.9rem}
 .field-label .hint{margin-left:auto;font-weight:400;font-size:.72rem;color:var(--ink-mute);text-transform:none;letter-spacing:0}
 
+/* ============ 投稿类型选择（新增） ============ */
+.type-picker{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.type-picker{grid-template-columns:1fr}}
+.type-opt{
+  position:relative;display:flex;align-items:flex-start;gap:14px;
+  padding:18px 20px;border-radius:14px;
+  background:var(--card-hi);border:1.5px solid var(--line);
+  cursor:pointer;transition:all .4s var(--ease);user-select:none;
+}
+.type-opt:hover{border-color:var(--line-hi);transform:translateY(-2px)}
+.type-opt.active{
+  border-color:var(--accent);
+  background:linear-gradient(180deg,rgba(184,118,46,.08),rgba(184,118,46,.02));
+  box-shadow:0 0 0 3px rgba(184,118,46,.12),0 12px 26px -16px rgba(184,118,46,.5);
+}
+.type-opt .ico{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;
+  display:grid;place-items:center;font-size:1.15rem;
+  background:#fff;border:1px solid var(--line);
+  transition:all .4s var(--ease);
+}
+.type-opt.active .ico{
+  background:linear-gradient(135deg,var(--accent-soft),#fff);
+  border-color:var(--line-hi);
+}
+.type-opt .body{flex:1;min-width:0}
+.type-opt .name{font-size:.94rem;font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.type-opt .name .check{
+  width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line-hi);
+  background:#fff;display:grid;place-items:center;flex-shrink:0;
+  transition:all .3s var(--ease);
+}
+.type-opt.active .name .check{background:var(--accent);border-color:var(--accent)}
+.type-opt.active .name .check::after{
+  content:"";width:6px;height:6px;border-radius:50%;background:#fff;
+}
+.type-opt .desc{font-size:.76rem;color:var(--ink-mute);line-height:1.55}
+
+/* 经典品读提示 */
+.mode-hint{
+  display:none;align-items:center;gap:10px;
+  padding:12px 16px;border-radius:10px;font-size:.82rem;
+  background:var(--accent-soft);border:1px solid var(--line-hi);color:var(--accent-2);
+  margin-bottom:4px;
+}
+.mode-hint.show{display:flex}
+.mode-hint .ico{font-size:1rem;flex-shrink:0}
+
 .input,.textarea{width:100%;background:var(--card-hi);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:.94rem;color:var(--ink);outline:none;transition:border-color .3s var(--ease),box-shadow .3s var(--ease),background .3s var(--ease)}
 .input::placeholder,.textarea::placeholder{color:var(--ink-mute)}
 .input:focus,.textarea:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(184,118,46,.13)}
@@ -110,6 +158,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
 
 .check-row{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:12px;background:var(--card-hi);border:1px solid var(--line);cursor:pointer;transition:all .3s var(--ease)}
 .check-row:hover{border-color:var(--line-hi)}
+.check-row.hidden{display:none}
 .check-row input{display:none}
 .check-box{width:20px;height:20px;flex-shrink:0;border-radius:6px;border:1.5px solid var(--line-hi);background:#fff;display:grid;place-items:center;transition:all .3s var(--ease);margin-top:1px}
 .check-box::after{content:"";width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) scale(0);transition:transform .25s var(--ease);margin-top:-3px}
@@ -159,10 +208,10 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
 
 .my-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.78rem;color:var(--ink-mute);margin-bottom:12px}
 .my-meta span{display:flex;align-items:center;gap:5px}
+.my-tag{font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--accent-soft);border:1px solid var(--line-hi);color:var(--accent-2);letter-spacing:.02em}
 .my-preview{font-size:.86rem;color:var(--ink-dim);line-height:1.75;padding:12px 14px;border-radius:9px;background:var(--card-hi);border:1px solid var(--line);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-family:"Songti SC","Noto Serif SC",Georgia,serif}
 .my-card.archived .my-preview{background:var(--paper)}
 .my-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-
 .btn-sm{padding:7px 14px;border-radius:8px;font-size:.78rem;font-weight:600;transition:all .3s var(--ease)}
 .btn-sm.view{background:var(--card-hi);border:1px solid var(--line);color:var(--ink-dim)}
 .btn-sm.view:hover{border-color:var(--accent);color:var(--accent)}
@@ -241,7 +290,8 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
 .add-admin .row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
 @media (max-width:640px){.add-admin .row{grid-template-columns:1fr}}
 
-.login-mask,.detail-mask{position:fixed;inset:0;z-index:9997;background:rgba(44,36,22,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s}
+/* 弹层（新增 overscroll-behavior 防止滚动穿透） */
+.login-mask,.detail-mask{position:fixed;inset:0;z-index:9997;background:rgba(44,36,22,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s;overscroll-behavior:contain}
 .login-mask.show,.detail-mask.show{opacity:1;visibility:visible}
 .login-modal{width:min(400px,100%);background:var(--card);border:1px solid var(--line-hi);border-radius:16px;padding:32px 28px;box-shadow:0 40px 90px -40px rgba(80,55,20,.6);transform:scale(.96) translateY(10px);transition:transform .35s var(--ease)}
 .login-mask.show .login-modal{transform:none}
@@ -331,6 +381,44 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
 
     <div class="form-card">
       <form class="form-grid" id="submitForm" novalidate>
+
+        <!-- ============================================================
+             ✨ 新增：投稿类型选择（默认「自己创作」）
+        ============================================================ -->
+        <div class="field">
+          <label class="field-label">
+            <span>投稿类型</span><span class="req">*</span>
+          </label>
+          <div class="type-picker" id="typePicker">
+            <div class="type-opt active" data-type="original">
+              <div class="ico">✍️</div>
+              <div class="body">
+                <div class="name">
+                  <span class="check"></span>
+                  <span>自己创作</span>
+                </div>
+                <div class="desc">原创作品，可以是散文、小说、随笔、诗歌……</div>
+              </div>
+            </div>
+            <div class="type-opt" data-type="classic">
+              <div class="ico">📖</div>
+              <div class="body">
+                <div class="name">
+                  <span class="check"></span>
+                  <span>经典品读</span>
+                </div>
+                <div class="desc">读一段经典作品后写下的感受、赏析或延伸思考。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 经典品读提示 -->
+        <div class="mode-hint" id="classicHint">
+          <span class="ico">📖</span>
+          <span>你正在提交一篇经典作品的品读，无需确认原创，也无需选择匿名。</span>
+        </div>
+
         <div class="field-row">
           <div class="field">
             <label class="field-label" for="title">
@@ -353,7 +441,8 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
             <span>正文</span><span class="req">*</span>
             <span class="hint">不少于 30 字</span>
           </label>
-          <textarea class="textarea" id="content" placeholder="在这里写下你的作品……&#10;&#10;可以直接换行分段。"></textarea>
+          <!-- ✨ placeholder 已改为豆包提示 -->
+          <textarea class="textarea" id="content" placeholder="（如果觉得一个个打太麻烦，可以找豆包拍照提取文字🤔）"></textarea>
           <div class="char-counter" id="charCounter">
             <span class="count" id="charCount">0</span>
             <span>字</span>
@@ -361,13 +450,14 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
           </div>
         </div>
 
-        <label class="check-row">
+        <!-- 下面两个 check-row 会在「经典品读」时隐藏 -->
+        <label class="check-row" id="anonymousRow">
           <input type="checkbox" id="anonymous">
           <span class="check-box"></span>
           <span class="check-text"><b>匿名投稿</b> · 班刊上只显示笔名，不展示真实身份</span>
         </label>
 
-        <label class="check-row">
+        <label class="check-row" id="agreeRow">
           <input type="checkbox" id="agree">
           <span class="check-box"></span>
           <span class="check-text"><b>确认原创</b> · 本稿件为本人原创，未侵犯他人版权</span>
@@ -383,6 +473,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
             <span>清空</span>
           </button>
         </div>
+
       </form>
     </div>
   </section>
@@ -514,9 +605,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
 (() => {
   'use strict';
 
-  /* ============================================================
-     ✅ 已填入你的 Bin ID
-  ============================================================ */
+  /* ============ 配置 ============ */
   const FIXED_BIN_ID = '6aaa68cbac6210605ad3fb6b';
 
   const JSONBIN_KEY = '$2a$10$8a1mjO5sFu4ZZetBfd6Npu5FC8s50I36xx70DBUjKenDK1AasAVOO';
@@ -584,6 +673,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
   function uid(p){ return (p||'id') + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
   const USER_STATUS_TEXT = { pending:'审核中', approved:'已采纳', rejected:'未采纳' };
+  const TYPE_TEXT = { original: '自己创作', classic: '经典品读' };
 
   function getMySubIds(){
     try{ const raw = localStorage.getItem(MY_SUBS_KEY); const arr = raw ? JSON.parse(raw) : []; return Array.isArray(arr)?arr:[]; }
@@ -594,9 +684,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
     if (!list.includes(id)){ list.push(id); try{ localStorage.setItem(MY_SUBS_KEY, JSON.stringify(list)); }catch(e){} }
   }
 
-  /* ============================================================
-     jsonbin 数据层
-  ============================================================ */
+  /* ============ jsonbin ============ */
   const Store = {
     binId:null, data:null, lastError:null,
     async init(){
@@ -623,7 +711,6 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
         }
       }
 
-      // FIXED_BIN_ID 已设置时，如果读不到，就尝试写入初始化
       if (FIXED_BIN_ID) {
         try {
           this.data = normalizeBin({});
@@ -639,7 +726,6 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
         }
       }
 
-      // 无 FIXED_BIN_ID 时自动创建一个
       try {
         this.data = await this.create();
         if (this.binId && this.binId !== 'local-only') {
@@ -706,8 +792,55 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
   }
 
   /* ============================================================
-     会话
-  ============================================================ */
+     🔒 滚动锁定（新增）
+     ============================================================ */
+  let scrollLockCount = 0;
+  let savedScrollY = 0;
+
+  function lockScroll(){
+    if (scrollLockCount === 0){
+      savedScrollY = window.scrollY || window.pageYOffset || 0;
+      const body = document.body;
+      body.style.position = 'fixed';
+      body.style.top = `-${savedScrollY}px`;
+      body.style.left = '0';
+      body.style.right = '0';
+      body.style.width = '100%';
+      body.style.overflow = 'hidden';
+    }
+    scrollLockCount++;
+  }
+
+  function unlockScroll(){
+    if (scrollLockCount > 0) scrollLockCount--;
+    if (scrollLockCount === 0){
+      const body = document.body;
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      body.style.width = '';
+      body.style.overflow = '';
+      window.scrollTo(0, savedScrollY);
+    }
+  }
+
+  function openMask(id){
+    const el = $(id);
+    if (!el) return;
+    if (!el.classList.contains('show')) lockScroll();
+    el.classList.add('show');
+  }
+  function closeMask(id){
+    const el = $(id);
+    if (!el) return;
+    if (el.classList.contains('show')){
+      el.classList.remove('show');
+      unlockScroll();
+    }
+  }
+
+  /* ============ 会话 ============ */
   let session = null;
   function loadSession(){
     try{ const raw = sessionStorage.getItem(SESSION_KEY); if (raw) session = JSON.parse(raw); }catch(e){}
@@ -764,16 +897,14 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
     });
   });
 
-  /* ============================================================
-     登录
-  ============================================================ */
+  /* ============ 登录 ============ */
   const loginMask = $('loginMask');
   function openLogin(){
     $('loginUser').value = ''; $('loginPass').value = ''; $('loginError').textContent = '';
-    loginMask.classList.add('show');
+    openMask('loginMask');
     setTimeout(() => $('loginUser').focus(), 100);
   }
-  function closeLogin(){ loginMask.classList.remove('show'); }
+  function closeLogin(){ closeMask('loginMask'); }
   $('loginBtn').addEventListener('click', openLogin);
   $('loginCancel').addEventListener('click', closeLogin);
   loginMask.addEventListener('click', e => { if (e.target === loginMask) closeLogin(); });
@@ -795,13 +926,47 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
     session = null; saveSession(); applySession(); switchPanel('submit'); showToast('已退出登录');
   });
 
-  /* ============================================================
-     投稿表单
-  ============================================================ */
+  /* ============ 投稿表单 ============ */
   const form = $('submitForm');
   const titleEl = $('title'), authorEl = $('author'), contentEl = $('content');
   const anonEl = $('anonymous'), agreeEl = $('agree');
   const submitBtn = $('submitBtn'), formMsg = $('formMsg');
+
+  /* ============================================================
+     ✨ 投稿类型选择逻辑（新增）
+     默认：自己创作（显示「确认原创」+「匿名投稿」）
+     切换：经典品读（隐藏这两个复选框）
+     ============================================================ */
+  let currentType = 'original';
+
+  function setType(type){
+    currentType = type;
+    document.querySelectorAll('.type-opt').forEach(opt => {
+      opt.classList.toggle('active', opt.dataset.type === type);
+    });
+
+    if (type === 'classic'){
+      // 隐藏复选框 + 取消勾选
+      $('anonymousRow').classList.add('hidden');
+      $('agreeRow').classList.add('hidden');
+      anonEl.checked = false;
+      agreeEl.checked = false;
+      $('classicHint').classList.add('show');
+    } else {
+      // 显示复选框
+      $('anonymousRow').classList.remove('hidden');
+      $('agreeRow').classList.remove('hidden');
+      $('classicHint').classList.remove('show');
+    }
+    saveDraftSoon();
+  }
+
+  document.querySelectorAll('.type-opt').forEach(opt => {
+    opt.addEventListener('click', () => setType(opt.dataset.type));
+  });
+
+  /* 默认「自己创作」 */
+  setType('original');
 
   function updateCounts(){
     $('titleCount').textContent = titleEl.value.length;
@@ -818,6 +983,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
     draftTimer = setTimeout(() => {
       try{
         localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          type: currentType,
           title:titleEl.value, author:authorEl.value, content:contentEl.value,
           anonymous:anonEl.checked, savedAt:Date.now()
         }));
@@ -828,6 +994,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
     try{
       const raw = localStorage.getItem(DRAFT_KEY); if (!raw) return;
       const d = JSON.parse(raw);
+      if (d.type) setType(d.type);
       titleEl.value = d.title || ''; authorEl.value = d.author || '';
       contentEl.value = d.content || ''; anonEl.checked = !!d.anonymous;
       updateCounts();
@@ -847,7 +1014,8 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
     const content = contentEl.value.trim();
     if (content.length < MIN_CHARS){ showFormMsg(`✕ 正文至少需要 ${MIN_CHARS} 字`); return; }
     if (content.length > MAX_CHARS){ showFormMsg(`✕ 正文超过 ${MAX_CHARS} 字上限`); return; }
-    if (!agreeEl.checked){ showFormMsg('✕ 请勾选「确认原创」'); return; }
+    // 只有「自己创作」才需要勾选「确认原创」
+    if (currentType === 'original' && !agreeEl.checked){ showFormMsg('✕ 请勾选「确认原创」'); return; }
 
     submitBtn.disabled = true;
     const txt = submitBtn.querySelector('span');
@@ -859,10 +1027,11 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
       if (!Store.data) throw new Error('数据未就绪');
       const item = {
         id: uid('sub'),
+        type: currentType,
         title: titleEl.value.trim(),
         author: authorEl.value.trim(),
         content: contentEl.value.trim(),
-        anonymous: anonEl.checked,
+        anonymous: currentType === 'classic' ? false : anonEl.checked,
         status:'pending', archived:false,
         createdAt: Date.now(), updatedAt: Date.now()
       };
@@ -870,6 +1039,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
       const synced = await Store.write(Store.data);
       addMySubId(item.id);
       form.reset(); updateCounts();
+      setType('original');
       try{ localStorage.removeItem(DRAFT_KEY); }catch(e){}
 
       if (synced){
@@ -890,13 +1060,12 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
   $('clearBtn').addEventListener('click', () => {
     if (!confirm('确定清空当前内容吗？')) return;
     form.reset(); updateCounts(); hideFormMsg();
+    setType('original');
     try{ localStorage.removeItem(DRAFT_KEY); }catch(e){}
     showToast('已清空');
   });
 
-  /* ============================================================
-     我的投稿
-  ============================================================ */
+  /* ============ 我的投稿 ============ */
   const myActiveList = $('myActiveList'), myHistoryList = $('myHistoryList');
   const myHistorySection = $('myHistorySection');
 
@@ -904,6 +1073,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
 
   function buildMyCard(item, isArchived){
     const statusText = USER_STATUS_TEXT[item.status] || '审核中';
+    const typeText = TYPE_TEXT[item.type] || '自己创作';
     const preview = (item.content || '').slice(0, 140).replace(/\s+/g, ' ');
     const el = document.createElement('div');
     el.className = 'my-card' + (isArchived ? ' archived' : '');
@@ -914,6 +1084,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
         <span class="my-badge ${item.status}">${statusText}</span>
       </div>
       <div class="my-meta">
+        <span class="my-tag">${typeText}</span>
         <span>✍ ${escapeHtml(item.anonymous ? item.author + '（匿名）' : item.author)}</span>
         <span>🕐 ${formatTime(item.createdAt)}</span>
         <span>📝 ${item.content.length} 字</span>
@@ -965,9 +1136,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
   myActiveList.addEventListener('click', handleMyClick);
   myHistoryList.addEventListener('click', handleMyClick);
 
-  /* ============================================================
-     管理员：查看投稿
-  ============================================================ */
+  /* ============ 管理员：查看投稿 ============ */
   const subList = $('subList'), subSearch = $('subSearch');
   let currentFilter = 'all';
   document.querySelectorAll('.filter-chip').forEach(chip => {
@@ -1011,6 +1180,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
       el.className = 'sub-card';
       el.dataset.status = item.status;
       const preview = (item.content || '').slice(0, 160).replace(/\s+/g, ' ');
+      const typeText = TYPE_TEXT[item.type] || '自己创作';
       let btns = `<button class="btn-sm view" data-act="view" data-id="${item.id}">查看全文</button>`;
       if (item.status !== 'approved') btns += `<button class="btn-sm approve" data-act="approve" data-id="${item.id}">通过</button>`;
       if (item.status !== 'rejected') btns += `<button class="btn-sm reject" data-act="reject" data-id="${item.id}">拒绝</button>`;
@@ -1022,6 +1192,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
           <span class="status-badge ${item.status}">${st[item.status] || item.status}</span>
         </div>
         <div class="sub-meta">
+          <span class="my-tag">${typeText}</span>
           <span>✍ <b>${escapeHtml(item.anonymous ? item.author + '（匿名）' : item.author)}</b></span>
           <span>🕐 ${formatTime(item.createdAt)}</span>
           <span>📝 ${item.content.length} 字</span>
@@ -1061,20 +1232,20 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
     }
   });
 
-  /* ============================================================
-     详情弹层
-  ============================================================ */
+  /* ============ 详情弹层 ============ */
   const detailMask = $('detailMask'), detailModal = $('detailModal');
   function openDetail(item, isUserView){
     const statusText = isUserView
       ? (USER_STATUS_TEXT[item.status] || '审核中')
       : ({ pending:'待审核', approved:'已采纳', rejected:'未采纳' }[item.status] || item.status);
+    const typeText = TYPE_TEXT[item.type] || '自己创作';
     detailModal.innerHTML = `
       <div class="detail-head">
         <h3>${escapeHtml(item.title)}</h3>
         <button class="close-btn" data-close type="button">✕</button>
       </div>
       <div class="detail-meta">
+        <span class="tag">${typeText}</span>
         <span class="tag">✍ ${escapeHtml(item.anonymous ? item.author + '（匿名）' : item.author)}</span>
         <span class="tag">🕐 ${formatTime(item.createdAt)}</span>
         <span class="tag">📝 ${item.content.length} 字</span>
@@ -1083,18 +1254,16 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
       </div>
       <div class="detail-body">${escapeHtml(item.content)}</div>
     `;
-    detailMask.classList.add('show');
+    openMask('detailMask');
     detailModal.querySelector('[data-close]').addEventListener('click', closeDetail);
   }
-  function closeDetail(){ detailMask.classList.remove('show'); }
+  function closeDetail(){ closeMask('detailMask'); }
   detailMask.addEventListener('click', e => { if (e.target === detailMask) closeDetail(); });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape'){ if (detailMask.classList.contains('show')) closeDetail(); if (loginMask.classList.contains('show')) closeLogin(); }
   });
 
-  /* ============================================================
-     管理账号
-  ============================================================ */
+  /* ============ 管理账号 ============ */
   function renderAdmins(){
     if (!session || session.role !== 'super') return;
     const adminList = $('adminList');
@@ -1181,9 +1350,7 @@ main{max-width:1200px;margin:0 auto;padding:40px clamp(18px,4vw,32px) 80px;min-h
     }
   });
 
-  /* ============================================================
-     初始化
-  ============================================================ */
+  /* ============ 初始化 ============ */
   async function init(){
     loadSession();
     const ok = await Store.init();
