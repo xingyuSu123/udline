@@ -182,36 +182,8 @@ input,textarea,select{font-family:inherit}
 
 .topic-desc{
   font-size:.94rem;color:var(--text-dim);line-height:1.85;
-  max-width:720px;margin-bottom:34px;
+  max-width:720px;margin-bottom:8px;
 }
-
-.topic-sides{
-  display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;
-  padding-top:28px;border-top:1px dashed var(--border);
-}
-@media (max-width:640px){.topic-sides{grid-template-columns:1fr;gap:14px}}
-.side{
-  padding:20px 22px;border-radius:16px;position:relative;
-  transition:all .4s var(--ease);
-}
-.side.pro{background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.24)}
-.side.con{background:rgba(244,114,182,.07);border:1px solid rgba(244,114,182,.24)}
-.side:hover{transform:translateY(-3px)}
-.side-label{
-  font-size:.68rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
-  margin-bottom:8px;display:flex;align-items:center;gap:8px;
-}
-.side.pro .side-label{color:var(--blue)}
-.side.con .side-label{color:var(--accent-4)}
-.side-text{font-size:.95rem;font-weight:600;color:var(--text);line-height:1.6}
-.vs{
-  font-size:1.4rem;font-weight:900;letter-spacing:.05em;
-  color:var(--text-mute);
-  font-family:ui-monospace,Menlo,monospace;
-  padding:6px 14px;border-radius:14px;
-  background:var(--surface-hi);border:1px solid var(--border);
-}
-@media (max-width:640px){.vs{margin:0 auto}}
 
 .topic-actions{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:.85rem;font-weight:650;transition:all .4s var(--ease);cursor:pointer}
@@ -424,7 +396,6 @@ input,textarea,select{font-family:inherit}
 
 @media (max-width:640px){
   .brand .nav-sub{display:none}
-  .topic-sides{gap:14px}
   .view-head{align-items:flex-start}
   .to-top{right:16px;bottom:16px;width:44px;height:44px}
   .toast{bottom:22px;font-size:.78rem;padding:10px 16px}
@@ -486,17 +457,6 @@ input,textarea,select{font-family:inherit}
         </div>
         <h1 class="topic-title" id="topicTitle">加载中…</h1>
         <p class="topic-desc" id="topicDesc"></p>
-        <div class="topic-sides">
-          <div class="side pro">
-            <div class="side-label">◈ 正方</div>
-            <div class="side-text" id="sideAText">—</div>
-          </div>
-          <div class="vs">VS</div>
-          <div class="side con">
-            <div class="side-label">◈ 反方</div>
-            <div class="side-text" id="sideBText">—</div>
-          </div>
-        </div>
         <div class="topic-actions" id="topicAdminActions" style="display:none">
           <button class="btn btn-ghost" id="refreshTopicBtn">✨ 用 AI 换一个辩题</button>
           <button class="btn btn-ghost" id="adminPanelBtnTop">⚙ 管理面板</button>
@@ -979,7 +939,6 @@ async function callDeepSeek(){
   try {
     parsed = JSON.parse(content);
   } catch(e){
-    // 兼容偶尔返回 markdown 包裹的情况
     const match = content.match(/\{[\s\S]*\}/);
     if (!match) throw new Error('无法解析 JSON');
     parsed = JSON.parse(match[0]);
@@ -1049,9 +1008,7 @@ async function checkWeeklyAuto(){
   const currentWeek = getWeekKey();
   if (topicsData.weekly.lastGenWeek === currentWeek) return;
 
-  // 需要生成新辩题（本周未生成）
   if (!topicsData.weekly.currentTopicId){
-    // 首次访问：从 fallback 里选一个作为初始辩题，不调用 AI
     const fb = getRandomFallback();
     const topic = {
       id: uid('topic'),
@@ -1072,7 +1029,6 @@ async function checkWeeklyAuto(){
     return;
   }
 
-  // 已有辩题：周一自动用 AI 生成新辩题
   isGenerating = true;
   toast('正在用 AI 生成本周辩题…');
   try {
@@ -1127,7 +1083,6 @@ function applySession(){
     loginBtn.style.display = '';
   }
 
-  // 我的观点区
   if (session){
     $('viewNotice').style.display = 'none';
     $('viewForm').style.display = '';
@@ -1136,7 +1091,6 @@ function applySession(){
     $('viewForm').style.display = 'none';
   }
 
-  // 主管理员专属按钮
   $('topicAdminActions').style.display = isAdmin() ? '' : 'none';
 }
 
@@ -1155,8 +1109,6 @@ function renderTopic(){
   if (!topic){
     $('topicTitle').textContent = '暂无辩题';
     $('topicDesc').textContent = '等待主持人发布第一个辩题…';
-    $('sideAText').textContent = '—';
-    $('sideBText').textContent = '—';
     return;
   }
 
@@ -1164,8 +1116,6 @@ function renderTopic(){
 
   $('topicTitle').textContent = topic.title;
   $('topicDesc').textContent = topic.desc || '';
-  $('sideAText').textContent = topic.sideA;
-  $('sideBText').textContent = topic.sideB;
   $('pickSideA').textContent = topic.sideA;
   $('pickSideB').textContent = topic.sideB;
 
@@ -1253,13 +1203,11 @@ function renderViews(){
     }
   }
 
-  // 事件绑定
   document.querySelectorAll('[data-del-view]').forEach(btn => {
     btn.addEventListener('click', () => deleteView(btn.dataset.delView));
   });
   document.querySelectorAll('[data-edit-view]').forEach(btn => {
     btn.addEventListener('click', () => {
-      // 直接跳到输入区
       document.querySelector('.my-view').scrollIntoView({ behavior: 'smooth', block: 'start' });
       $('viewContent').focus();
     });
@@ -1270,7 +1218,6 @@ function buildViewItemHtml(v){
   const isMine = session && session.username === v.username;
   const isSuper = isAdmin();
   const sideClass = v.side === 'A' ? 'pro' : 'con';
-  const sideText = v.side === 'A' ? '正方' : '反方';
   const displayName = v.displayName || v.username;
   const avatarChar = displayName.charAt(0).toUpperCase();
   const edited = v.updatedAt && v.updatedAt > v.createdAt + 1000;
@@ -1318,11 +1265,9 @@ async function submitView(){
   span.textContent = '提交中…';
 
   try {
-    // 拉最新数据
     await loadAll();
 
     if (existing){
-      // 修改
       const item = viewsData.views.find(v => v.id === existing.id);
       if (item){
         item.side = pendingSide;
@@ -1333,7 +1278,6 @@ async function submitView(){
       await writeBin(BIN_VIEWS, viewsData);
       toast('观点已更新');
     } else {
-      // 新增
       const item = {
         id: uid('view'),
         topicId: currentTopicId,
@@ -1426,7 +1370,6 @@ function openUserInfo(){
   $('userInfoSub').textContent = `账号：${session.username} · ${roleMap[session.role] || '用户'}`;
 
   const myViews = viewsData.views.filter(v => v.username === session.username);
-  const myTopics = isAdmin() ? topicsData.topics.filter(t => t.createdBy === session.username) : [];
   const weekKey = getWeekKey();
 
   $('userInfoBody').innerHTML = `
@@ -1471,12 +1414,10 @@ async function saveDisplayName(){
     return;
   }
 
-  // 更新 session
   session.displayName = v;
   saveSession();
   applySession();
 
-  // 更新自己已发表观点里的 displayName（在本页面立即生效）
   try {
     await loadAll();
     let changed = false;
@@ -1637,12 +1578,10 @@ async function createManualTopic(){
    事件绑定
    ============================================================ */
 function bindEvents(){
-  // 导航
   $('brandBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   $('backToLib').addEventListener('click', () => { location.href = 'index.html'; });
   $('toTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  // 主题
   const savedTheme = localStorage.getItem('mu-theme');
   if (savedTheme) document.documentElement.dataset.theme = savedTheme;
   $('themeBtn').addEventListener('click', () => {
@@ -1651,7 +1590,6 @@ function bindEvents(){
     localStorage.setItem('mu-theme', next);
   });
 
-  // 登录
   $('loginBtn').addEventListener('click', openLogin);
   $('quickLogin').addEventListener('click', openLogin);
   $('loginSubmit').addEventListener('click', doLogin);
@@ -1659,7 +1597,6 @@ function bindEvents(){
   $('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginPass').focus(); });
   $('loginMask').addEventListener('click', e => { if (e.target === $('loginMask')) closeMask('loginMask'); });
 
-  // 用户信息
   $('userChip').addEventListener('click', openUserInfo);
   $('userMask').addEventListener('click', e => { if (e.target === $('userMask')) closeMask('userMask'); });
   $('logoutBtn').addEventListener('click', () => {
@@ -1678,7 +1615,6 @@ function bindEvents(){
   $('editNameSave').addEventListener('click', saveDisplayName);
   $('editNameMask').addEventListener('click', e => { if (e.target === $('editNameMask')) closeMask('editNameMask'); });
 
-  // 管理面板
   $('adminPanelBtn').addEventListener('click', () => {
     closeMask('userMask');
     setTimeout(() => openAdmin(), 80);
@@ -1686,7 +1622,6 @@ function bindEvents(){
   $('adminPanelBtnTop').addEventListener('click', openAdmin);
   $('adminMask').addEventListener('click', e => { if (e.target === $('adminMask')) closeMask('adminMask'); });
 
-  // 管理面板 tabs
   $$('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       $$('.tab').forEach(t => t.classList.remove('active'));
@@ -1696,7 +1631,6 @@ function bindEvents(){
     });
   });
 
-  // 每周一辩开关
   $('weeklyToggle').addEventListener('click', async () => {
     topicsData.weekly.enabled = !topicsData.weekly.enabled;
     renderWeeklyPanel();
@@ -1708,7 +1642,6 @@ function bindEvents(){
     }
   });
 
-  // 强制生成
   $('forceGenBtn').addEventListener('click', async () => {
     if (isGenerating){ toast('正在生成中…'); return; }
     if (!confirm('立即用 AI 生成一个新辩题并设为当前？')) return;
@@ -1734,10 +1667,8 @@ function bindEvents(){
     }
   });
 
-  // 新建辩题
   $('createTopicBtn').addEventListener('click', createManualTopic);
 
-  // 顶栏上的 AI 刷新
   $('refreshTopicBtn').addEventListener('click', async () => {
     if (!isAdmin()) return;
     if (isGenerating){ toast('正在生成中…'); return; }
@@ -1762,7 +1693,6 @@ function bindEvents(){
     }
   });
 
-  // 立场选择
   $$('.side-opt').forEach(opt => {
     opt.addEventListener('click', () => {
       pendingSide = opt.dataset.side;
@@ -1770,12 +1700,10 @@ function bindEvents(){
     });
   });
 
-  // 观点字数
   $('viewContent').addEventListener('input', e => {
     $('viewCount').textContent = e.target.value.length;
   });
 
-  // 提交观点
   $('submitViewBtn').addEventListener('click', submitView);
   $('clearViewBtn').addEventListener('click', () => {
     if (!confirm('清空输入内容？')) return;
@@ -1785,7 +1713,6 @@ function bindEvents(){
     $$('.side-opt').forEach(opt => opt.classList.remove('active'));
   });
 
-  // 观点墙筛选
   $$('.filter-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       $$('.filter-chip').forEach(c => c.classList.remove('active'));
@@ -1795,12 +1722,10 @@ function bindEvents(){
     });
   });
 
-  // 关闭按钮
   document.querySelectorAll('[data-close]').forEach(btn => {
     btn.addEventListener('click', () => closeMask(btn.dataset.close));
   });
 
-  // ESC
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape'){
       ['loginMask','userMask','editNameMask','adminMask'].forEach(id => {
@@ -1809,7 +1734,6 @@ function bindEvents(){
     }
   });
 
-  // 滚动
   let ticking = false;
   window.addEventListener('scroll', () => {
     if (!ticking){
@@ -1825,7 +1749,6 @@ function bindEvents(){
     }
   }, { passive: true });
 
-  // 光标光晕
   (function(){
     if (window.matchMedia('(hover: none)').matches) return;
     const el = $('glow');
@@ -1839,7 +1762,6 @@ function bindEvents(){
     })();
   })();
 
-  // 辩题卡片鼠标跟随
   const tc = $('topicCard');
   tc.addEventListener('mousemove', e => {
     const b = tc.getBoundingClientRect();
@@ -1847,7 +1769,6 @@ function bindEvents(){
     tc.style.setProperty('--my', ((e.clientY-b.top)/b.height*100)+'%');
   });
 
-  // 滚动出现
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(en => {
       if (en.isIntersecting){
@@ -1866,25 +1787,20 @@ async function init(){
   loadSession();
   bindEvents();
 
-  // 隐藏加载
   setTimeout(() => {
     $('loader').classList.add('done');
   }, 500);
 
-  // 加载云端数据
   await loadAll();
 
-  // 决定当前辩题
   currentTopicId = topicsData.weekly.currentTopicId;
   renderTopic();
   applySession();
   renderMyViewForm();
   renderViews();
 
-  // 检查每周一辩
   await checkWeeklyAuto();
 
-  // 如果刚才生成了新辩题，刷新界面
   renderTopic();
   renderMyViewForm();
   renderViews();
