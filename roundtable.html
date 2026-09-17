@@ -210,20 +210,44 @@ input,textarea,select{font-family:inherit}
 .view-head h2{font-size:1.1rem;font-weight:750;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
 .view-head h2::before{content:"";width:4px;height:1em;border-radius:2px;background:linear-gradient(180deg,var(--accent-3),var(--accent-2))}
 
-.side-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-@media (max-width:520px){.side-picker{grid-template-columns:1fr}}
+/* ============ 立场选择（只保留正方/反方） ============ */
+.side-picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+@media (max-width:520px){.side-picker{grid-template-columns:1fr 1fr}}
 .side-opt{
-  padding:16px 18px;border-radius:14px;border:1.5px solid var(--border);
-  background:var(--surface-hi);cursor:pointer;transition:all .4s var(--ease);
-  text-align:left;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:18px 16px;
+  border-radius:14px;
+  border:1.5px solid var(--border);
+  background:var(--surface-hi);
+  cursor:pointer;
+  transition:all .4s var(--ease);
+  user-select:none;
 }
 .side-opt:hover{border-color:var(--border-hi);transform:translateY(-2px)}
-.side-opt.active.pro{border-color:var(--blue);background:rgba(96,165,250,.1);box-shadow:0 0 0 3px rgba(96,165,250,.15)}
-.side-opt.active.con{border-color:var(--accent-4);background:rgba(244,114,182,.1);box-shadow:0 0 0 3px rgba(244,114,182,.15)}
-.side-opt .tag{font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;display:block}
+.side-opt .tag{
+  font-size:.95rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
 .side-opt.pro .tag{color:var(--blue)}
 .side-opt.con .tag{color:var(--accent-4)}
-.side-opt .text{font-size:.88rem;font-weight:600;color:var(--text)}
+.side-opt.active.pro{
+  border-color:var(--blue);
+  background:rgba(96,165,250,.12);
+  box-shadow:0 0 0 3px rgba(96,165,250,.18);
+}
+.side-opt.active.con{
+  border-color:var(--accent-4);
+  background:rgba(244,114,182,.12);
+  box-shadow:0 0 0 3px rgba(244,114,182,.18);
+}
+.side-opt.active.pro .tag,
+.side-opt.active.con .tag{
+  transform:scale(1.05);
+}
 
 .textarea{width:100%;background:var(--surface-hi);border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-size:.92rem;color:var(--text);outline:none;transition:all .3s var(--ease);min-height:130px;resize:vertical;line-height:1.8}
 .textarea::placeholder{color:var(--text-mute)}
@@ -240,7 +264,6 @@ input,textarea,select{font-family:inherit}
 .view-notice .link{color:var(--accent-3);cursor:pointer;font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .view-notice .link:hover{color:var(--accent-2)}
 
-/* 已提交的状态条 */
 .view-status{
   display:none;align-items:center;gap:10px;
   padding:12px 16px;border-radius:12px;font-size:.82rem;
@@ -278,7 +301,6 @@ input,textarea,select{font-family:inherit}
 .stat-box.all .num{color:var(--text)}
 .stat-box .label{font-size:.7rem;color:var(--text-mute);letter-spacing:.06em;margin-top:2px}
 
-/* 双栏对照（桌面端） */
 .wall-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media (max-width:820px){.wall-cols{grid-template-columns:1fr}}
 .wall-col-head{
@@ -316,7 +338,6 @@ input,textarea,select{font-family:inherit}
 .view-item-body{font-size:.85rem;color:var(--text-dim);line-height:1.75;white-space:pre-wrap;word-break:break-word}
 .view-item-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
 
-/* 空状态 */
 .empty-state{text-align:center;padding:44px 20px;border:1px dashed var(--border-hi);border-radius:16px;color:var(--text-mute);font-size:.88rem}
 .empty-state .ico{font-size:2.2rem;display:block;margin-bottom:10px;filter:grayscale(.4)}
 .empty-state p{color:var(--text-dim);margin-bottom:4px}
@@ -347,7 +368,6 @@ input,textarea,select{font-family:inherit}
 .form-msg.success{color:var(--ok);background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.28)}
 .form-msg.info{color:var(--accent-2);background:rgba(94,234,212,.08);border:1px solid rgba(94,234,212,.28)}
 
-/* 管理面板 */
 .tabs{display:flex;gap:4px;margin-bottom:22px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;overflow-x:auto}
 .tab{flex:1;padding:9px 14px;border-radius:9px;font-size:.8rem;font-weight:600;color:var(--text-dim);transition:all .35s var(--ease);text-align:center;cursor:pointer;white-space:nowrap}
 .tab:hover{color:var(--text)}
@@ -380,12 +400,10 @@ input,textarea,select{font-family:inherit}
 .topic-item-meta{font-size:.7rem;color:var(--text-mute);display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .topic-item-actions{display:flex;gap:6px;flex-wrap:wrap}
 
-/* ============ Toast ============ */
 .toast{position:fixed;left:50%;bottom:36px;z-index:9998;transform:translate(-50%,20px) scale(.94);display:flex;align-items:center;gap:9px;padding:12px 22px;border-radius:99px;font-size:.83rem;font-weight:500;color:var(--text);background:var(--surface-hi);border:1px solid var(--border-hi);-webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);box-shadow:0 18px 44px -18px rgba(0,0,0,.85);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s var(--ease),transform .5s var(--ease),visibility .4s;max-width:calc(100vw - 40px)}
 .toast.show{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1)}
 .toast .tick{width:18px;height:18px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent-3),var(--accent-2));color:#fff;font-size:.62rem;font-weight:900}
 
-/* ============ 页脚 ============ */
 .footer{border-top:1px solid var(--border);padding:32px 0 30px;margin-top:20px;font-size:.76rem;color:var(--text-mute)}
 .footer-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
 .footer a:hover{color:var(--accent-2);cursor:pointer}
@@ -486,11 +504,9 @@ input,textarea,select{font-family:inherit}
           <div class="side-picker" id="sidePicker">
             <div class="side-opt pro" data-side="A">
               <span class="tag">◈ 正方</span>
-              <span class="text" id="pickSideA">—</span>
             </div>
             <div class="side-opt con" data-side="B">
               <span class="tag">◈ 反方</span>
-              <span class="text" id="pickSideB">—</span>
             </div>
           </div>
 
@@ -715,7 +731,7 @@ const STUDENTS = [
 
 const SESSION_KEY = 'roundtable-session';
 
-/* Fallback 辩题库（DeepSeek 失败时使用） */
+/* Fallback 辩题库 */
 const FALLBACK_TOPICS = [
   { title:'网络的便利，值得我们放弃一部分隐私吗？', sideA:'值得，隐私换来的是效率和方便', sideB:'不值得，隐私是不可让渡的底线', desc:'人脸识别、定位、算法推荐……便利与隐私的博弈每天都在发生。' },
   { title:'AI 应该参与我们的日常决策吗？', sideA:'应该，AI 更理性、更少情绪化', sideB:'不应该，人应该为自己的选择负责', desc:'当 AI 能给出比我们更准的建议，我们还要不要自己判断？' },
@@ -745,10 +761,10 @@ const $$ = sel => document.querySelectorAll(sel);
    ============================================================ */
 let topicsData = { topics: [], weekly: { enabled: true, lastGenWeek: null, currentTopicId: null } };
 let viewsData  = { views: [] };
-let session = null;      // { username, role, displayName }
+let session = null;
 let currentTopicId = null;
 let currentFilter = 'all';
-let pendingSide = null;  // 用户选择的立场
+let pendingSide = null;
 let scrollLockCount = 0;
 let savedScrollY = 0;
 let isGenerating = false;
@@ -892,7 +908,7 @@ async function loadAll(){
 }
 
 /* ============================================================
-   DeepSeek 生成辩题
+   DeepSeek
    ============================================================ */
 async function callDeepSeek(){
   const sysPrompt = `你是一位中学辩论赛的命题人，擅长设计"两可性强、贴近学生生活、能引发深度思考"的辩题。`;
@@ -998,9 +1014,6 @@ async function generateNewTopic(source){
   return newTopic;
 }
 
-/* ============================================================
-   自动生成判断
-   ============================================================ */
 async function checkWeeklyAuto(){
   if (!topicsData.weekly.enabled) return;
   if (isGenerating) return;
@@ -1116,8 +1129,6 @@ function renderTopic(){
 
   $('topicTitle').textContent = topic.title;
   $('topicDesc').textContent = topic.desc || '';
-  $('pickSideA').textContent = topic.sideA;
-  $('pickSideB').textContent = topic.sideB;
 
   const srcMap = { ai: '✨ AI 生成', manual: '✏ 手动创建', fallback: '📚 预置辩题' };
   const srcEl = $('topicSource');
@@ -1128,7 +1139,7 @@ function renderTopic(){
 }
 
 /* ============================================================
-   渲染：我的观点输入区
+   我的观点
    ============================================================ */
 function getMyView(){
   if (!session || !currentTopicId) return null;
@@ -1159,7 +1170,7 @@ function renderMyViewForm(){
 }
 
 /* ============================================================
-   渲染：观点墙
+   观点墙
    ============================================================ */
 function renderViews(){
   if (!currentTopicId){
@@ -1306,7 +1317,7 @@ async function submitView(){
 }
 
 /* ============================================================
-   删除观点（仅主管理员）
+   删除观点
    ============================================================ */
 async function deleteView(id){
   if (!isAdmin()) return;
