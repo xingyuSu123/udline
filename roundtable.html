@@ -239,15 +239,6 @@ select.input:focus{background-color:var(--bg)}
 .panel.active{display:block;animation:fadeUp .35s var(--ease)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-.toggle-row{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:16px}
-.toggle-row .info{flex:1;min-width:0}
-.toggle-row .info h4{font-size:.9rem;font-weight:700;margin-bottom:3px}
-.toggle-row .info p{font-size:.76rem;color:var(--text-mute);line-height:1.55}
-.toggle{position:relative;width:48px;height:28px;border-radius:99px;background:var(--surface-hi);border:1px solid var(--border);cursor:pointer;transition:all .3s var(--ease);flex-shrink:0}
-.toggle::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--text-mute);transition:all .3s var(--ease-back)}
-.toggle.on{background:linear-gradient(135deg,var(--accent-3),var(--accent-2));border-color:transparent}
-.toggle.on::after{left:23px;background:#fff}
-
 .topic-item{padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin-bottom:10px;transition:all .3s var(--ease)}
 .topic-item:hover{border-color:var(--border-hi);background:var(--surface-hi)}
 .topic-item.current{border-color:var(--accent-3);background:rgba(167,139,250,.06)}
@@ -625,32 +616,13 @@ select.input:focus{background-color:var(--bg)}
     <p class="desc" id="adminSubtitle">—</p>
 
     <div class="tabs" id="adminTabs">
-      <div class="tab active" data-tab="weekly">📅 每周一辩</div>
-      <div class="tab" data-tab="new">➕ 新建辩题</div>
+      <div class="tab active" data-tab="new">➕ 新建辩题</div>
       <div class="tab" data-tab="list">📋 历史辩题</div>
       <div class="tab" data-tab="users" id="usersTabBtn" style="display:none">👥 用户管理</div>
     </div>
 
-    <!-- 每周一辩 -->
-    <div class="panel active" id="panelWeekly">
-      <div class="toggle-row">
-        <div class="info">
-          <h4>每周一辩 · 自动生成</h4>
-          <p>开启后，每周一自动用 AI 生成一个时事辩题。关闭则保持当前辩题不变。</p>
-        </div>
-        <div class="toggle" id="weeklyToggle"></div>
-      </div>
-      <div style="padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:.78rem;color:var(--text-dim);line-height:1.8">
-        <div>本周标识：<b id="currentWeekKey" style="color:var(--accent-3);font-family:ui-monospace,Menlo,monospace">—</b></div>
-        <div>上次生成：<b id="lastGenWeek" style="color:var(--text-dim);font-family:ui-monospace,Menlo,monospace">—</b></div>
-        <div style="margin-top:8px">
-          <button class="btn-mini primary" id="forceGenBtn">✨ 立即生成一个新辩题</button>
-        </div>
-      </div>
-    </div>
-
     <!-- 新建辩题 -->
-    <div class="panel" id="panelNew">
+    <div class="panel active" id="panelNew">
       <div class="field">
         <label class="field-label">辩题标题<span class="req">*</span></label>
         <input class="input" type="text" id="newTopicTitle" maxlength="80" placeholder="例如：网络的便利值得我们放弃一部分隐私吗？" autocomplete="off">
@@ -807,7 +779,7 @@ const SESSION_KEY = 'roundtable-session';
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
-let topicsData = { topics: [], weekly: { enabled: true, lastGenWeek: null, currentTopicId: null } };
+let topicsData = { topics: [], currentTopicId: null };
 let viewsData  = { views: [] };
 let usersData  = { users: {} };
 let session = null;
@@ -887,19 +859,6 @@ function formatRelative(ts){
   if (s < 86400*7) return Math.floor(s/86400) + ' 天前';
   return formatDate(ts).slice(0, 10);
 }
-function getWeekKey(date){
-  const d = date || new Date();
-  const target = new Date(d.valueOf());
-  const dayNr = (d.getDay() + 6) % 7;
-  target.setDate(target.getDate() - dayNr + 3);
-  const firstThursday = target.valueOf();
-  target.setMonth(0, 1);
-  if (target.getDay() !== 4){
-    target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
-  }
-  const week = 1 + Math.ceil((firstThursday - target) / 604800000);
-  return `${d.getFullYear()}-W${String(week).padStart(2,'0')}`;
-}
 
 let cachedIP = null;
 async function getIP(){
@@ -931,10 +890,12 @@ async function writeBin(binId, data){
 function normalizeTopics(d){
   if (!d || typeof d !== 'object') d = {};
   if (!Array.isArray(d.topics)) d.topics = [];
-  if (!d.weekly || typeof d.weekly !== 'object') d.weekly = {};
-  if (typeof d.weekly.enabled !== 'boolean') d.weekly.enabled = true;
-  if (typeof d.weekly.lastGenWeek !== 'string') d.weekly.lastGenWeek = null;
-  if (typeof d.weekly.currentTopicId !== 'string') d.weekly.currentTopicId = null;
+  if (typeof d.currentTopicId !== 'string') d.currentTopicId = null;
+  // 兼容旧结构：从 weekly.currentTopicId 迁移
+  if (!d.currentTopicId && d.weekly && typeof d.weekly === 'object' && typeof d.weekly.currentTopicId === 'string'){
+    d.currentTopicId = d.weekly.currentTopicId;
+  }
+  delete d.weekly;
   return d;
 }
 function normalizeViews(d){
@@ -965,7 +926,7 @@ async function loadAll(){
   try {
     const viewsPromise = loadAllViewsFromBins();
     const [t, u] = await Promise.all([
-      readBin(BIN_TOPICS).catch(() => ({topics:[], weekly:{enabled:true,lastGenWeek:null,currentTopicId:null}})),
+      readBin(BIN_TOPICS).catch(() => ({topics:[], currentTopicId:null})),
       readBin(BIN_USERS).catch(() => ({users:{}}))
     ]);
     topicsData = normalizeTopics(t);
@@ -1141,45 +1102,10 @@ async function generateNewTopic(source){
     newTopic.source = 'fallback';
   }
   topicsData.topics.push(newTopic);
-  topicsData.weekly.currentTopicId = newTopic.id;
-  topicsData.weekly.lastGenWeek = getWeekKey();
+  topicsData.currentTopicId = newTopic.id;
   await writeBin(BIN_TOPICS, topicsData);
   currentTopicId = newTopic.id;
   return newTopic;
-}
-
-async function checkWeeklyAuto(){
-  if (!topicsData.weekly.enabled) return;
-  if (isGenerating) return;
-  const currentWeek = getWeekKey();
-  if (topicsData.weekly.lastGenWeek === currentWeek) return;
-
-  if (!topicsData.weekly.currentTopicId){
-    const fb = getRandomFallback();
-    const topic = {
-      id: uid('topic'),
-      title: fb.title, sideA: fb.sideA, sideB: fb.sideB, desc: fb.desc,
-      source: 'fallback',
-      createdAt: Date.now(),
-      createdBy: 'system'
-    };
-    topicsData.topics.push(topic);
-    topicsData.weekly.currentTopicId = topic.id;
-    topicsData.weekly.lastGenWeek = currentWeek;
-    await writeBin(BIN_TOPICS, topicsData);
-    currentTopicId = topic.id;
-    return;
-  }
-
-  isGenerating = true;
-  toast('正在用 AI 生成本周辩题…');
-  try {
-    await generateNewTopic('ai');
-    toast('✨ 本周辩题已更新');
-    renderTopic();
-    renderViews();
-  } catch(e){ console.warn('自动生成失败', e); }
-  finally { isGenerating = false; }
 }
 
 function loadSession(){
@@ -1230,7 +1156,7 @@ function applySession(){
 }
 
 function getCurrentTopic(){
-  if (!currentTopicId) currentTopicId = topicsData.weekly.currentTopicId;
+  if (!currentTopicId) currentTopicId = topicsData.currentTopicId;
   return topicsData.topics.find(t => t.id === currentTopicId) || topicsData.topics[topicsData.topics.length - 1];
 }
 function renderTopic(){
@@ -1616,15 +1542,9 @@ async function doChangePwd(){
 function openAdmin(){
   if (!isAdmin()) return;
   $('adminSubtitle').textContent = session.role === 'super' ? '主管理员 · ' + session.username : '管理员 · ' + session.username;
-  renderWeeklyPanel();
   renderTopicList();
   renderUserList();
   openMask('adminMask');
-}
-function renderWeeklyPanel(){
-  $('currentWeekKey').textContent = getWeekKey();
-  $('lastGenWeek').textContent = topicsData.weekly.lastGenWeek || '未生成';
-  $('weeklyToggle').classList.toggle('on', topicsData.weekly.enabled);
 }
 function renderTopicList(){
   const list = $('topicList');
@@ -1636,7 +1556,7 @@ function renderTopicList(){
   const srcMap = { ai: '✨ AI 生成', manual: '✏ 手动', fallback: '📚 预置' };
   list.innerHTML = '';
   topics.forEach(t => {
-    const isCurrent = t.id === topicsData.weekly.currentTopicId;
+    const isCurrent = t.id === topicsData.currentTopicId;
     const el = document.createElement('div');
     el.className = 'topic-item' + (isCurrent ? ' current' : '');
     el.innerHTML = `
@@ -1885,7 +1805,7 @@ async function deleteCustomUser(username){
 
 async function setCurrentTopic(id){
   try {
-    topicsData.weekly.currentTopicId = id;
+    topicsData.currentTopicId = id;
     currentTopicId = id;
     await writeBin(BIN_TOPICS, topicsData);
     toast('已切换当前辩题');
@@ -1900,10 +1820,10 @@ async function deleteTopic(id){
   if (!confirm('删除这个辩题？相关观点不会被删除。')) return;
   try {
     topicsData.topics = topicsData.topics.filter(t => t.id !== id);
-    if (topicsData.weekly.currentTopicId === id){
-      topicsData.weekly.currentTopicId = topicsData.topics[topicsData.topics.length - 1].id;
+    if (topicsData.currentTopicId === id){
+      topicsData.currentTopicId = topicsData.topics[topicsData.topics.length - 1].id;
     }
-    currentTopicId = topicsData.weekly.currentTopicId;
+    currentTopicId = topicsData.currentTopicId;
     await writeBin(BIN_TOPICS, topicsData);
     toast('已删除');
     renderTopic();
@@ -1934,7 +1854,7 @@ async function createManualTopic(){
       createdBy: session.username
     };
     topicsData.topics.push(topic);
-    topicsData.weekly.currentTopicId = topic.id;
+    topicsData.currentTopicId = topic.id;
     currentTopicId = topic.id;
     await writeBin(BIN_TOPICS, topicsData);
     toast('已创建并设为当前辩题');
@@ -2023,40 +1943,6 @@ function bindEvents(){
       tab.classList.add('active');
       $('panel' + tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1)).classList.add('active');
     });
-  });
-
-  $('weeklyToggle').addEventListener('click', async () => {
-    topicsData.weekly.enabled = !topicsData.weekly.enabled;
-    renderWeeklyPanel();
-    try {
-      await writeBin(BIN_TOPICS, topicsData);
-      toast(topicsData.weekly.enabled ? '已开启每周一辩' : '已关闭每周一辩');
-    } catch(e){ toast('保存失败'); }
-  });
-
-  $('forceGenBtn').addEventListener('click', async () => {
-    if (isGenerating){ toast('正在生成中…'); return; }
-    if (!confirm('立即用 AI 生成一个新辩题并设为当前？')) return;
-    isGenerating = true;
-    const btn = $('forceGenBtn');
-    const orig = btn.textContent;
-    btn.textContent = '生成中…';
-    btn.disabled = true;
-    try {
-      await generateNewTopic('ai');
-      toast('✨ 已生成新辩题');
-      renderTopic();
-      renderMyViewForm();
-      renderViews();
-      renderTopicList();
-      renderWeeklyPanel();
-    } catch(e){
-      toast('生成失败：' + (e.message || '网络错误'));
-    } finally {
-      btn.textContent = orig;
-      btn.disabled = false;
-      isGenerating = false;
-    }
   });
 
   $('createTopicBtn').addEventListener('click', createManualTopic);
@@ -2191,15 +2077,9 @@ async function init(){
 
   await loadAll();
 
-  currentTopicId = topicsData.weekly.currentTopicId;
+  currentTopicId = topicsData.currentTopicId;
   renderTopic();
   applySession();
-  renderMyViewForm();
-  renderViews();
-
-  await checkWeeklyAuto();
-
-  renderTopic();
   renderMyViewForm();
   renderViews();
 
