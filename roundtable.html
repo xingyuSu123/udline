@@ -254,7 +254,6 @@ input,textarea,select{font-family:inherit}
 .topic-item-meta{font-size:.7rem;color:var(--text-mute);display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .topic-item-actions{display:flex;gap:6px;flex-wrap:wrap}
 
-/* 用户管理 */
 .user-toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
 .user-toolbar .search{flex:1;min-width:180px;display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:10px;background:var(--surface);border:1px solid var(--border);transition:all .3s var(--ease)}
 .user-toolbar .search:focus-within{border-color:var(--accent-3);box-shadow:0 0 0 3px rgba(167,139,250,.13)}
@@ -693,7 +692,6 @@ const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
 const DEEPSEEK_KEY = 'sk-c633bb7dd6c4f86aeac943a8936ba93';
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
-/* 账号 */
 const SUPER_ADMIN = { username: 'My_Underline', password: 'kk20140119', role: 'super' };
 
 const BASE_ACCOUNTS = [
@@ -767,9 +765,6 @@ const SESSION_KEY = 'roundtable-session';
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
-/* ============================================================
-   状态
-   ============================================================ */
 let topicsData = { topics: [], weekly: { enabled: true, lastGenWeek: null, currentTopicId: null } };
 let viewsData  = { views: [] };
 let usersData  = { users: {} };
@@ -783,9 +778,6 @@ let savedScrollY = 0;
 let isGenerating = false;
 let pendingActivateUser = null;
 
-/* ============================================================
-   滚动锁定
-   ============================================================ */
 function lockScroll(){
   if (scrollLockCount === 0){
     savedScrollY = window.scrollY || 0;
@@ -825,7 +817,6 @@ function closeMask(id){
   }
 }
 
-/* Toast */
 let toastTimer = null;
 function toast(text){
   $('toastText').textContent = text || '已完成';
@@ -834,7 +825,6 @@ function toast(text){
   toastTimer = setTimeout(() => $('toast').classList.remove('show'), 2400);
 }
 
-/* 工具 */
 function escapeHtml(str){
   return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -880,7 +870,6 @@ async function getIP(){
   return cachedIP;
 }
 
-/* jsonbin */
 async function readBin(binId){
   const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, { headers: { 'X-Master-Key': JSONBIN_KEY } });
   if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -933,7 +922,6 @@ async function loadAll(){
   }
 }
 
-/* 账号 */
 function findBaseAccount(username){
   return BASE_ACCOUNTS.find(a => a.username === username) || null;
 }
@@ -951,7 +939,6 @@ function isActivated(username){
   return !!(cloud && cloud.activated);
 }
 
-/* DeepSeek */
 async function callDeepSeek(){
   const sysPrompt = `你是一位中学辩论赛的命题人，擅长设计"两可性强、贴近学生生活、能引发深度思考"的辩题。`;
   const userPrompt = `请生成一个适合中学生讨论的辩题，要求：
@@ -1073,7 +1060,6 @@ async function checkWeeklyAuto(){
   finally { isGenerating = false; }
 }
 
-/* 会话 */
 function loadSession(){
   try{ const raw = localStorage.getItem(SESSION_KEY); if (raw) session = JSON.parse(raw); }catch(e){}
 }
@@ -1120,7 +1106,6 @@ function applySession(){
   $('usersTabBtn').style.display = isAdmin() ? '' : 'none';
 }
 
-/* 渲染：辩题 */
 function getCurrentTopic(){
   if (!currentTopicId) currentTopicId = topicsData.weekly.currentTopicId;
   return topicsData.topics.find(t => t.id === currentTopicId) || topicsData.topics[topicsData.topics.length - 1];
@@ -1142,7 +1127,6 @@ function renderTopic(){
   $('topicWeek').textContent = topic.createdAt ? formatRelative(topic.createdAt) : '';
 }
 
-/* 我的观点 */
 function getMyView(){
   if (!session || !currentTopicId) return null;
   return viewsData.views.find(v => v.topicId === currentTopicId && v.username === session.username) || null;
@@ -1170,7 +1154,6 @@ function renderMyViewForm(){
   $('myViewHint').textContent = '';
 }
 
-/* 观点墙 */
 function renderViews(){
   if (!currentTopicId){
     $('wallPro').innerHTML = '<div class="empty-state"><span class="ico">💭</span><p>暂无辩题</p></div>';
@@ -1245,7 +1228,6 @@ function buildViewItemHtml(v){
   `;
 }
 
-/* 提交观点 */
 async function submitView(){
   if (!session){ toast('请先登录'); return; }
   if (!currentTopicId){ toast('当前没有辩题'); return; }
@@ -1311,7 +1293,6 @@ async function deleteView(id){
   } catch(e){ toast('删除失败'); }
 }
 
-/* 登录 */
 function openLogin(){
   $('loginUser').value = '';
   $('loginPass').value = '';
@@ -1334,7 +1315,6 @@ async function doLogin(){
 
   await loadAll();
 
-  // 主管理员
   if (u === SUPER_ADMIN.username){
     if (p !== SUPER_ADMIN.password){
       msg.className = 'form-msg show error';
@@ -1351,7 +1331,6 @@ async function doLogin(){
     return;
   }
 
-  // 学生 / 老师
   const base = findBaseAccount(u);
   if (!base){
     msg.className = 'form-msg show error';
@@ -1424,7 +1403,6 @@ async function doActivateChangePwd(){
   }
 }
 
-/* 用户信息 */
 function openUserInfo(){
   if (!session) return;
   $('userInfoTitle').textContent = session.username;
@@ -1451,7 +1429,6 @@ function openUserInfo(){
     html += `
       <div style="margin-top:12px;font-size:.75rem;color:var(--text-mute);line-height:1.9">
         <div>最后登录：${formatDate(cloud.lastLoginAt)}</div>
-        <div>登录 IP：<span class="mono" style="font-family:ui-monospace,Menlo,monospace">${escapeHtml(cloud.lastLoginIp || '—')}</span></div>
       </div>
     `;
   }
@@ -1461,7 +1438,6 @@ function openUserInfo(){
   openMask('userMask');
 }
 
-/* 用户自己改密码 */
 function openChangePwd(){
   $('oldPass').value = '';
   $('newPass').value = '';
@@ -1512,7 +1488,6 @@ async function doChangePwd(){
   }
 }
 
-/* 管理面板 */
 function openAdmin(){
   if (!isAdmin()) return;
   $('adminSubtitle').textContent = session.role === 'super' ? '主管理员 · ' + session.username : '管理员 · ' + session.username;
@@ -1564,9 +1539,8 @@ function renderTopicList(){
   });
 }
 
-/* 用户管理 */
+/* 用户管理 —— IP 只对主管理员显示 */
 function renderUserList(){
-  // 统计
   const total = BASE_ACCOUNTS.length;
   let activeCount = 0;
   BASE_ACCOUNTS.forEach(a => { if (isActivated(a.username)) activeCount++; });
@@ -1574,7 +1548,6 @@ function renderUserList(){
   $('ustatActive').textContent = activeCount;
   $('ustatInactive').textContent = total - activeCount;
 
-  // 筛选
   const q = ($('userSearch').value || '').trim().toLowerCase();
   let filtered = BASE_ACCOUNTS.slice();
   if (currentUserFilter === 'active') filtered = filtered.filter(a => isActivated(a.username));
@@ -1582,17 +1555,21 @@ function renderUserList(){
   if (q){
     filtered = filtered.filter(a => {
       const cloud = getCloudUser(a.username);
-      const hay = (a.username + ' ' + ((cloud && cloud.lastLoginIp) || '')).toLowerCase();
+      // 管理员搜索时，IP 不参与匹配（因为看不到）
+      const hay = isSuper()
+        ? (a.username + ' ' + ((cloud && cloud.lastLoginIp) || '')).toLowerCase()
+        : a.username.toLowerCase();
       return hay.includes(q);
     });
   }
 
-  // 分组：主管理员（仅主管理员可见） + 管理员 + 学生
   const admins = filtered.filter(a => a.role === 'admin');
   const students = filtered.filter(a => a.role === 'student');
 
   const list = $('userList');
   list.innerHTML = '';
+
+  const showIP = isSuper(); // 只有主管理员能看到 IP
 
   const buildCard = (a, isSuperRecord) => {
     const cloud = getCloudUser(a.username);
@@ -1634,7 +1611,7 @@ function renderUserList(){
         ${cloud && cloud.lastLoginAt ? `
           <div class="user-info-row">
             <span>最后登录：${formatDate(cloud.lastLoginAt)}</span>
-            <span>IP：<b>${escapeHtml(cloud.lastLoginAt ? (cloud.lastLoginIp || '—') : '—')}</b></span>
+            ${showIP ? `<span>IP：<b>${escapeHtml(cloud.lastLoginIp || '—')}</b></span>` : ''}
           </div>
         ` : ''}
         ${actions ? `<div class="user-card-actions">${actions}</div>` : ''}
@@ -1643,7 +1620,6 @@ function renderUserList(){
     return card;
   };
 
-  // 主管理员分组（仅主管理员自己登录时可见）
   if (isSuper()){
     const st = document.createElement('div');
     st.className = 'user-section-title';
@@ -1656,7 +1632,6 @@ function renderUserList(){
     }, true));
   }
 
-  // 管理员分组
   if (admins.length){
     const st = document.createElement('div');
     st.className = 'user-section-title';
@@ -1665,7 +1640,6 @@ function renderUserList(){
     admins.forEach(a => list.appendChild(buildCard(a, false)));
   }
 
-  // 学生分组
   if (students.length){
     const st = document.createElement('div');
     st.className = 'user-section-title';
@@ -1718,7 +1692,6 @@ async function saveAdminChangePwd(){
   }
 }
 
-/* 辩题操作 */
 async function setCurrentTopic(id){
   try {
     topicsData.weekly.currentTopicId = id;
@@ -1788,7 +1761,6 @@ async function createManualTopic(){
   }
 }
 
-/* 事件绑定 */
 function bindEvents(){
   $('brandBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   $('backToLib').addEventListener('click', () => { location.href = 'index.html'; });
@@ -2014,7 +1986,6 @@ function bindEvents(){
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 }
 
-/* 初始化 */
 async function init(){
   loadSession();
   bindEvents();
