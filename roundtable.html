@@ -716,8 +716,17 @@ select.input:focus{background-color:var(--bg)}
    配置
    ============================================================ */
 const BIN_TOPICS = '6aab8577ac6210605ad72f3e';
-const BIN_VIEWS  = '6aab859fac6210605ad72fd1';
 const BIN_USERS  = '6aace8ceffd5d1605314f3aa';
+
+// 观点存储：可以加多个 Bin，代码会自动找还有空间的写入
+const BIN_VIEWS_LIST = [
+  '6aad04acffd5d16053154c28',
+  '6aad05c4ac6210605adbc08e',
+  '6aad05d4ac6210605adbc0c1'
+];
+
+// 单个 Bin 的写入阈值（JSONBin 免费上限 100KB，留点余量）
+const VIEWS_MAX_BYTES = 90 * 1024;
 
 const JSONBIN_KEY  = '$2a$10$8a1mjO5sFu4ZZetBfd6Npu5FC8s50I36xx70DBUjKenDK1AasAVOO';
 const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
@@ -939,23 +948,82 @@ function normalizeUsers(d){
   return d;
 }
 
+/* ---------- 多 Bin 观点读取 / 写入 ---------- */
+async function loadAllViewsFromBins(){
+  const results = await Promise.all(
+    BIN_VIEWS_LIST.map(id => readBin(id).catch(() => ({ views: [] })))
+  );
+  const merged = { views: [] };
+  results.forEach(r => {
+    const n = normalizeViews(r);
+    merged.views.push(...n.views);
+  });
+  return merged;
+}
+
 async function loadAll(){
   try {
-    const [t, v, u] = await Promise.all([
+    const viewsPromise = loadAllViewsFromBins();
+    const [t, u] = await Promise.all([
       readBin(BIN_TOPICS).catch(() => ({topics:[], weekly:{enabled:true,lastGenWeek:null,currentTopicId:null}})),
-      readBin(BIN_VIEWS).catch(() => ({views:[]})),
       readBin(BIN_USERS).catch(() => ({users:{}}))
     ]);
     topicsData = normalizeTopics(t);
-    viewsData = normalizeViews(v);
     usersData = normalizeUsers(u);
+    viewsData = await viewsPromise;
   } catch(e){
     console.error('加载失败', e);
     toast('数据加载失败');
   }
 }
 
-/* ---------- 账号体系：内置名单 + 云端自定义账号 ---------- */
+async function findWritableViewsBin(extraBytes){
+  for (const id of BIN_VIEWS_LIST){
+    const raw = await readBin(id).catch(() => null);
+    const data = normalizeViews(raw || { views: [] });
+    const size = JSON.stringify(data).length;
+    if (size + extraBytes < VIEWS_MAX_BYTES){
+      return { binId: id, data, size };
+    }
+  }
+  return null;
+}
+
+async function appendViewToBins(item){
+  const extra = JSON.stringify(item).length + 50;
+  const slot = await findWritableViewsBin(extra);
+  if (!slot) throw new Error('所有观点存储桶已满，请到代码里加新的 BIN_VIEWS_LIST');
+  slot.data.views.push(item);
+  await writeBin(slot.binId, slot.data);
+}
+
+async function updateViewInBins(viewId, newItem){
+  for (const binId of BIN_VIEWS_LIST){
+    const data = normalizeViews(await readBin(binId).catch(() => ({ views: [] })));
+    const idx = data.views.findIndex(v => v.id === viewId);
+    if (idx >= 0){
+      data.views[idx] = newItem;
+      await writeBin(binId, data);
+      return true;
+    }
+  }
+  return false;
+}
+
+async function deleteViewFromBins(viewId){
+  for (const binId of BIN_VIEWS_LIST){
+    const data = normalizeViews(await readBin(binId).catch(() => ({ views: [] })));
+    const idx = data.views.findIndex(v => v.id === viewId);
+    if (idx >= 0){
+      data.views.splice(idx, 1);
+      await writeBin(binId, data);
+      return true;
+    }
+  }
+  return false;
+}
+
+/* ---------- 账号体系 ---------- */
 function getCustomUsers(){
   const out = [];
   Object.keys(usersData.users).forEach(name => {
@@ -1301,15 +1369,16 @@ async function submitView(){
   span.textContent = '提交中…';
 
   try {
-    await loadAll();
     if (existing){
-      const item = viewsData.views.find(v => v.id === existing.id);
-      if (item){
-        item.side = pendingSide;
-        item.content = content;
-        item.updatedAt = Date.now();
-      }
-      await writeBin(BIN_VIEWS, viewsData);
+      const newItem = {
+        ...existing,
+        side: pendingSide,
+        content,
+        topicTitle,
+        updatedAt: Date.now()
+      };
+      const ok = await updateViewInBins(existing.id, newItem);
+      if (!ok) throw new Error('未找到原观点');
       toast('观点已更新');
     } else {
       const item = {
@@ -1322,10 +1391,10 @@ async function submitView(){
         createdAt: Date.now(),
         updatedAt: Date.now()
       };
-      viewsData.views.push(item);
-      await writeBin(BIN_VIEWS, viewsData);
+      await appendViewToBins(item);
       toast('观点已发表');
     }
+    await loadAll();
     renderViews();
     renderMyViewForm();
   } catch(e){
@@ -1341,8 +1410,9 @@ async function deleteView(id){
   if (!isAdmin()) return;
   if (!confirm('确定删除这条观点吗？')) return;
   try {
-    viewsData.views = viewsData.views.filter(v => v.id !== id);
-    await writeBin(BIN_VIEWS, viewsData);
+    const ok = await deleteViewFromBins(id);
+    if (!ok){ toast('未找到该观点'); return; }
+    await loadAll();
     toast('已删除');
     renderViews();
   } catch(e){ toast('删除失败'); }
