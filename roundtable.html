@@ -211,6 +211,8 @@ input,textarea,select{font-family:inherit}
 .input{width:100%;background:var(--surface-hi);border:1px solid var(--border);border-radius:11px;padding:12px 15px;font-size:.9rem;color:var(--text);outline:none;transition:all .3s var(--ease)}
 .input::placeholder{color:var(--text-mute)}
 .input:focus{border-color:var(--accent-3);background:var(--bg);box-shadow:0 0 0 3px rgba(167,139,250,.13)}
+select.input{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--text-mute) 50%),linear-gradient(135deg,var(--text-mute) 50%,transparent 50%);background-position:calc(100% - 19px) calc(50% - 2px),calc(100% - 14px) calc(50% - 2px);background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:40px}
+select.input:focus{background-color:var(--bg)}
 .modal-actions{display:flex;gap:10px;margin-top:6px}
 .modal-actions .btn{flex:1;padding:11px 20px;font-size:.85rem;justify-content:center}
 .modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--surface-hi);border:1px solid var(--border);color:var(--text-dim);font-size:1rem;transition:all .3s var(--ease);cursor:pointer}
@@ -306,6 +308,7 @@ input,textarea,select{font-family:inherit}
 .user-role-tag.student{background:var(--surface-hi);border:1px solid var(--border);color:var(--text-dim)}
 .user-role-tag.admin{background:rgba(244,114,182,.15);border:1px solid rgba(244,114,182,.35);color:var(--accent-4)}
 .user-role-tag.super{background:linear-gradient(135deg,var(--accent-5),var(--accent-4));color:#fff}
+.user-tag-custom{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(94,234,212,.14);border:1px solid rgba(94,234,212,.35);color:var(--accent-2);letter-spacing:.05em}
 .user-info-row{font-size:.75rem;color:var(--text-mute);display:flex;gap:12px;flex-wrap:wrap;line-height:1.8}
 .user-info-row b{color:var(--text-dim);font-weight:600}
 .user-info-row .pw{font-family:ui-monospace,Menlo,monospace;background:var(--surface-hi);border:1px solid var(--border);border-radius:6px;padding:1px 6px;color:var(--accent-2);letter-spacing:.02em}
@@ -585,6 +588,35 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
+<!-- 主管理员：新增用户 -->
+<div class="mask" id="addUserMask">
+  <div class="modal">
+    <button class="modal-close" data-close="addUserMask">✕</button>
+    <h2>新增用户</h2>
+    <p class="desc">新账号首次登录后会自动激活，可随时改密码。</p>
+    <div class="field">
+      <label class="field-label">姓名<span class="req">*</span></label>
+      <input class="input" type="text" id="addUserName" maxlength="20" placeholder="请输入姓名" autocomplete="off">
+    </div>
+    <div class="field">
+      <label class="field-label">初始密码<span class="req">*</span></label>
+      <input class="input" type="text" id="addUserPass" placeholder="至少 6 位" autocomplete="off">
+    </div>
+    <div class="field">
+      <label class="field-label">角色</label>
+      <select class="input" id="addUserRole">
+        <option value="student">学生</option>
+        <option value="admin">管理员</option>
+      </select>
+    </div>
+    <div class="form-msg" id="addUserMsg"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" data-close="addUserMask">取消</button>
+      <button class="btn btn-primary" type="button" id="addUserSave">创建账号</button>
+    </div>
+  </div>
+</div>
+
 <!-- 管理面板 -->
 <div class="mask" id="adminMask">
   <div class="modal wide">
@@ -662,6 +694,7 @@ input,textarea,select{font-family:inherit}
         <button class="filter-chip active" data-user-filter="all">全部</button>
         <button class="filter-chip" data-user-filter="active">已激活</button>
         <button class="filter-chip" data-user-filter="inactive">未激活</button>
+        <button class="btn-mini primary" id="addUserBtn" style="display:none;padding:8px 14px;border-radius:99px">＋ 新增用户</button>
       </div>
 
       <div class="user-list" id="userList"></div>
@@ -922,8 +955,29 @@ async function loadAll(){
   }
 }
 
+/* ---------- 账号体系：内置名单 + 云端自定义账号 ---------- */
+function getCustomUsers(){
+  const out = [];
+  Object.keys(usersData.users).forEach(name => {
+    const u = usersData.users[name];
+    if (u && u.custom){
+      out.push({ username: name, password: u.password || '', role: u.role || 'student', custom: true });
+    }
+  });
+  return out;
+}
+function getAllAccounts(){
+  const list = BASE_ACCOUNTS.map(a => ({ username: a.username, password: a.password, role: a.role, custom: false }));
+  const names = new Set(list.map(a => a.username));
+  getCustomUsers().forEach(c => {
+    if (!names.has(c.username)){ list.push(c); names.add(c.username); }
+  });
+  return list;
+}
 function findBaseAccount(username){
-  return BASE_ACCOUNTS.find(a => a.username === username) || null;
+  return BASE_ACCOUNTS.find(a => a.username === username)
+      || getCustomUsers().find(a => a.username === username)
+      || null;
 }
 function getCloudUser(username){
   return usersData.users[username] || null;
@@ -1104,6 +1158,7 @@ function applySession(){
 
   $('topicAdminActions').style.display = isAdmin() ? '' : 'none';
   $('usersTabBtn').style.display = isAdmin() ? '' : 'none';
+  $('addUserBtn').style.display = isSuper() ? '' : 'none';
 }
 
 function getCurrentTopic(){
@@ -1539,23 +1594,24 @@ function renderTopicList(){
   });
 }
 
-/* 用户管理 —— IP 只对主管理员显示 */
+/* 用户管理 —— IP 只对主管理员显示；主管理员可改密码 / 新增 / 删除 */
 function renderUserList(){
-  const total = BASE_ACCOUNTS.length;
+  const all = getAllAccounts();
   let activeCount = 0;
-  BASE_ACCOUNTS.forEach(a => { if (isActivated(a.username)) activeCount++; });
-  $('ustatTotal').textContent = total;
+  all.forEach(a => { if (isActivated(a.username)) activeCount++; });
+  $('ustatTotal').textContent = all.length;
   $('ustatActive').textContent = activeCount;
-  $('ustatInactive').textContent = total - activeCount;
+  $('ustatInactive').textContent = all.length - activeCount;
+
+  $('addUserBtn').style.display = isSuper() ? '' : 'none';
 
   const q = ($('userSearch').value || '').trim().toLowerCase();
-  let filtered = BASE_ACCOUNTS.slice();
+  let filtered = all.slice();
   if (currentUserFilter === 'active') filtered = filtered.filter(a => isActivated(a.username));
   else if (currentUserFilter === 'inactive') filtered = filtered.filter(a => !isActivated(a.username));
   if (q){
     filtered = filtered.filter(a => {
       const cloud = getCloudUser(a.username);
-      // 管理员搜索时，IP 不参与匹配（因为看不到）
       const hay = isSuper()
         ? (a.username + ' ' + ((cloud && cloud.lastLoginIp) || '')).toLowerCase()
         : a.username.toLowerCase();
@@ -1569,13 +1625,13 @@ function renderUserList(){
   const list = $('userList');
   list.innerHTML = '';
 
-  const showIP = isSuper(); // 只有主管理员能看到 IP
+  const showIP = isSuper();
 
   const buildCard = (a, isSuperRecord) => {
     const cloud = getCloudUser(a.username);
     const activated = isSuperRecord ? true : isActivated(a.username);
     const password = isSuperRecord ? a.password : (getEffectivePassword(a.username) || a.password);
-    const isChangedPwd = !isSuperRecord && cloud && cloud.password;
+    const isChangedPwd = !isSuperRecord && !a.custom && cloud && cloud.password;
 
     let dotClass = 'user-dot';
     if (a.role === 'super') dotClass += ' super';
@@ -1588,7 +1644,10 @@ function renderUserList(){
 
     let actions = '';
     if (isSuper() && !isSuperRecord){
-      actions = `<button class="btn-mini primary" data-admin-change-pwd="${escapeHtml(a.username)}">改密码</button>`;
+      actions += `<button class="btn-mini primary" data-admin-change-pwd="${escapeHtml(a.username)}">改密码</button>`;
+      if (a.custom){
+        actions += `<button class="btn-mini danger" data-del-user="${escapeHtml(a.username)}">删除账号</button>`;
+      }
     }
 
     const card = document.createElement('div');
@@ -1603,6 +1662,7 @@ function renderUserList(){
         <div class="user-info-head">
           <h4>${escapeHtml(a.username)}</h4>
           <span class="${roleTagClass}">${roleTagText}</span>
+          ${a.custom ? '<span class="user-tag-custom">自定义</span>' : ''}
           ${isSuperRecord ? '' : (activated ? '<span style="font-size:.66rem;color:var(--ok);font-weight:700">● 已激活</span>' : '<span style="font-size:.66rem;color:var(--text-mute);font-weight:600">○ 未激活</span>')}
         </div>
         <div class="user-info-row">
@@ -1655,6 +1715,9 @@ function renderUserList(){
   list.querySelectorAll('[data-admin-change-pwd]').forEach(btn => {
     btn.addEventListener('click', () => openAdminChangePwd(btn.dataset.adminChangePwd));
   });
+  list.querySelectorAll('[data-del-user]').forEach(btn => {
+    btn.addEventListener('click', () => deleteCustomUser(btn.dataset.delUser));
+  });
 }
 
 function openAdminChangePwd(username){
@@ -1689,6 +1752,64 @@ async function saveAdminChangePwd(){
   } catch(e){
     msg.className = 'form-msg show error';
     msg.textContent = '保存失败：' + (e.message || '网络错误');
+  }
+}
+
+/* ---------- 主管理员：新增 / 删除用户 ---------- */
+function openAddUser(){
+  if (!isSuper()) return;
+  $('addUserName').value = '';
+  $('addUserPass').value = '';
+  $('addUserRole').value = 'student';
+  $('addUserMsg').className = 'form-msg';
+  openMask('addUserMask');
+  setTimeout(() => $('addUserName').focus(), 100);
+}
+
+async function saveAddUser(){
+  if (!isSuper()) return;
+  const name = $('addUserName').value.trim();
+  const pass = $('addUserPass').value.trim();
+  const role = $('addUserRole').value;
+  const msg = $('addUserMsg');
+  msg.className = 'form-msg';
+
+  if (!name){ msg.className = 'form-msg show error'; msg.textContent = '请输入姓名'; return; }
+  if (name === SUPER_ADMIN.username){ msg.className = 'form-msg show error'; msg.textContent = '该姓名已被占用'; return; }
+  if (pass.length < 6){ msg.className = 'form-msg show error'; msg.textContent = '初始密码至少 6 位'; return; }
+
+  try {
+    await loadAll();
+    if (findBaseAccount(name)){ msg.className = 'form-msg show error'; msg.textContent = '该姓名已存在'; return; }
+    usersData.users[name] = {
+      custom: true,
+      role,
+      password: pass,
+      activated: false,
+      createdAt: Date.now(),
+      createdBy: session.username
+    };
+    await writeBin(BIN_USERS, usersData);
+    closeMask('addUserMask');
+    toast('账号已创建：' + name);
+    renderUserList();
+  } catch(e){
+    msg.className = 'form-msg show error';
+    msg.textContent = '创建失败：' + (e.message || '网络错误');
+  }
+}
+
+async function deleteCustomUser(username){
+  if (!isSuper()) return;
+  if (!confirm(`删除账号「${username}」？该用户将无法再登录，已发表的观点会保留。`)) return;
+  try {
+    await loadAll();
+    delete usersData.users[username];
+    await writeBin(BIN_USERS, usersData);
+    toast('已删除账号：' + username);
+    renderUserList();
+  } catch(e){
+    toast('删除失败');
   }
 }
 
@@ -1812,6 +1933,12 @@ function bindEvents(){
   $('adminChangePwdMask').addEventListener('click', e => { if (e.target === $('adminChangePwdMask')) closeMask('adminChangePwdMask'); });
   $('adminNewPass').addEventListener('keydown', e => { if (e.key === 'Enter') saveAdminChangePwd(); });
 
+  $('addUserBtn').addEventListener('click', openAddUser);
+  $('addUserSave').addEventListener('click', saveAddUser);
+  $('addUserMask').addEventListener('click', e => { if (e.target === $('addUserMask')) closeMask('addUserMask'); });
+  $('addUserPass').addEventListener('keydown', e => { if (e.key === 'Enter') saveAddUser(); });
+  $('addUserName').addEventListener('keydown', e => { if (e.key === 'Enter') $('addUserPass').focus(); });
+
   $('adminPanelBtn').addEventListener('click', () => {
     closeMask('userMask');
     setTimeout(() => openAdmin(), 80);
@@ -1934,7 +2061,7 @@ function bindEvents(){
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape'){
-      ['loginMask','userMask','changePwdMask','adminMask','activateMask','adminChangePwdMask'].forEach(id => {
+      ['loginMask','userMask','changePwdMask','adminMask','activateMask','adminChangePwdMask','addUserMask'].forEach(id => {
         if ($(id).classList.contains('show')) closeMask(id);
       });
     }
