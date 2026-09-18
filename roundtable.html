@@ -6,61 +6,28 @@
 <title>观点圆桌 · Round Table</title>
 <style>
 :root{
-  --bg:#07070c;
-  --surface:rgba(255,255,255,.038);
-  --surface-hi:rgba(255,255,255,.075);
-  --border:rgba(255,255,255,.085);
-  --border-hi:rgba(255,255,255,.2);
-  --text:#eceef6;
-  --text-dim:#9a9cb2;
-  --text-mute:#6a6c82;
-  --accent:#c9f75a;
-  --accent-2:#5eead4;
-  --accent-3:#a78bfa;
-  --accent-4:#f472b6;
-  --accent-5:#fb923c;
-  --blue:#60a5fa;
-  --on-accent:#0a0a0a;
-  --nav-bg:rgba(7,7,12,.72);
-  --ok:#4ade80;
-  --err:#f87171;
-  --warn:#fbbf24;
-  --ease:cubic-bezier(.22,1,.36,1);
-  --ease-back:cubic-bezier(.34,1.56,.64,1);
-  --nav-h:72px;
+  --bg:#07070c;--surface:rgba(255,255,255,.038);--surface-hi:rgba(255,255,255,.075);
+  --border:rgba(255,255,255,.085);--border-hi:rgba(255,255,255,.2);
+  --text:#eceef6;--text-dim:#9a9cb2;--text-mute:#6a6c82;
+  --accent:#c9f75a;--accent-2:#5eead4;--accent-3:#a78bfa;--accent-4:#f472b6;--accent-5:#fb923c;
+  --blue:#60a5fa;--on-accent:#0a0a0a;--nav-bg:rgba(7,7,12,.72);
+  --ok:#4ade80;--err:#f87171;--warn:#fbbf24;
+  --ease:cubic-bezier(.22,1,.36,1);--ease-back:cubic-bezier(.34,1.56,.64,1);--nav-h:72px;
 }
 [data-theme="light"]{
-  --bg:#f5f5f0;
-  --surface:rgba(0,0,0,.026);
-  --surface-hi:rgba(0,0,0,.055);
-  --border:rgba(0,0,0,.09);
-  --border-hi:rgba(0,0,0,.22);
-  --text:#111219;
-  --text-dim:#5a5c6e;
-  --text-mute:#8b8d9c;
-  --accent:#5b8f00;
-  --accent-2:#0d9488;
-  --accent-3:#7c3aed;
-  --accent-4:#db2777;
-  --accent-5:#ea580c;
-  --blue:#2563eb;
-  --on-accent:#ffffff;
-  --nav-bg:rgba(245,245,240,.78);
-  --ok:#16a34a;
-  --err:#dc2626;
-  --warn:#d97706;
+  --bg:#f5f5f0;--surface:rgba(0,0,0,.026);--surface-hi:rgba(0,0,0,.055);
+  --border:rgba(0,0,0,.09);--border-hi:rgba(0,0,0,.22);
+  --text:#111219;--text-dim:#5a5c6e;--text-mute:#8b8d9c;
+  --accent:#5b8f00;--accent-2:#0d9488;--accent-3:#7c3aed;--accent-4:#db2777;--accent-5:#ea580c;
+  --blue:#2563eb;--on-accent:#ffffff;--nav-bg:rgba(245,245,240,.78);
+  --ok:#16a34a;--err:#dc2626;--warn:#d97706;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
   font-family:"Inter","SF Pro Text",-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.6;
+  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;line-height:1.6;
   transition:background .6s var(--ease),color .6s var(--ease);
 }
 ::selection{background:var(--accent);color:var(--on-accent)}
@@ -72,7 +39,6 @@ input,textarea,select{font-family:inherit}
 ::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:99px;border:3px solid var(--bg)}
 ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 
-/* ============ 背景 ============ */
 .bg-orbs{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none}
 .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.3;animation:orbFloat 22s ease-in-out infinite;will-change:transform}
 .o1{width:560px;height:560px;background:var(--accent-3);top:-180px;left:-160px}
@@ -86,7 +52,6 @@ input,textarea,select{font-family:inherit}
 [data-theme="light"] .cursor-glow{mix-blend-mode:multiply;background:radial-gradient(circle,rgba(124,58,237,.1),transparent 62%)}
 @media (hover:none){.cursor-glow{display:none}}
 
-/* ============ 加载 ============ */
 .loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:grid;place-items:center;opacity:1;visibility:visible;transition:opacity .7s var(--ease),visibility .7s}
 .loader.done{opacity:0;visibility:hidden}
 .loader-inner{display:flex;flex-direction:column;align-items:center;gap:22px}
@@ -98,7 +63,6 @@ input,textarea,select{font-family:inherit}
 
 .progress{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--accent-3),var(--accent-2),var(--accent));z-index:9995;will-change:transform}
 
-/* ============ 导航 ============ */
 .nav{position:sticky;top:0;left:0;right:0;height:var(--nav-h);z-index:900;display:flex;align-items:center;transition:background .45s var(--ease),backdrop-filter .45s,border-color .45s,height .45s var(--ease);border-bottom:1px solid transparent}
 .nav.scrolled{background:var(--nav-bg);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom-color:var(--border);height:62px}
 .nav-inner{width:100%;max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,32px);display:flex;align-items:center;gap:24px}
@@ -107,13 +71,9 @@ input,textarea,select{font-family:inherit}
 .brand-mark::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(-150%);transition:transform .7s var(--ease)}
 .brand:hover .brand-mark{transform:rotate(-10deg) scale(1.08);box-shadow:0 10px 28px -6px rgba(167,139,250,.9)}
 .brand:hover .brand-mark::after{transform:translateX(150%)}
-.brand .dot{color:var(--accent-2);animation:blink 1.1s steps(2,start) infinite}
-@keyframes blink{50%{opacity:.15}}
 .nav-sub{font-size:.72rem;color:var(--text-mute);letter-spacing:.14em;text-transform:uppercase;font-weight:600;padding-left:10px;border-left:1px solid var(--border);margin-left:4px}
 
 .nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
-.icon-btn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;cursor:pointer;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);font-size:1rem;transition:all .4s var(--ease)}
-.icon-btn:hover{color:var(--accent);border-color:var(--border-hi);transform:translateY(-2px) rotate(180deg);box-shadow:0 8px 22px -10px rgba(201,247,90,.6)}
 .btn-nav{padding:8px 15px;border-radius:10px;font-size:.8rem;font-weight:600;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);transition:all .35s var(--ease);white-space:nowrap}
 .btn-nav:hover{color:var(--accent-2);border-color:var(--border-hi);transform:translateY(-1px)}
 .btn-nav.primary{background:linear-gradient(135deg,var(--accent-3),var(--accent-2));color:#fff;border-color:transparent;box-shadow:0 8px 22px -10px rgba(167,139,250,.7)}
@@ -124,68 +84,29 @@ input,textarea,select{font-family:inherit}
 .user-chip .avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--accent-3),var(--accent-2));display:grid;place-items:center;font-size:.78rem;color:#fff;font-weight:800}
 .user-chip.admin .avatar{background:linear-gradient(135deg,var(--accent-5),var(--accent-4))}
 .user-chip .role{font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--accent-3);color:#fff;letter-spacing:.05em;text-transform:uppercase}
+.user-chip.super .role{background:linear-gradient(135deg,var(--accent-5),var(--accent-4))}
 
-/* ============ 通用 ============ */
 .wrap{max-width:1100px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
-.sec-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:99px;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-3);background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.22);margin-bottom:14px;font-weight:600}
-.sec-title{font-size:clamp(1.5rem,3.6vw,2.1rem);font-weight:800;letter-spacing:-.04em;line-height:1.2;margin-bottom:10px}
-.sec-title .accent{background:linear-gradient(135deg,var(--accent-3),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .reveal{opacity:0;transform:translateY(36px);transition:opacity 1s var(--ease),transform 1s var(--ease);transition-delay:var(--d,0ms)}
 .reveal.in{opacity:1;transform:none}
 
-/* ============ HERO · 辩题卡片 ============ */
 .hero{padding:60px 0 40px}
-.topic-card{
-  position:relative;
-  border-radius:26px;
-  padding:clamp(28px,5vw,56px);
-  background:var(--surface);
-  border:1px solid var(--border);
-  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-  overflow:hidden;
-  isolation:isolate;
-  box-shadow:0 40px 90px -50px rgba(0,0,0,.9);
-}
-.topic-card::before{
-  content:"";position:absolute;inset:0;z-index:-1;
-  background:
-    radial-gradient(800px circle at 15% 0%, rgba(167,139,250,.1), transparent 45%),
-    radial-gradient(700px circle at 85% 100%, rgba(94,234,212,.08), transparent 45%);
-}
-.topic-card::after{
-  content:"";position:absolute;inset:0;z-index:-1;
-  background:radial-gradient(700px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.06), transparent 50%);
-  opacity:0;transition:opacity .5s ease;
-}
+.topic-card{position:relative;border-radius:26px;padding:clamp(28px,5vw,56px);background:var(--surface);border:1px solid var(--border);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);overflow:hidden;isolation:isolate;box-shadow:0 40px 90px -50px rgba(0,0,0,.9)}
+.topic-card::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(800px circle at 15% 0%, rgba(167,139,250,.1), transparent 45%),radial-gradient(700px circle at 85% 100%, rgba(94,234,212,.08), transparent 45%)}
+.topic-card::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(700px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.06), transparent 50%);opacity:0;transition:opacity .5s ease}
 .topic-card:hover::after{opacity:1}
-
 .topic-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
-.topic-source{
-  font-size:.66rem;font-weight:700;padding:3px 10px;border-radius:99px;letter-spacing:.06em;text-transform:uppercase;
-}
+.topic-source{font-size:.66rem;font-weight:700;padding:3px 10px;border-radius:99px;letter-spacing:.06em;text-transform:uppercase}
 .topic-source.ai{background:linear-gradient(135deg,var(--accent-3),var(--accent-2));color:#fff}
 .topic-source.manual{background:var(--surface-hi);border:1px solid var(--border-hi);color:var(--text-dim)}
 .topic-source.fallback{background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.3);color:var(--warn)}
 .topic-week{font-size:.72rem;color:var(--text-mute);font-family:ui-monospace,Menlo,monospace;letter-spacing:.05em}
-
-.topic-title{
-  font-size:clamp(1.5rem,4.2vw,2.6rem);
-  font-weight:850;letter-spacing:-.035em;line-height:1.25;
-  margin-bottom:22px;
-}
-.topic-title::before{
-  content:"「";color:var(--accent-3);margin-right:4px;
-}
-.topic-title::after{
-  content:"」";color:var(--accent-3);margin-left:4px;
-}
-
-.topic-desc{
-  font-size:.94rem;color:var(--text-dim);line-height:1.85;
-  max-width:720px;margin-bottom:8px;
-}
-
+.topic-title{font-size:clamp(1.5rem,4.2vw,2.6rem);font-weight:850;letter-spacing:-.035em;line-height:1.25;margin-bottom:22px}
+.topic-title::before{content:"「";color:var(--accent-3);margin-right:4px}
+.topic-title::after{content:"」";color:var(--accent-3);margin-left:4px}
+.topic-desc{font-size:.94rem;color:var(--text-dim);line-height:1.85;max-width:720px;margin-bottom:8px}
 .topic-actions{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap}
+
 .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;font-size:.85rem;font-weight:650;transition:all .4s var(--ease);cursor:pointer}
 .btn-primary{background:linear-gradient(135deg,var(--accent-3),var(--accent-2));color:#fff;box-shadow:0 12px 30px -12px rgba(167,139,250,.75)}
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 20px 44px -12px rgba(167,139,250,.95)}
@@ -197,57 +118,22 @@ input,textarea,select{font-family:inherit}
 .btn-mini.danger:hover{background:var(--err);color:#fff;border-color:var(--err)}
 .btn-mini.primary{color:var(--accent-3);border-color:rgba(167,139,250,.35)}
 .btn-mini.primary:hover{background:var(--accent-3);color:#fff;border-color:var(--accent-3)}
+.btn-mini:disabled{opacity:.4;cursor:not-allowed;transform:none !important}
 
-/* ============ 我的观点 ============ */
 .my-view{padding:40px 0}
-.view-card{
-  border-radius:22px;padding:clamp(24px,4vw,36px);
-  background:var(--surface);border:1px solid var(--border);
-  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-  box-shadow:0 30px 70px -50px rgba(0,0,0,.9);
-}
+.view-card{border-radius:22px;padding:clamp(24px,4vw,36px);background:var(--surface);border:1px solid var(--border);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 30px 70px -50px rgba(0,0,0,.9)}
 .view-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px;flex-wrap:wrap}
 .view-head h2{font-size:1.1rem;font-weight:750;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
 .view-head h2::before{content:"";width:4px;height:1em;border-radius:2px;background:linear-gradient(180deg,var(--accent-3),var(--accent-2))}
 
-/* ============ 立场选择（只保留正方/反方） ============ */
 .side-picker{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
-@media (max-width:520px){.side-picker{grid-template-columns:1fr 1fr}}
-.side-opt{
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  padding:18px 16px;
-  border-radius:14px;
-  border:1.5px solid var(--border);
-  background:var(--surface-hi);
-  cursor:pointer;
-  transition:all .4s var(--ease);
-  user-select:none;
-}
+.side-opt{display:flex;align-items:center;justify-content:center;gap:10px;padding:18px 16px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface-hi);cursor:pointer;transition:all .4s var(--ease);user-select:none}
 .side-opt:hover{border-color:var(--border-hi);transform:translateY(-2px)}
-.side-opt .tag{
-  font-size:.95rem;
-  font-weight:800;
-  letter-spacing:.08em;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
+.side-opt .tag{font-size:.95rem;font-weight:800;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
 .side-opt.pro .tag{color:var(--blue)}
 .side-opt.con .tag{color:var(--accent-4)}
-.side-opt.active.pro{
-  border-color:var(--blue);
-  background:rgba(96,165,250,.12);
-  box-shadow:0 0 0 3px rgba(96,165,250,.18);
-}
-.side-opt.active.con{
-  border-color:var(--accent-4);
-  background:rgba(244,114,182,.12);
-  box-shadow:0 0 0 3px rgba(244,114,182,.18);
-}
-.side-opt.active.pro .tag,
-.side-opt.active.con .tag{
-  transform:scale(1.05);
-}
+.side-opt.active.pro{border-color:var(--blue);background:rgba(96,165,250,.12);box-shadow:0 0 0 3px rgba(96,165,250,.18)}
+.side-opt.active.con{border-color:var(--accent-4);background:rgba(244,114,182,.12);box-shadow:0 0 0 3px rgba(244,114,182,.18)}
 
 .textarea{width:100%;background:var(--surface-hi);border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-size:.92rem;color:var(--text);outline:none;transition:all .3s var(--ease);min-height:130px;resize:vertical;line-height:1.8}
 .textarea::placeholder{color:var(--text-mute)}
@@ -257,28 +143,18 @@ input,textarea,select{font-family:inherit}
 .char-hint{font-size:.72rem;color:var(--text-mute);font-variant-numeric:tabular-nums;margin-left:auto}
 .view-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 
-.view-notice{
-  padding:20px 24px;border-radius:14px;background:var(--surface-hi);border:1px dashed var(--border-hi);
-  text-align:center;color:var(--text-dim);font-size:.88rem;
-}
+.view-notice{padding:20px 24px;border-radius:14px;background:var(--surface-hi);border:1px dashed var(--border-hi);text-align:center;color:var(--text-dim);font-size:.88rem}
 .view-notice .link{color:var(--accent-3);cursor:pointer;font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .view-notice .link:hover{color:var(--accent-2)}
 
-.view-status{
-  display:none;align-items:center;gap:10px;
-  padding:12px 16px;border-radius:12px;font-size:.82rem;
-  background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.28);color:var(--ok);
-  margin-bottom:16px;
-}
+.view-status{display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;font-size:.82rem;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.28);color:var(--ok);margin-bottom:16px}
 .view-status.show{display:flex}
 
-/* ============ 观点墙 ============ */
 .wall{padding:40px 0 80px}
 .wall-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
 .wall-head h2{font-size:clamp(1.3rem,3vw,1.6rem);font-weight:800;letter-spacing:-.03em;display:flex;align-items:center;gap:10px}
 .wall-head h2::before{content:"";width:4px;height:1.1em;border-radius:2px;background:linear-gradient(180deg,var(--accent-3),var(--accent-2))}
 .wall-head .count{font-size:.78rem;color:var(--text-mute);font-weight:600}
-
 .wall-toolbar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
 .filter-chip{padding:8px 16px;border-radius:99px;font-size:.78rem;font-weight:600;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);transition:all .3s var(--ease);cursor:pointer}
 .filter-chip:hover{border-color:var(--border-hi);color:var(--text)}
@@ -286,14 +162,9 @@ input,textarea,select{font-family:inherit}
 .filter-chip.pro.active{background:linear-gradient(135deg,var(--blue),#3b82f6)}
 .filter-chip.con.active{background:linear-gradient(135deg,var(--accent-4),#db2777)}
 
-.wall-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px;
-}
+.wall-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
 @media (max-width:520px){.wall-stats{grid-template-columns:1fr}}
-.stat-box{
-  padding:14px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--border);
-  transition:all .3s var(--ease);
-}
+.stat-box{padding:14px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--border);transition:all .3s var(--ease)}
 .stat-box:hover{border-color:var(--border-hi);transform:translateY(-2px)}
 .stat-box .num{font-size:1.6rem;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
 .stat-box.pro .num{color:var(--blue)}
@@ -303,36 +174,20 @@ input,textarea,select{font-family:inherit}
 
 .wall-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 @media (max-width:820px){.wall-cols{grid-template-columns:1fr}}
-.wall-col-head{
-  display:flex;align-items:center;gap:10px;
-  padding:12px 16px;border-radius:12px;
-  font-size:.86rem;font-weight:700;letter-spacing:.02em;
-  margin-bottom:14px;
-}
+.wall-col-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;font-size:.86rem;font-weight:700;letter-spacing:.02em;margin-bottom:14px}
 .wall-col-head.pro{background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.24);color:var(--blue)}
 .wall-col-head.con{background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.24);color:var(--accent-4)}
 .wall-col-head .count{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--surface-hi);margin-left:auto}
 .wall-col-head.pro .count{color:var(--blue)}
 .wall-col-head.con .count{color:var(--accent-4)}
 
-.view-item{
-  position:relative;
-  padding:16px 18px;border-radius:14px;
-  background:var(--surface);border:1px solid var(--border);
-  margin-bottom:12px;
-  transition:all .4s var(--ease);
-}
+.view-item{position:relative;padding:16px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:12px;transition:all .4s var(--ease)}
 .view-item:hover{border-color:var(--border-hi);background:var(--surface-hi);transform:translateY(-2px);box-shadow:0 20px 40px -28px rgba(0,0,0,.9)}
 .view-item.pro{border-left:3px solid var(--blue)}
 .view-item.con{border-left:3px solid var(--accent-4)}
 .view-item.mine{border-color:var(--accent-3);background:rgba(167,139,250,.06)}
 .view-item-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.view-item-avatar{
-  width:30px;height:30px;border-radius:50%;flex-shrink:0;
-  display:grid;place-items:center;font-size:.85rem;
-  background:linear-gradient(135deg,var(--accent-3),var(--accent-2));
-  color:#fff;font-weight:700;
-}
+.view-item-avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;font-size:.85rem;background:linear-gradient(135deg,var(--accent-3),var(--accent-2));color:#fff;font-weight:700}
 .view-item-name{font-size:.82rem;font-weight:700;color:var(--text)}
 .view-item-meta{font-size:.68rem;color:var(--text-mute);margin-left:auto;flex-shrink:0}
 .view-item-body{font-size:.85rem;color:var(--text-dim);line-height:1.75;white-space:pre-wrap;word-break:break-word}
@@ -342,12 +197,11 @@ input,textarea,select{font-family:inherit}
 .empty-state .ico{font-size:2.2rem;display:block;margin-bottom:10px;filter:grayscale(.4)}
 .empty-state p{color:var(--text-dim);margin-bottom:4px}
 
-/* ============ 弹层 ============ */
 .mask{position:fixed;inset:0;z-index:9997;background:rgba(0,0,0,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .35s var(--ease),visibility .35s;overflow-y:auto;overscroll-behavior:contain}
 .mask.show{opacity:1;visibility:visible}
 .modal{width:min(460px,100%);background:var(--bg);border:1px solid var(--border-hi);border-radius:20px;padding:30px 26px;box-shadow:0 50px 100px -40px rgba(0,0,0,.9);transform:scale(.95) translateY(20px);transition:transform .4s var(--ease);max-height:90vh;overflow-y:auto;position:relative}
 .mask.show .modal{transform:none}
-.modal.wide{width:min(720px,100%)}
+.modal.wide{width:min(820px,100%)}
 .modal h2{font-size:1.25rem;font-weight:750;letter-spacing:-.03em;margin-bottom:8px}
 .modal .desc{font-size:.82rem;color:var(--text-mute);margin-bottom:22px}
 .field{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
@@ -368,6 +222,14 @@ input,textarea,select{font-family:inherit}
 .form-msg.success{color:var(--ok);background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.28)}
 .form-msg.info{color:var(--accent-2);background:rgba(94,234,212,.08);border:1px solid rgba(94,234,212,.28)}
 
+/* 首次激活弹窗特别样式 */
+.activate-modal{text-align:center}
+.activate-icon{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;font-size:2rem;background:linear-gradient(135deg,var(--accent-3),var(--accent-2));box-shadow:0 16px 40px -12px rgba(167,139,250,.7);animation:popIn .6s var(--ease-back)}
+@keyframes popIn{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.activate-modal h2{font-size:1.35rem;margin-bottom:8px;text-align:center}
+.activate-modal .desc{text-align:center;margin-bottom:22px}
+.activate-modal .field{text-align:left}
+
 .tabs{display:flex;gap:4px;margin-bottom:22px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;overflow-x:auto}
 .tab{flex:1;padding:9px 14px;border-radius:9px;font-size:.8rem;font-weight:600;color:var(--text-dim);transition:all .35s var(--ease);text-align:center;cursor:pointer;white-space:nowrap}
 .tab:hover{color:var(--text)}
@@ -376,11 +238,7 @@ input,textarea,select{font-family:inherit}
 .panel.active{display:block;animation:fadeUp .35s var(--ease)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-.toggle-row{
-  display:flex;align-items:center;gap:14px;padding:16px 18px;
-  border-radius:14px;background:var(--surface);border:1px solid var(--border);
-  margin-bottom:16px;
-}
+.toggle-row{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:16px}
 .toggle-row .info{flex:1;min-width:0}
 .toggle-row .info h4{font-size:.9rem;font-weight:700;margin-bottom:3px}
 .toggle-row .info p{font-size:.76rem;color:var(--text-mute);line-height:1.55}
@@ -389,16 +247,60 @@ input,textarea,select{font-family:inherit}
 .toggle.on{background:linear-gradient(135deg,var(--accent-3),var(--accent-2));border-color:transparent}
 .toggle.on::after{left:23px;background:#fff}
 
-.topic-item{
-  padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);
-  margin-bottom:10px;transition:all .3s var(--ease);
-}
+.topic-item{padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);margin-bottom:10px;transition:all .3s var(--ease)}
 .topic-item:hover{border-color:var(--border-hi);background:var(--surface-hi)}
 .topic-item.current{border-color:var(--accent-3);background:rgba(167,139,250,.06)}
 .topic-item-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .topic-item-head h4{font-size:.92rem;font-weight:700;flex:1;min-width:0;word-break:break-word}
 .topic-item-meta{font-size:.7rem;color:var(--text-mute);display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .topic-item-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* 用户管理 */
+.user-toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.user-toolbar .search{flex:1;min-width:180px;display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:10px;background:var(--surface);border:1px solid var(--border);transition:all .3s var(--ease)}
+.user-toolbar .search:focus-within{border-color:var(--accent-3);box-shadow:0 0 0 3px rgba(167,139,250,.13)}
+.user-toolbar .search svg{width:15px;height:15px;color:var(--text-mute);flex-shrink:0}
+.user-toolbar .search input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:.85rem;min-width:0}
+.user-toolbar .search input::placeholder{color:var(--text-mute)}
+
+.user-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+@media (max-width:520px){.user-stats{grid-template-columns:1fr}}
+.user-stat{padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);text-align:center}
+.user-stat b{display:block;font-size:1.3rem;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;line-height:1.1}
+.user-stat span{font-size:.68rem;color:var(--text-mute);letter-spacing:.05em}
+.user-stat.active b{color:var(--ok)}
+.user-stat.inactive b{color:var(--text-mute)}
+
+.user-list{display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow-y:auto;padding-right:4px}
+.user-card{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .3s var(--ease);
+}
+.user-card:hover{border-color:var(--border-hi);background:var(--surface-hi)}
+.user-card.super-card{border-color:rgba(251,146,60,.35);background:rgba(251,146,60,.05)}
+.user-card.admin-card{border-color:rgba(244,114,182,.28);background:rgba(244,114,182,.04)}
+.user-card.inactive{opacity:.75}
+.user-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px;
+  background:var(--text-mute);
+}
+.user-dot.active{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.user-dot.inactive{background:var(--text-mute)}
+.user-dot.super{background:linear-gradient(135deg,var(--accent-5),var(--accent-4));box-shadow:0 0 8px rgba(251,146,60,.6)}
+.user-dot.admin{background:linear-gradient(135deg,var(--accent-4),#db2777);box-shadow:0 0 8px rgba(244,114,182,.6)}
+.user-info{flex:1;min-width:0}
+.user-info-head{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.user-info-head h4{font-size:.94rem;font-weight:700;letter-spacing:-.01em}
+.user-role-tag{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:99px;letter-spacing:.05em;text-transform:uppercase}
+.user-role-tag.student{background:var(--surface-hi);border:1px solid var(--border);color:var(--text-dim)}
+.user-role-tag.admin{background:rgba(244,114,182,.15);border:1px solid rgba(244,114,182,.35);color:var(--accent-4)}
+.user-role-tag.super{background:linear-gradient(135deg,var(--accent-5),var(--accent-4));color:#fff}
+.user-info-row{font-size:.75rem;color:var(--text-mute);display:flex;gap:12px;flex-wrap:wrap;line-height:1.8}
+.user-info-row b{color:var(--text-dim);font-weight:600}
+.user-info-row .pw{font-family:ui-monospace,Menlo,monospace;background:var(--surface-hi);border:1px solid var(--border);border-radius:6px;padding:1px 6px;color:var(--accent-2);letter-spacing:.02em}
+.user-card-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 
 .toast{position:fixed;left:50%;bottom:36px;z-index:9998;transform:translate(-50%,20px) scale(.94);display:flex;align-items:center;gap:9px;padding:12px 22px;border-radius:99px;font-size:.83rem;font-weight:500;color:var(--text);background:var(--surface-hi);border:1px solid var(--border-hi);-webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);box-shadow:0 18px 44px -18px rgba(0,0,0,.85);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s var(--ease),transform .5s var(--ease),visibility .4s;max-width:calc(100vw - 40px)}
 .toast.show{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1)}
@@ -414,10 +316,10 @@ input,textarea,select{font-family:inherit}
 
 @media (max-width:640px){
   .brand .nav-sub{display:none}
-  .view-head{align-items:flex-start}
   .to-top{right:16px;bottom:16px;width:44px;height:44px}
   .toast{bottom:22px;font-size:.78rem;padding:10px 16px}
   .modal{padding:24px 20px}
+  .user-list{max-height:50vh}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
@@ -457,7 +359,7 @@ input,textarea,select{font-family:inherit}
       <div class="user-chip" id="userChip" style="display:none">
         <span class="avatar" id="userAvatar">U</span>
         <span id="userName">—</span>
-        <span class="role" id="userRole" style="display:none">SUPER</span>
+        <span class="role" id="userRole" style="display:none">ADMIN</span>
       </div>
     </div>
   </div>
@@ -465,7 +367,6 @@ input,textarea,select{font-family:inherit}
 
 <main>
 
-  <!-- 当前辩题 -->
   <section class="hero">
     <div class="wrap">
       <div class="topic-card" id="topicCard">
@@ -483,7 +384,6 @@ input,textarea,select{font-family:inherit}
     </div>
   </section>
 
-  <!-- 我的观点 -->
   <section class="my-view">
     <div class="wrap">
       <div class="view-card" id="viewCard">
@@ -527,7 +427,6 @@ input,textarea,select{font-family:inherit}
     </div>
   </section>
 
-  <!-- 观点墙 -->
   <section class="wall">
     <div class="wrap">
       <div class="wall-head">
@@ -568,24 +467,22 @@ input,textarea,select{font-family:inherit}
   <div class="wrap">
     <div class="footer-inner">
       <span>© 2026 观点圆桌 · My_Underline</span>
-      <span>
-        <a id="backToLib">← 返回资源库</a>
-      </span>
+      <span><a id="backToLib">← 返回资源库</a></span>
     </div>
   </div>
 </footer>
 
 <button class="to-top" id="toTop">↑</button>
 
-<!-- 登录弹层 -->
+<!-- 登录 -->
 <div class="mask" id="loginMask">
   <div class="modal">
     <button class="modal-close" data-close="loginMask">✕</button>
     <h2>登录</h2>
-    <p class="desc">请输入你的账号以继续。</p>
+    <p class="desc">请输入你的姓名和密码。</p>
     <div class="field">
-      <label class="field-label">用户名</label>
-      <input class="input" type="text" id="loginUser" placeholder="请输入用户名" autocomplete="off">
+      <label class="field-label">姓名</label>
+      <input class="input" type="text" id="loginUser" placeholder="请输入你的姓名" autocomplete="off">
     </div>
     <div class="field">
       <label class="field-label">密码</label>
@@ -599,7 +496,25 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
-<!-- 用户信息弹层 -->
+<!-- 首次登录激活弹窗 -->
+<div class="mask" id="activateMask">
+  <div class="modal activate-modal">
+    <div class="activate-icon">🎉</div>
+    <h2>账号已激活</h2>
+    <p class="desc" id="activateDesc">欢迎！请尽快更改初始密码。</p>
+    <div class="field" style="text-align:left">
+      <label class="field-label">新密码 <span class="hint">至少 6 位，留空则暂不修改</span></label>
+      <input class="input" type="password" id="activateNewPass" placeholder="输入新密码" autocomplete="off">
+    </div>
+    <div class="form-msg" id="activateMsg"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" id="activateLater">以后再说</button>
+      <button class="btn btn-primary" type="button" id="activateConfirm">确认修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- 用户信息 -->
 <div class="mask" id="userMask">
   <div class="modal">
     <button class="modal-close" data-close="userMask">✕</button>
@@ -608,7 +523,10 @@ input,textarea,select{font-family:inherit}
     <div id="userInfoBody" style="font-size:.85rem;color:var(--text-dim);line-height:2"></div>
     <div class="modal-actions" style="margin-top:22px">
       <button class="btn btn-ghost" type="button" id="editNameBtn">改显示名</button>
-      <button class="btn btn-primary" type="button" id="adminPanelBtn" style="display:none">管理面板</button>
+      <button class="btn btn-ghost" type="button" id="changePwdBtn">改密码</button>
+    </div>
+    <div class="modal-actions" style="margin-top:10px">
+      <button class="btn btn-ghost" type="button" id="adminPanelBtn" style="display:none">管理面板</button>
     </div>
     <div class="modal-actions" style="margin-top:10px">
       <button class="btn btn-ghost" type="button" id="logoutBtn" style="color:var(--err);border-color:rgba(248,113,113,.3)">退出登录</button>
@@ -616,12 +534,12 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
-<!-- 改显示名弹层 -->
+<!-- 改显示名 -->
 <div class="mask" id="editNameMask">
   <div class="modal">
     <button class="modal-close" data-close="editNameMask">✕</button>
     <h2>修改显示名</h2>
-    <p class="desc">修改后，你的观点墙上显示的名字会更新（账号本身不变）。</p>
+    <p class="desc">修改后，你的观点墙上显示的名字会更新（登录用的姓名不变）。</p>
     <div class="field">
       <label class="field-label">显示名</label>
       <input class="input" type="text" id="displayNameInput" maxlength="20" placeholder="1-20 个字符">
@@ -634,17 +552,62 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
+<!-- 改密码 -->
+<div class="mask" id="changePwdMask">
+  <div class="modal">
+    <button class="modal-close" data-close="changePwdMask">✕</button>
+    <h2>修改密码</h2>
+    <p class="desc">请输入当前密码，再设置新密码。</p>
+    <div class="field">
+      <label class="field-label">当前密码</label>
+      <input class="input" type="password" id="oldPass" placeholder="请输入当前密码" autocomplete="off">
+    </div>
+    <div class="field">
+      <label class="field-label">新密码</label>
+      <input class="input" type="password" id="newPass" placeholder="至少 6 位" autocomplete="off">
+    </div>
+    <div class="field">
+      <label class="field-label">确认新密码</label>
+      <input class="input" type="password" id="newPass2" placeholder="再输一次" autocomplete="off">
+    </div>
+    <div class="form-msg" id="changePwdMsg"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" data-close="changePwdMask">取消</button>
+      <button class="btn btn-primary" type="button" id="changePwdSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 主管理员：改指定用户的密码 -->
+<div class="mask" id="adminChangePwdMask">
+  <div class="modal">
+    <button class="modal-close" data-close="adminChangePwdMask">✕</button>
+    <h2>修改密码</h2>
+    <p class="desc" id="adminChangePwdDesc">—</p>
+    <div class="field">
+      <label class="field-label">新密码</label>
+      <input class="input" type="text" id="adminNewPass" placeholder="至少 6 位" autocomplete="off">
+    </div>
+    <div class="form-msg" id="adminChangePwdMsg"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" data-close="adminChangePwdMask">取消</button>
+      <button class="btn btn-primary" type="button" id="adminChangePwdSave">保存</button>
+    </div>
+  </div>
+</div>
+
 <!-- 管理面板 -->
 <div class="mask" id="adminMask">
   <div class="modal wide">
     <button class="modal-close" data-close="adminMask">✕</button>
     <h2>管理面板</h2>
-    <p class="desc">主管理员专属</p>
+    <p class="desc" id="adminSubtitle">—</p>
 
-    <div class="tabs">
+    <div class="tabs" id="adminTabs">
       <div class="tab active" data-tab="weekly">📅 每周一辩</div>
       <div class="tab" data-tab="new">➕ 新建辩题</div>
       <div class="tab" data-tab="list">📋 历史辩题</div>
+      <div class="tab" data-tab="users" id="usersTabBtn" style="display:none">👥 用户管理</div>
     </div>
 
     <!-- 每周一辩 -->
@@ -694,6 +657,27 @@ input,textarea,select{font-family:inherit}
       <div id="topicList"></div>
     </div>
 
+    <!-- 用户管理 -->
+    <div class="panel" id="panelUsers">
+      <div class="user-stats">
+        <div class="user-stat"><b id="ustatTotal">0</b><span>全部账号</span></div>
+        <div class="user-stat active"><b id="ustatActive">0</b><span>已激活</span></div>
+        <div class="user-stat inactive"><b id="ustatInactive">0</b><span>未激活</span></div>
+      </div>
+
+      <div class="user-toolbar">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input type="text" id="userSearch" placeholder="搜索姓名或 IP…" autocomplete="off">
+        </div>
+        <button class="filter-chip active" data-user-filter="all">全部</button>
+        <button class="filter-chip" data-user-filter="active">已激活</button>
+        <button class="filter-chip" data-user-filter="inactive">未激活</button>
+      </div>
+
+      <div class="user-list" id="userList"></div>
+    </div>
+
     <div class="modal-actions" style="margin-top:20px">
       <button class="btn btn-ghost" type="button" data-close="adminMask">关闭</button>
     </div>
@@ -709,8 +693,9 @@ input,textarea,select{font-family:inherit}
 /* ============================================================
    配置
    ============================================================ */
-const BIN_TOPICS = '6aab8577ac6210605ad72f3e'; // 辩题
-const BIN_VIEWS  = '6aab859fac6210605ad72fd1'; // 观点
+const BIN_TOPICS = '6aab8577ac6210605ad72f3e';
+const BIN_VIEWS  = '6aab859fac6210605ad72fd1';
+const BIN_USERS  = '6aace8ceffd5d1605314f3aa';
 
 const JSONBIN_KEY  = '$2a$10$8a1mjO5sFu4ZZetBfd6Npu5FC8s50I36xx70DBUjKenDK1AasAVOO';
 const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
@@ -718,18 +703,60 @@ const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
 const DEEPSEEK_KEY = 'sk-c633bb7dd6c4f86aeac943a8936ba93';
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
-/* 账号配置 —— 学生账号之后在这里补 */
+/* ============================================================
+   账号体系
+   - 主管理员：硬编码
+   - 老师 / 学生：45 人，按学号顺序
+   ============================================================ */
 const SUPER_ADMIN = { username: 'My_Underline', password: 'kk20140119', role: 'super', defaultName: '下划线' };
-const MODERATORS  = [
-  // { username: 'teacher', password: '...', role: 'moderator', defaultName: '邹老师' },
-  // { username: 'banzhang', password: '...', role: 'moderator', defaultName: '班长' },
-];
-const STUDENTS = [
-  // { username: 'cyj', password: '202506', role: 'student', defaultName: 'cyj' },
-  // ... 之后填 44 个
-];
 
-const SESSION_KEY = 'roundtable-session';
+const BASE_ACCOUNTS = [
+  { username: '范亦馨', password: '20250601', role: 'student' },
+  { username: '林俊峰', password: '20250602', role: 'student' },
+  { username: '秦宇扬', password: '20250603', role: 'student' },
+  { username: '汪杺逸', password: '20250604', role: 'student' },
+  { username: '张尹彦', password: '20250605', role: 'student' },
+  { username: '张梓睿', password: '20250606', role: 'student' },
+  { username: '方晨霖', password: '20250607', role: 'student' },
+  { username: '仇弈贺', password: '20250608', role: 'student' },
+  { username: '黄辰安', password: '20250609', role: 'student' },
+  { username: '康屹轩', password: '20250610', role: 'student' },
+  { username: '石龚宇', password: '20250611', role: 'student' },
+  { username: '王裕冰', password: '20250612', role: 'student' },
+  { username: '辛铭皓', password: '20250613', role: 'student' },
+  { username: '张迈之', password: '20250614', role: 'student' },
+  { username: '谈子梦', password: '20250615', role: 'student' },
+  { username: '王宇豪', password: '20250616', role: 'student' },
+  { username: '杨梓皓', password: '20250617', role: 'student' },
+  { username: '姚星罕', password: '20250618', role: 'student' },
+  { username: '居佳宸', password: '20250619', role: 'student' },
+  { username: '张艺翎', password: '20250620', role: 'student' },
+  { username: '封鸣阳', password: '20250621', role: 'student' },
+  { username: '程雨嘉', password: '20250622', role: 'student' },
+  { username: '李岱霖', password: '20250623', role: 'student' },
+  { username: '马若琳', password: '20250624', role: 'student' },
+  { username: '王一伊', password: '20250625', role: 'student' },
+  { username: '王艺彤', password: '20250626', role: 'student' },
+  { username: '沃芸伊', password: '20250627', role: 'student' },
+  { username: '忻宸',   password: '20250628', role: 'student' },
+  { username: '郑欣媛', password: '20250629', role: 'student' },
+  { username: '许雅',   password: '20250630', role: 'student' },
+  { username: '葛轩萱', password: '20250631', role: 'student' },
+  { username: '桂书滢', password: '20250632', role: 'student' },
+  { username: '蒋莱',   password: '20250633', role: 'student' },
+  { username: '陆婧玥', password: '20250634', role: 'student' },
+  { username: '陆芸萱', password: '20250635', role: 'student' },
+  { username: '王玥蘅', password: '20250636', role: 'student' },
+  { username: '尤筠涵', password: '20250637', role: 'admin' },   // 学生管理员
+  { username: '张宸瑜', password: '20250638', role: 'student' },
+  { username: '赵若希', password: '20250639', role: 'student' },
+  { username: '何妍',   password: '20250640', role: 'student' },
+  { username: '汪紫萱', password: '20250641', role: 'student' },
+  { username: '沙芸伊', password: '20250642', role: 'student' },
+  { username: '涂尧',   password: '20250643', role: 'student' },
+  { username: '杨乐遥', password: '20250644', role: 'student' },
+  { username: '邹衍',   password: '20250645', role: 'admin' }    // 老师
+];
 
 /* Fallback 辩题库 */
 const FALLBACK_TOPICS = [
@@ -750,9 +777,8 @@ const FALLBACK_TOPICS = [
   { title:'传统阅读会不会被电子阅读取代？', sideA:'会', sideB:'不会', desc:'纸质书与屏幕之间，是习惯，也是某种情怀。' }
 ];
 
-/* ============================================================
-   DOM
-   ============================================================ */
+const SESSION_KEY = 'roundtable-session';
+
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
@@ -761,13 +787,16 @@ const $$ = sel => document.querySelectorAll(sel);
    ============================================================ */
 let topicsData = { topics: [], weekly: { enabled: true, lastGenWeek: null, currentTopicId: null } };
 let viewsData  = { views: [] };
+let usersData  = { users: {} };
 let session = null;
 let currentTopicId = null;
 let currentFilter = 'all';
+let currentUserFilter = 'all';
 let pendingSide = null;
 let scrollLockCount = 0;
 let savedScrollY = 0;
 let isGenerating = false;
+let pendingActivateUser = null; // 当前激活弹窗对应的用户名
 
 /* ============================================================
    滚动锁定
@@ -859,8 +888,19 @@ function getWeekKey(date){
   return `${d.getFullYear()}-W${String(week).padStart(2,'0')}`;
 }
 
+let cachedIP = null;
+async function getIP(){
+  if (cachedIP) return cachedIP;
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    const json = await res.json();
+    cachedIP = json.ip || 'unknown';
+  } catch(e){ cachedIP = 'unknown'; }
+  return cachedIP;
+}
+
 /* ============================================================
-   jsonbin 读写
+   jsonbin
    ============================================================ */
 async function readBin(binId){
   const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, { headers: { 'X-Master-Key': JSONBIN_KEY } });
@@ -892,19 +932,56 @@ function normalizeViews(d){
   if (!Array.isArray(d.views)) d.views = [];
   return d;
 }
+function normalizeUsers(d){
+  if (!d || typeof d !== 'object') d = {};
+  if (!d.users || typeof d.users !== 'object' || Array.isArray(d.users)) d.users = {};
+  return d;
+}
 
 async function loadAll(){
   try {
-    const [t, v] = await Promise.all([
+    const [t, v, u] = await Promise.all([
       readBin(BIN_TOPICS).catch(() => ({topics:[], weekly:{enabled:true,lastGenWeek:null,currentTopicId:null}})),
-      readBin(BIN_VIEWS).catch(() => ({views:[]}))
+      readBin(BIN_VIEWS).catch(() => ({views:[]})),
+      readBin(BIN_USERS).catch(() => ({users:{}}))
     ]);
     topicsData = normalizeTopics(t);
     viewsData = normalizeViews(v);
+    usersData = normalizeUsers(u);
   } catch(e){
     console.error('加载失败', e);
     toast('数据加载失败');
   }
+}
+
+/* ============================================================
+   账号相关工具
+   ============================================================ */
+function findBaseAccount(username){
+  return BASE_ACCOUNTS.find(a => a.username === username) || null;
+}
+function getCloudUser(username){
+  return usersData.users[username] || null;
+}
+function getEffectivePassword(username){
+  const cloud = getCloudUser(username);
+  if (cloud && cloud.password) return cloud.password;
+  const base = findBaseAccount(username);
+  return base ? base.password : null;
+}
+function isActivated(username){
+  const cloud = getCloudUser(username);
+  return !!(cloud && cloud.activated);
+}
+function getDisplayName(username){
+  const cloud = getCloudUser(username);
+  if (cloud && cloud.displayName) return cloud.displayName;
+  return username;
+}
+function getRoleLabel(role){
+  if (role === 'super') return '主管理员';
+  if (role === 'admin') return '管理员';
+  return '学生';
 }
 
 /* ============================================================
@@ -944,9 +1021,7 @@ async function callDeepSeek(){
     })
   });
 
-  if (!res.ok){
-    throw new Error('DeepSeek HTTP ' + res.status);
-  }
+  if (!res.ok) throw new Error('DeepSeek HTTP ' + res.status);
   const json = await res.json();
   const content = json.choices && json.choices[0] && json.choices[0].message && json.choices[0].message.content;
   if (!content) throw new Error('DeepSeek 返回为空');
@@ -977,10 +1052,7 @@ function getRandomFallback(){
 async function generateNewTopic(source){
   const newTopic = {
     id: uid('topic'),
-    title: '',
-    sideA: '',
-    sideB: '',
-    desc: '',
+    title: '', sideA: '', sideB: '', desc: '',
     source: source || 'ai',
     createdAt: Date.now(),
     createdBy: session ? session.username : 'system'
@@ -1010,14 +1082,12 @@ async function generateNewTopic(source){
 
   await writeBin(BIN_TOPICS, topicsData);
   currentTopicId = newTopic.id;
-
   return newTopic;
 }
 
 async function checkWeeklyAuto(){
   if (!topicsData.weekly.enabled) return;
   if (isGenerating) return;
-
   const currentWeek = getWeekKey();
   if (topicsData.weekly.lastGenWeek === currentWeek) return;
 
@@ -1025,10 +1095,7 @@ async function checkWeeklyAuto(){
     const fb = getRandomFallback();
     const topic = {
       id: uid('topic'),
-      title: fb.title,
-      sideA: fb.sideA,
-      sideB: fb.sideB,
-      desc: fb.desc,
+      title: fb.title, sideA: fb.sideA, sideB: fb.sideB, desc: fb.desc,
       source: 'fallback',
       createdAt: Date.now(),
       createdBy: 'system'
@@ -1038,7 +1105,6 @@ async function checkWeeklyAuto(){
     topicsData.weekly.lastGenWeek = currentWeek;
     await writeBin(BIN_TOPICS, topicsData);
     currentTopicId = topic.id;
-    console.log('📌 首次访问：使用预置辩题作为初始内容');
     return;
   }
 
@@ -1068,17 +1134,10 @@ function saveSession(){
     else localStorage.removeItem(SESSION_KEY);
   }catch(e){}
 }
-function checkLogin(u, p){
-  if (u === SUPER_ADMIN.username && p === SUPER_ADMIN.password){
-    return { username: u, role: SUPER_ADMIN.role, displayName: SUPER_ADMIN.defaultName };
-  }
-  const mod = MODERATORS.find(x => x.username === u && x.password === p);
-  if (mod) return { username: u, role: mod.role, displayName: mod.defaultName || u };
-  const stu = STUDENTS.find(x => x.username === u && x.password === p);
-  if (stu) return { username: u, role: stu.role, displayName: stu.defaultName || u };
-  return null;
-}
 function isAdmin(){
+  return session && (session.role === 'super' || session.role === 'admin');
+}
+function isSuper(){
   return session && session.role === 'super';
 }
 function applySession(){
@@ -1089,8 +1148,15 @@ function applySession(){
     loginBtn.style.display = 'none';
     $('userName').textContent = session.displayName || session.username;
     $('userAvatar').textContent = (session.displayName || session.username).charAt(0).toUpperCase();
-    $('userRole').style.display = session.role === 'super' ? 'inline-block' : 'none';
-    chip.classList.toggle('admin', session.role === 'super');
+    if (session.role === 'super' || session.role === 'admin'){
+      $('userRole').style.display = 'inline-block';
+      $('userRole').textContent = session.role === 'super' ? 'SUPER' : 'ADMIN';
+      chip.classList.add('admin');
+      chip.classList.toggle('super', session.role === 'super');
+    } else {
+      $('userRole').style.display = 'none';
+      chip.classList.remove('admin', 'super');
+    }
   } else {
     chip.style.display = 'none';
     loginBtn.style.display = '';
@@ -1105,28 +1171,24 @@ function applySession(){
   }
 
   $('topicAdminActions').style.display = isAdmin() ? '' : 'none';
+  $('usersTabBtn').style.display = isAdmin() ? '' : 'none';
 }
 
 /* ============================================================
-   渲染：当前辩题
+   渲染：辩题
    ============================================================ */
 function getCurrentTopic(){
-  if (!currentTopicId){
-    currentTopicId = topicsData.weekly.currentTopicId;
-  }
+  if (!currentTopicId) currentTopicId = topicsData.weekly.currentTopicId;
   return topicsData.topics.find(t => t.id === currentTopicId) || topicsData.topics[topicsData.topics.length - 1];
 }
 function renderTopic(){
   const topic = getCurrentTopic();
-
   if (!topic){
     $('topicTitle').textContent = '暂无辩题';
     $('topicDesc').textContent = '等待主持人发布第一个辩题…';
     return;
   }
-
   currentTopicId = topic.id;
-
   $('topicTitle').textContent = topic.title;
   $('topicDesc').textContent = topic.desc || '';
 
@@ -1134,7 +1196,6 @@ function renderTopic(){
   const srcEl = $('topicSource');
   srcEl.className = 'topic-source ' + (topic.source || 'fallback');
   srcEl.textContent = srcMap[topic.source] || '辩题';
-
   $('topicWeek').textContent = topic.createdAt ? formatRelative(topic.createdAt) : '';
 }
 
@@ -1148,7 +1209,6 @@ function getMyView(){
 function renderMyViewForm(){
   if (!session) return;
   const mine = getMyView();
-
   if (mine){
     $('viewStatus').classList.add('show');
     $('viewContent').value = mine.content;
@@ -1196,7 +1256,6 @@ function renderViews(){
   if (currentFilter === 'all'){
     wallCols.style.display = '';
     wallAll.style.display = 'none';
-
     $('wallPro').innerHTML = proViews.length
       ? proViews.map(v => buildViewItemHtml(v)).join('')
       : `<div class="empty-state" style="padding:30px 16px"><span class="ico">—</span><p>还没有正方观点</p></div>`;
@@ -1207,11 +1266,9 @@ function renderViews(){
     wallCols.style.display = 'none';
     wallAll.style.display = '';
     const filtered = currentFilter === 'A' ? proViews : conViews;
-    if (!filtered.length){
-      wallAll.innerHTML = `<div class="empty-state"><span class="ico">💭</span><p>还没有观点</p></div>`;
-    } else {
-      wallAll.innerHTML = filtered.map(v => buildViewItemHtml(v)).join('');
-    }
+    wallAll.innerHTML = filtered.length
+      ? filtered.map(v => buildViewItemHtml(v)).join('')
+      : `<div class="empty-state"><span class="ico">💭</span><p>还没有观点</p></div>`;
   }
 
   document.querySelectorAll('[data-del-view]').forEach(btn => {
@@ -1227,7 +1284,7 @@ function renderViews(){
 
 function buildViewItemHtml(v){
   const isMine = session && session.username === v.username;
-  const isSuper = isAdmin();
+  const canDel = isAdmin();
   const sideClass = v.side === 'A' ? 'pro' : 'con';
   const displayName = v.displayName || v.username;
   const avatarChar = displayName.charAt(0).toUpperCase();
@@ -1237,7 +1294,7 @@ function buildViewItemHtml(v){
   if (isMine){
     actions = `<button class="btn-mini primary" data-edit-view="${escapeHtml(v.id)}">✎ 修改</button>`;
   }
-  if (isSuper){
+  if (canDel){
     actions += `<button class="btn-mini danger" data-del-view="${escapeHtml(v.id)}">删除</button>`;
   }
 
@@ -1255,7 +1312,7 @@ function buildViewItemHtml(v){
 }
 
 /* ============================================================
-   提交 / 修改观点
+   提交观点
    ============================================================ */
 async function submitView(){
   if (!session){ toast('请先登录'); return; }
@@ -1277,7 +1334,6 @@ async function submitView(){
 
   try {
     await loadAll();
-
     if (existing){
       const item = viewsData.views.find(v => v.id === existing.id);
       if (item){
@@ -1304,7 +1360,6 @@ async function submitView(){
       await writeBin(BIN_VIEWS, viewsData);
       toast('观点已发表');
     }
-
     renderViews();
     renderMyViewForm();
   } catch(e){
@@ -1316,21 +1371,15 @@ async function submitView(){
   }
 }
 
-/* ============================================================
-   删除观点
-   ============================================================ */
 async function deleteView(id){
   if (!isAdmin()) return;
   if (!confirm('确定删除这条观点吗？')) return;
-
   try {
     viewsData.views = viewsData.views.filter(v => v.id !== id);
     await writeBin(BIN_VIEWS, viewsData);
     toast('已删除');
     renderViews();
-  } catch(e){
-    toast('删除失败');
-  }
+  } catch(e){ toast('删除失败'); }
 }
 
 /* ============================================================
@@ -1343,6 +1392,7 @@ function openLogin(){
   openMask('loginMask');
   setTimeout(() => $('loginUser').focus(), 100);
 }
+
 async function doLogin(){
   const u = $('loginUser').value.trim();
   const p = $('loginPass').value;
@@ -1351,62 +1401,155 @@ async function doLogin(){
 
   if (!u || !p){
     msg.className = 'form-msg show error';
-    msg.textContent = '请输入用户名和密码';
+    msg.textContent = '请输入姓名和密码';
     return;
   }
 
-  const s = checkLogin(u, p);
-  if (!s){
+  await loadAll();
+
+  // 主管理员
+  if (u === SUPER_ADMIN.username){
+    if (p !== SUPER_ADMIN.password){
+      msg.className = 'form-msg show error';
+      msg.textContent = '密码错误';
+      return;
+    }
+    session = { username: u, role: 'super', displayName: SUPER_ADMIN.defaultName };
+    saveSession();
+    applySession();
+    closeMask('loginMask');
+    toast('欢迎回来，' + session.displayName);
+    renderMyViewForm();
+    renderViews();
+    return;
+  }
+
+  // 学生 / 老师
+  const base = findBaseAccount(u);
+  if (!base){
     msg.className = 'form-msg show error';
-    msg.textContent = '用户名或密码错误';
+    msg.textContent = '该姓名不在名单中';
     return;
   }
 
-  session = s;
+  const effectivePass = getEffectivePassword(u);
+  if (p !== effectivePass){
+    msg.className = 'form-msg show error';
+    msg.textContent = '密码错误';
+    return;
+  }
+
+  const wasActivated = isActivated(u);
+  const ip = await getIP();
+
+  // 更新云端记录
+  if (!usersData.users[u]) usersData.users[u] = {};
+  const cu = usersData.users[u];
+  cu.activated = true;
+  cu.displayName = cu.displayName || u;
+  cu.lastLoginAt = Date.now();
+  cu.lastLoginIp = ip;
+  try { await writeBin(BIN_USERS, usersData); } catch(e){ console.warn(e); }
+
+  session = {
+    username: u,
+    role: base.role,
+    displayName: cu.displayName || u
+  };
   saveSession();
   applySession();
   closeMask('loginMask');
-  toast('欢迎回来，' + (session.displayName || session.username));
   renderMyViewForm();
   renderViews();
+
+  if (!wasActivated){
+    // 首次登录：弹出激活弹窗
+    pendingActivateUser = u;
+    $('activateDesc').textContent = `欢迎，${u}！请尽快更改初始密码。`;
+    $('activateNewPass').value = '';
+    $('activateMsg').className = 'form-msg';
+    openMask('activateMask');
+  } else {
+    toast('欢迎回来，' + session.displayName);
+  }
 }
 
 /* ============================================================
-   用户信息
+   激活弹窗：确认修改
+   ============================================================ */
+async function doActivateChangePwd(){
+  const np = $('activateNewPass').value.trim();
+  const msg = $('activateMsg');
+  msg.className = 'form-msg';
+
+  if (!np){
+    msg.className = 'form-msg show error';
+    msg.textContent = '请输入新密码，或点「以后再说」';
+    return;
+  }
+  if (np.length < 6){
+    msg.className = 'form-msg show error';
+    msg.textContent = '密码至少 6 位';
+    return;
+  }
+
+  const u = pendingActivateUser;
+  if (!u) return;
+
+  try {
+    await loadAll();
+    if (!usersData.users[u]) usersData.users[u] = {};
+    usersData.users[u].password = np;
+    await writeBin(BIN_USERS, usersData);
+    closeMask('activateMask');
+    pendingActivateUser = null;
+    toast('密码已更新');
+  } catch(e){
+    msg.className = 'form-msg show error';
+    msg.textContent = '修改失败：' + (e.message || '网络错误');
+  }
+}
+
+/* ============================================================
+   用户信息弹窗
    ============================================================ */
 function openUserInfo(){
   if (!session) return;
   $('userInfoTitle').textContent = session.displayName || session.username;
-  const roleMap = { super: '主管理员', moderator: '主持人', student: '同学' };
-  $('userInfoSub').textContent = `账号：${session.username} · ${roleMap[session.role] || '用户'}`;
+  $('userInfoSub').textContent = `登录名：${session.username} · ${getRoleLabel(session.role)}`;
 
   const myViews = viewsData.views.filter(v => v.username === session.username);
-  const weekKey = getWeekKey();
+  const cloud = getCloudUser(session.username);
+  const activated = session.role === 'super' ? true : isActivated(session.username);
 
-  $('userInfoBody').innerHTML = `
+  let html = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div style="padding:12px;border-radius:10px;background:var(--surface-hi);border:1px solid var(--border);text-align:center">
         <b style="display:block;font-size:1.3rem;color:var(--accent-3)">${myViews.length}</b>
         <span style="font-size:.7rem;color:var(--text-mute)">已发表观点</span>
       </div>
       <div style="padding:12px;border-radius:10px;background:var(--surface-hi);border:1px solid var(--border);text-align:center">
-        <b style="display:block;font-size:1.3rem;color:var(--accent-2)">${isAdmin() ? topicsData.topics.length : '—'}</b>
-        <span style="font-size:.7rem;color:var(--text-mute)">${isAdmin() ? '历史辩题' : '本周'}</span>
+        <b style="display:block;font-size:1.3rem;color:${activated ? 'var(--ok)' : 'var(--text-mute)'}">${activated ? '已激活' : '未激活'}</b>
+        <span style="font-size:.7rem;color:var(--text-mute)">账号状态</span>
       </div>
     </div>
-    ${isAdmin() ? `
-      <div style="margin-top:12px;font-size:.76rem;color:var(--text-mute);line-height:1.9">
-        <div>本周标识：${weekKey}</div>
-        <div>每周一辩：${topicsData.weekly.enabled ? '已开启' : '已关闭'}</div>
-      </div>
-    ` : ''}
   `;
+  if (cloud && cloud.lastLoginAt){
+    html += `
+      <div style="margin-top:12px;font-size:.75rem;color:var(--text-mute);line-height:1.9">
+        <div>最后登录：${formatDate(cloud.lastLoginAt)}</div>
+        <div>登录 IP：<span class="mono">${escapeHtml(cloud.lastLoginIp || '—')}</span></div>
+      </div>
+    `;
+  }
+  $('userInfoBody').innerHTML = html;
+
   $('adminPanelBtn').style.display = isAdmin() ? '' : 'none';
   openMask('userMask');
 }
 
 /* ============================================================
-   修改显示名
+   改显示名
    ============================================================ */
 function openEditName(){
   $('displayNameInput').value = session.displayName || session.username;
@@ -1424,13 +1567,19 @@ async function saveDisplayName(){
     msg.textContent = '显示名需 1-20 个字符';
     return;
   }
-
-  session.displayName = v;
-  saveSession();
-  applySession();
+  if (v === session.username){
+    msg.className = 'form-msg show error';
+    msg.textContent = '显示名不能和登录名相同';
+    return;
+  }
 
   try {
     await loadAll();
+    if (!usersData.users[session.username]) usersData.users[session.username] = {};
+    usersData.users[session.username].displayName = v;
+    await writeBin(BIN_USERS, usersData);
+
+    // 更新本用户已发表观点的显示名
     let changed = false;
     viewsData.views.forEach(view => {
       if (view.username === session.username){
@@ -1439,13 +1588,69 @@ async function saveDisplayName(){
       }
     });
     if (changed) await writeBin(BIN_VIEWS, viewsData);
+
+    session.displayName = v;
+    saveSession();
+    applySession();
     toast('显示名已更新');
     closeMask('editNameMask');
     renderViews();
-    renderMyViewForm();
   } catch(e){
-    toast('云端同步失败，仅本机生效');
-    closeMask('editNameMask');
+    msg.className = 'form-msg show error';
+    msg.textContent = '保存失败：' + (e.message || '网络错误');
+  }
+}
+
+/* ============================================================
+   用户自己改密码
+   ============================================================ */
+function openChangePwd(){
+  $('oldPass').value = '';
+  $('newPass').value = '';
+  $('newPass2').value = '';
+  $('changePwdMsg').className = 'form-msg';
+  openMask('changePwdMask');
+  setTimeout(() => $('oldPass').focus(), 100);
+}
+async function doChangePwd(){
+  const op = $('oldPass').value;
+  const np = $('newPass').value;
+  const np2 = $('newPass2').value;
+  const msg = $('changePwdMsg');
+  msg.className = 'form-msg';
+
+  if (!op || !np || !np2){
+    msg.className = 'form-msg show error';
+    msg.textContent = '请填写所有字段';
+    return;
+  }
+  if (np.length < 6){
+    msg.className = 'form-msg show error';
+    msg.textContent = '新密码至少 6 位';
+    return;
+  }
+  if (np !== np2){
+    msg.className = 'form-msg show error';
+    msg.textContent = '两次输入的新密码不一致';
+    return;
+  }
+
+  try {
+    await loadAll();
+    const current = getEffectivePassword(session.username);
+    if (op !== current){
+      msg.className = 'form-msg show error';
+      msg.textContent = '当前密码错误';
+      return;
+    }
+    if (!usersData.users[session.username]) usersData.users[session.username] = {};
+    usersData.users[session.username].password = np;
+    await writeBin(BIN_USERS, usersData);
+    toast('密码已更新');
+    closeMask('changePwdMask');
+  } catch(e){
+    msg.className = 'form-msg show error';
+    msg.textContent = '修改失败：' + (e.message || '网络错误');
   }
 }
 
@@ -1454,27 +1659,25 @@ async function saveDisplayName(){
    ============================================================ */
 function openAdmin(){
   if (!isAdmin()) return;
+  $('adminSubtitle').textContent = session.role === 'super' ? '主管理员 · ' + session.username : '管理员 · ' + session.username;
   renderWeeklyPanel();
   renderTopicList();
+  renderUserList();
   openMask('adminMask');
 }
 function renderWeeklyPanel(){
-  const wk = getWeekKey();
-  $('currentWeekKey').textContent = wk;
+  $('currentWeekKey').textContent = getWeekKey();
   $('lastGenWeek').textContent = topicsData.weekly.lastGenWeek || '未生成';
   $('weeklyToggle').classList.toggle('on', topicsData.weekly.enabled);
 }
 function renderTopicList(){
   const list = $('topicList');
   const topics = topicsData.topics.slice().sort((a,b) => b.createdAt - a.createdAt);
-
   if (!topics.length){
     list.innerHTML = '<div class="empty-state"><span class="ico">📭</span><p>暂无历史辩题</p></div>';
     return;
   }
-
   const srcMap = { ai: '✨ AI 生成', manual: '✏ 手动', fallback: '📚 预置' };
-
   list.innerHTML = '';
   topics.forEach(t => {
     const isCurrent = t.id === topicsData.weekly.currentTopicId;
@@ -1497,7 +1700,6 @@ function renderTopicList(){
     `;
     list.appendChild(el);
   });
-
   list.querySelectorAll('[data-set-topic]').forEach(btn => {
     btn.addEventListener('click', () => setCurrentTopic(btn.dataset.setTopic));
   });
@@ -1506,6 +1708,143 @@ function renderTopicList(){
   });
 }
 
+/* ============================================================
+   用户管理
+   ============================================================ */
+function renderUserList(){
+  // 统计
+  const total = BASE_ACCOUNTS.length;
+  let activeCount = 0;
+  BASE_ACCOUNTS.forEach(a => { if (isActivated(a.username)) activeCount++; });
+  $('ustatTotal').textContent = total;
+  $('ustatActive').textContent = activeCount;
+  $('ustatInactive').textContent = total - activeCount;
+
+  // 筛选 + 搜索
+  const q = ($('userSearch').value || '').trim().toLowerCase();
+  let filtered = BASE_ACCOUNTS.slice();
+  if (currentUserFilter === 'active'){
+    filtered = filtered.filter(a => isActivated(a.username));
+  } else if (currentUserFilter === 'inactive'){
+    filtered = filtered.filter(a => !isActivated(a.username));
+  }
+  if (q){
+    filtered = filtered.filter(a => {
+      const cloud = getCloudUser(a.username);
+      const hay = (a.username + ' ' + (cloud && cloud.lastLoginIp || '')).toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  const list = $('userList');
+  if (!filtered.length){
+    list.innerHTML = '<div class="empty-state"><span class="pico"></span><p>没有匹配的账号</p></div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  filtered.forEach(a => {
+    const cloud = getCloudUser(a.username);
+    const activated = isActivated(a.username);
+    const password = getEffectivePassword(a.username) || a.password;
+    const displayName = (cloud && cloud.displayName) || a.username;
+    const isChangedPwd = cloud && cloud.password;
+
+    let dotClass = 'user-dot';
+    if (a.role === 'super') dotClass += ' super';
+    else if (a.role === 'admin') dotClass += ' admin';
+    else if (activated) dotClass += ' active';
+    else dotClass += ' inactive';
+
+    let roleTagClass = 'user-role-tag ' + a.role;
+    let roleTagText = a.role === 'admin' ? '管理员' : (a.role === 'super' ? '主管理员' : '学生');
+
+    let actions = '';
+    if (isSuper()){
+      actions = `
+        <button class="btn-mini primary" data-admin-change-pwd="${escapeHtml(a.username)}">改密码</button>
+      `;
+    }
+
+    const el = document.createElement('div');
+    el.className = 'user-card';
+    if (a.role === 'admin') el.classList.add('admin-card');
+    if (!activated) el.classList.add('inactive');
+    el.innerHTML = `
+      <span class="${dotClass}"></span>
+      <div class="user-info">
+        <div class="user-info-head">
+          <h4>${escapeHtml(displayName)}${displayName !== a.username ? ` <span style="font-size:.7rem;color:var(--text-mute);font-weight:400">（登录名 ${escapeHtml(a.username)}）</span>` : ''}</h4>
+          <span class="${roleTagClass}">${roleTagText}</span>
+          ${activated ? '<span style="font-size:.66rem;color:var(--ok);font-weight:700">● 已激活</span>' : '<span style="font-size:.66rem;color:var(--text-mute);font-weight:600">○ 未激活</span>'}
+        </div>
+        <div class="user-info-row">
+          <span>密码：<span class="pw">${escapeHtml(password)}</span>${isChangedPwd ? ' <span style="color:var(--accent-3);font-size:.66rem">（已改）</span>' : ''}</span>
+        </div>
+        ${cloud && cloud.lastLoginAt ? `
+          <div class="user-info-row">
+            <span>最后登录：${formatDate(cloud.lastLoginAt)}</span>
+            <span>IP：<b>${escapeHtml(cloud.lastLoginIp || '—')}</b></span>
+          </div>
+        ` : ''}
+        ${actions ? `<div class="user-card-actions">${actions}</div>` : ''}
+      </div>
+    `;
+    list.appendChild(el);
+  });
+
+  list.querySelectorAll('[data-admin-change-pwd]').forEach(btn => {
+    btn.addEventListener('click', () => openAdminChangePwd(btn.dataset.adminChangePwd));
+  });
+}
+
+function openAdminChangePwd(username){
+  if (!isSuper()) return;
+  const cloud = getCloudUser(username);
+  const current = getEffectivePassword(username);
+  $('adminChangePwdDesc').textContent = `为「${username}」设置新密码（当前：${current}）`;
+  $('adminNewPass').value = '';
+  $('adminChangePwdMsg').className = 'form-msg';
+  $('adminChangePwdSave').dataset.username = username;
+  openMask('adminChangePwdMask');
+  setTimeout(() => $('adminNewPass').focus(), 100);
+}
+
+async function saveAdminChangePwd(){
+  if (!isSuper()) return;
+  const username = $('adminChangePwdSave').dataset.username;
+  const np = $('adminNewPass').value.trim();
+  const msg = $('adminChangePwdMsg');
+  msg.className = 'form-msg';
+
+  if (!np){
+    msg.className = 'form-msg show error';
+    msg.textContent = '请输入新密码';
+    return;
+  }
+  if (np.length < 6){
+    msg.className = 'form-msg show error';
+    msg.textContent = '密码至少 6 位';
+    return;
+  }
+
+  try {
+    await loadAll();
+    if (!usersData.users[username]) usersData.users[username] = {};
+    usersData.users[username].password = np;
+    await writeBin(BIN_USERS, usersData);
+    toast('密码已更新');
+    closeMask('adminChangePwdMask');
+    renderUserList();
+  } catch(e){
+    msg.className = 'form-msg show error';
+    msg.textContent = '保存失败：' + (e.message || '网络错误');
+  }
+}
+
+/* ============================================================
+   辩题操作
+   ============================================================ */
 async function setCurrentTopic(id){
   try {
     topicsData.weekly.currentTopicId = id;
@@ -1516,16 +1855,10 @@ async function setCurrentTopic(id){
     renderMyViewForm();
     renderViews();
     renderTopicList();
-  } catch(e){
-    toast('切换失败');
-  }
+  } catch(e){ toast('切换失败'); }
 }
-
 async function deleteTopic(id){
-  if (topicsData.topics.length <= 1){
-    toast('至少保留一个辩题');
-    return;
-  }
+  if (topicsData.topics.length <= 1){ toast('至少保留一个辩题'); return; }
   if (!confirm('删除这个辩题？相关观点不会被删除。')) return;
   try {
     topicsData.topics = topicsData.topics.filter(t => t.id !== id);
@@ -1539,11 +1872,8 @@ async function deleteTopic(id){
     renderMyViewForm();
     renderViews();
     renderTopicList();
-  } catch(e){
-    toast('删除失败');
-  }
+  } catch(e){ toast('删除失败'); }
 }
-
 async function createManualTopic(){
   const title = $('newTopicTitle').value.trim();
   const a = $('newTopicA').value.trim();
@@ -1557,7 +1887,6 @@ async function createManualTopic(){
     msg.textContent = '标题、正方、反方为必填';
     return;
   }
-
   try {
     const topic = {
       id: uid('topic'),
@@ -1608,6 +1937,15 @@ function bindEvents(){
   $('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginPass').focus(); });
   $('loginMask').addEventListener('click', e => { if (e.target === $('loginMask')) closeMask('loginMask'); });
 
+  // 激活弹窗
+  $('activateLater').addEventListener('click', () => {
+    closeMask('activateMask');
+    pendingActivateUser = null;
+    toast('好的，可随时在个人主页修改密码');
+  });
+  $('activateConfirm').addEventListener('click', doActivateChangePwd);
+  $('activateNewPass').addEventListener('keydown', e => { if (e.key === 'Enter') doActivateChangePwd(); });
+
   $('userChip').addEventListener('click', openUserInfo);
   $('userMask').addEventListener('click', e => { if (e.target === $('userMask')) closeMask('userMask'); });
   $('logoutBtn').addEventListener('click', () => {
@@ -1623,8 +1961,19 @@ function bindEvents(){
     closeMask('userMask');
     setTimeout(() => openEditName(), 80);
   });
+  $('changePwdBtn').addEventListener('click', () => {
+    closeMask('userMask');
+    setTimeout(() => openChangePwd(), 80);
+  });
   $('editNameSave').addEventListener('click', saveDisplayName);
   $('editNameMask').addEventListener('click', e => { if (e.target === $('editNameMask')) closeMask('editNameMask'); });
+  $('changePwdSave').addEventListener('click', doChangePwd);
+  $('changePwdMask').addEventListener('click', e => { if (e.target === $('changePwdMask')) closeMask('changePwdMask'); });
+  $('newPass2').addEventListener('keydown', e => { if (e.key === 'Enter') doChangePwd(); });
+
+  $('adminChangePwdSave').addEventListener('click', saveAdminChangePwd);
+  $('adminChangePwdMask').addEventListener('click', e => { if (e.target === $('adminChangePwdMask')) closeMask('adminChangePwdMask'); });
+  $('adminNewPass').addEventListener('keydown', e => { if (e.key === 'Enter') saveAdminChangePwd(); });
 
   $('adminPanelBtn').addEventListener('click', () => {
     closeMask('userMask');
@@ -1648,9 +1997,7 @@ function bindEvents(){
     try {
       await writeBin(BIN_TOPICS, topicsData);
       toast(topicsData.weekly.enabled ? '已开启每周一辩' : '已关闭每周一辩');
-    } catch(e){
-      toast('保存失败');
-    }
+    } catch(e){ toast('保存失败'); }
   });
 
   $('forceGenBtn').addEventListener('click', async () => {
@@ -1724,14 +2071,25 @@ function bindEvents(){
     $$('.side-opt').forEach(opt => opt.classList.remove('active'));
   });
 
-  $$('.filter-chip').forEach(chip => {
+  $$('.filter-chip[data-filter]').forEach(chip => {
     chip.addEventListener('click', () => {
-      $$('.filter-chip').forEach(c => c.classList.remove('active'));
+      $$('.filter-chip[data-filter]').forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       currentFilter = chip.dataset.filter;
       renderViews();
     });
   });
+
+  $$('.filter-chip[data-user-filter]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      $$('.filter-chip[data-user-filter]').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentUserFilter = chip.dataset.userFilter;
+      renderUserList();
+    });
+  });
+
+  $('userSearch').addEventListener('input', renderUserList);
 
   document.querySelectorAll('[data-close]').forEach(btn => {
     btn.addEventListener('click', () => closeMask(btn.dataset.close));
@@ -1739,7 +2097,7 @@ function bindEvents(){
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape'){
-      ['loginMask','userMask','editNameMask','adminMask'].forEach(id => {
+      ['loginMask','userMask','editNameMask','changePwdMask','adminMask','activateMask','adminChangePwdMask'].forEach(id => {
         if ($(id).classList.contains('show')) closeMask(id);
       });
     }
@@ -1817,6 +2175,7 @@ async function init(){
   renderViews();
 
   console.log('%c💬 观点圆桌已就绪', 'color:#a78bfa;font-weight:bold;font-size:14px');
+  console.log('%c共 ' + BASE_ACCOUNTS.length + ' 个学生/老师账号已加载', 'color:#9a9cb2;font-size:12px');
 }
 
 init();
