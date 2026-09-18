@@ -222,7 +222,6 @@ input,textarea,select{font-family:inherit}
 .form-msg.success{color:var(--ok);background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.28)}
 .form-msg.info{color:var(--accent-2);background:rgba(94,234,212,.08);border:1px solid rgba(94,234,212,.28)}
 
-/* 首次激活弹窗特别样式 */
 .activate-modal{text-align:center}
 .activate-icon{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;font-size:2rem;background:linear-gradient(135deg,var(--accent-3),var(--accent-2));box-shadow:0 16px 40px -12px rgba(167,139,250,.7);animation:popIn .6s var(--ease-back)}
 @keyframes popIn{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
@@ -271,7 +270,18 @@ input,textarea,select{font-family:inherit}
 .user-stat.active b{color:var(--ok)}
 .user-stat.inactive b{color:var(--text-mute)}
 
-.user-list{display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow-y:auto;padding-right:4px}
+.user-list{display:flex;flex-direction:column;gap:10px}
+.user-section-title{
+  font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-mute);padding:14px 4px 4px;
+  display:flex;align-items:center;gap:10px;
+}
+.user-section-title::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,var(--border),transparent);
+}
+.user-section-title:first-child{padding-top:0}
+
 .user-card{
   display:flex;align-items:flex-start;gap:12px;
   padding:14px 16px;border-radius:12px;
@@ -279,9 +289,9 @@ input,textarea,select{font-family:inherit}
   transition:all .3s var(--ease);
 }
 .user-card:hover{border-color:var(--border-hi);background:var(--surface-hi)}
-.user-card.super-card{border-color:rgba(251,146,60,.35);background:rgba(251,146,60,.05)}
-.user-card.admin-card{border-color:rgba(244,114,182,.28);background:rgba(244,114,182,.04)}
-.user-card.inactive{opacity:.75}
+.user-card.super-card{border-color:rgba(251,146,60,.4);background:rgba(251,146,60,.06)}
+.user-card.admin-card{border-color:rgba(244,114,182,.3);background:rgba(244,114,182,.05)}
+.user-card.inactive{opacity:.72}
 .user-dot{
   width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px;
   background:var(--text-mute);
@@ -319,7 +329,6 @@ input,textarea,select{font-family:inherit}
   .to-top{right:16px;bottom:16px;width:44px;height:44px}
   .toast{bottom:22px;font-size:.78rem;padding:10px 16px}
   .modal{padding:24px 20px}
-  .user-list{max-height:50vh}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
@@ -522,32 +531,13 @@ input,textarea,select{font-family:inherit}
     <p class="desc" id="userInfoSub">—</p>
     <div id="userInfoBody" style="font-size:.85rem;color:var(--text-dim);line-height:2"></div>
     <div class="modal-actions" style="margin-top:22px">
-      <button class="btn btn-ghost" type="button" id="editNameBtn">改显示名</button>
-      <button class="btn btn-ghost" type="button" id="changePwdBtn">改密码</button>
+      <button class="btn btn-primary" type="button" id="changePwdBtn">改密码</button>
     </div>
     <div class="modal-actions" style="margin-top:10px">
       <button class="btn btn-ghost" type="button" id="adminPanelBtn" style="display:none">管理面板</button>
     </div>
     <div class="modal-actions" style="margin-top:10px">
       <button class="btn btn-ghost" type="button" id="logoutBtn" style="color:var(--err);border-color:rgba(248,113,113,.3)">退出登录</button>
-    </div>
-  </div>
-</div>
-
-<!-- 改显示名 -->
-<div class="mask" id="editNameMask">
-  <div class="modal">
-    <button class="modal-close" data-close="editNameMask">✕</button>
-    <h2>修改显示名</h2>
-    <p class="desc">修改后，你的观点墙上显示的名字会更新（登录用的姓名不变）。</p>
-    <div class="field">
-      <label class="field-label">显示名</label>
-      <input class="input" type="text" id="displayNameInput" maxlength="20" placeholder="1-20 个字符">
-    </div>
-    <div class="form-msg" id="editNameMsg"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" type="button" data-close="editNameMask">取消</button>
-      <button class="btn btn-primary" type="button" id="editNameSave">保存</button>
     </div>
   </div>
 </div>
@@ -703,12 +693,8 @@ const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
 const DEEPSEEK_KEY = 'sk-c633bb7dd6c4f86aeac943a8936ba93';
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
-/* ============================================================
-   账号体系
-   - 主管理员：硬编码
-   - 老师 / 学生：45 人，按学号顺序
-   ============================================================ */
-const SUPER_ADMIN = { username: 'My_Underline', password: 'kk20140119', role: 'super', defaultName: '下划线' };
+/* 账号 */
+const SUPER_ADMIN = { username: 'My_Underline', password: 'kk20140119', role: 'super' };
 
 const BASE_ACCOUNTS = [
   { username: '范亦馨', password: '20250601', role: 'student' },
@@ -747,7 +733,7 @@ const BASE_ACCOUNTS = [
   { username: '陆婧玥', password: '20250634', role: 'student' },
   { username: '陆芸萱', password: '20250635', role: 'student' },
   { username: '王玥蘅', password: '20250636', role: 'student' },
-  { username: '尤筠涵', password: '20250637', role: 'admin' },   // 学生管理员
+  { username: '尤筠涵', password: '20250637', role: 'admin' },
   { username: '张宸瑜', password: '20250638', role: 'student' },
   { username: '赵若希', password: '20250639', role: 'student' },
   { username: '何妍',   password: '20250640', role: 'student' },
@@ -755,10 +741,9 @@ const BASE_ACCOUNTS = [
   { username: '沙芸伊', password: '20250642', role: 'student' },
   { username: '涂尧',   password: '20250643', role: 'student' },
   { username: '杨乐遥', password: '20250644', role: 'student' },
-  { username: '邹衍',   password: '20250645', role: 'admin' }    // 老师
+  { username: '邹衍',   password: '20250645', role: 'admin' }
 ];
 
-/* Fallback 辩题库 */
 const FALLBACK_TOPICS = [
   { title:'网络的便利，值得我们放弃一部分隐私吗？', sideA:'值得，隐私换来的是效率和方便', sideB:'不值得，隐私是不可让渡的底线', desc:'人脸识别、定位、算法推荐……便利与隐私的博弈每天都在发生。' },
   { title:'AI 应该参与我们的日常决策吗？', sideA:'应该，AI 更理性、更少情绪化', sideB:'不应该，人应该为自己的选择负责', desc:'当 AI 能给出比我们更准的建议，我们还要不要自己判断？' },
@@ -796,7 +781,7 @@ let pendingSide = null;
 let scrollLockCount = 0;
 let savedScrollY = 0;
 let isGenerating = false;
-let pendingActivateUser = null; // 当前激活弹窗对应的用户名
+let pendingActivateUser = null;
 
 /* ============================================================
    滚动锁定
@@ -840,9 +825,7 @@ function closeMask(id){
   }
 }
 
-/* ============================================================
-   Toast
-   ============================================================ */
+/* Toast */
 let toastTimer = null;
 function toast(text){
   $('toastText').textContent = text || '已完成';
@@ -851,9 +834,7 @@ function toast(text){
   toastTimer = setTimeout(() => $('toast').classList.remove('show'), 2400);
 }
 
-/* ============================================================
-   工具
-   ============================================================ */
+/* 工具 */
 function escapeHtml(str){
   return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -899,9 +880,7 @@ async function getIP(){
   return cachedIP;
 }
 
-/* ============================================================
-   jsonbin
-   ============================================================ */
+/* jsonbin */
 async function readBin(binId){
   const res = await fetch(`${JSONBIN_BASE}/b/${binId}/latest`, { headers: { 'X-Master-Key': JSONBIN_KEY } });
   if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -954,9 +933,7 @@ async function loadAll(){
   }
 }
 
-/* ============================================================
-   账号相关工具
-   ============================================================ */
+/* 账号 */
 function findBaseAccount(username){
   return BASE_ACCOUNTS.find(a => a.username === username) || null;
 }
@@ -973,20 +950,8 @@ function isActivated(username){
   const cloud = getCloudUser(username);
   return !!(cloud && cloud.activated);
 }
-function getDisplayName(username){
-  const cloud = getCloudUser(username);
-  if (cloud && cloud.displayName) return cloud.displayName;
-  return username;
-}
-function getRoleLabel(role){
-  if (role === 'super') return '主管理员';
-  if (role === 'admin') return '管理员';
-  return '学生';
-}
 
-/* ============================================================
-   DeepSeek
-   ============================================================ */
+/* DeepSeek */
 async function callDeepSeek(){
   const sysPrompt = `你是一位中学辩论赛的命题人，擅长设计"两可性强、贴近学生生活、能引发深度思考"的辩题。`;
   const userPrompt = `请生成一个适合中学生讨论的辩题，要求：
@@ -1005,10 +970,7 @@ async function callDeepSeek(){
 
   const res = await fetch(DEEPSEEK_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${DEEPSEEK_KEY}`
-    },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_KEY}` },
     body: JSON.stringify({
       model: 'deepseek-chat',
       messages: [
@@ -1027,14 +989,12 @@ async function callDeepSeek(){
   if (!content) throw new Error('DeepSeek 返回为空');
 
   let parsed;
-  try {
-    parsed = JSON.parse(content);
-  } catch(e){
+  try { parsed = JSON.parse(content); }
+  catch(e){
     const match = content.match(/\{[\s\S]*\}/);
     if (!match) throw new Error('无法解析 JSON');
     parsed = JSON.parse(match[0]);
   }
-
   if (!parsed.title || !parsed.sideA || !parsed.sideB) throw new Error('返回字段缺失');
   return {
     title: String(parsed.title).slice(0, 100),
@@ -1043,12 +1003,10 @@ async function callDeepSeek(){
     desc: String(parsed.desc || '').slice(0, 300)
   };
 }
-
 function getRandomFallback(){
   const t = FALLBACK_TOPICS[Math.floor(Math.random() * FALLBACK_TOPICS.length)];
   return { ...t };
 }
-
 async function generateNewTopic(source){
   const newTopic = {
     id: uid('topic'),
@@ -1057,7 +1015,6 @@ async function generateNewTopic(source){
     createdAt: Date.now(),
     createdBy: session ? session.username : 'system'
   };
-
   try {
     const ai = await callDeepSeek();
     newTopic.title = ai.title;
@@ -1065,7 +1022,6 @@ async function generateNewTopic(source){
     newTopic.sideB = ai.sideB;
     newTopic.desc = ai.desc;
     newTopic.source = 'ai';
-    console.log('%c✨ AI 生成辩题成功', 'color:#a78bfa;font-weight:bold', ai);
   } catch(e){
     console.warn('DeepSeek 生成失败，使用预置题库', e);
     const fb = getRandomFallback();
@@ -1075,11 +1031,9 @@ async function generateNewTopic(source){
     newTopic.desc = fb.desc;
     newTopic.source = 'fallback';
   }
-
   topicsData.topics.push(newTopic);
   topicsData.weekly.currentTopicId = newTopic.id;
   topicsData.weekly.lastGenWeek = getWeekKey();
-
   await writeBin(BIN_TOPICS, topicsData);
   currentTopicId = newTopic.id;
   return newTopic;
@@ -1115,16 +1069,11 @@ async function checkWeeklyAuto(){
     toast('✨ 本周辩题已更新');
     renderTopic();
     renderViews();
-  } catch(e){
-    console.warn('自动生成失败', e);
-  } finally {
-    isGenerating = false;
-  }
+  } catch(e){ console.warn('自动生成失败', e); }
+  finally { isGenerating = false; }
 }
 
-/* ============================================================
-   会话
-   ============================================================ */
+/* 会话 */
 function loadSession(){
   try{ const raw = localStorage.getItem(SESSION_KEY); if (raw) session = JSON.parse(raw); }catch(e){}
 }
@@ -1134,20 +1083,17 @@ function saveSession(){
     else localStorage.removeItem(SESSION_KEY);
   }catch(e){}
 }
-function isAdmin(){
-  return session && (session.role === 'super' || session.role === 'admin');
-}
-function isSuper(){
-  return session && session.role === 'super';
-}
+function isAdmin(){ return session && (session.role === 'super' || session.role === 'admin'); }
+function isSuper(){ return session && session.role === 'super'; }
+
 function applySession(){
   const chip = $('userChip');
   const loginBtn = $('loginBtn');
   if (session){
     chip.style.display = 'inline-flex';
     loginBtn.style.display = 'none';
-    $('userName').textContent = session.displayName || session.username;
-    $('userAvatar').textContent = (session.displayName || session.username).charAt(0).toUpperCase();
+    $('userName').textContent = session.username;
+    $('userAvatar').textContent = session.username.charAt(0).toUpperCase();
     if (session.role === 'super' || session.role === 'admin'){
       $('userRole').style.display = 'inline-block';
       $('userRole').textContent = session.role === 'super' ? 'SUPER' : 'ADMIN';
@@ -1174,9 +1120,7 @@ function applySession(){
   $('usersTabBtn').style.display = isAdmin() ? '' : 'none';
 }
 
-/* ============================================================
-   渲染：辩题
-   ============================================================ */
+/* 渲染：辩题 */
 function getCurrentTopic(){
   if (!currentTopicId) currentTopicId = topicsData.weekly.currentTopicId;
   return topicsData.topics.find(t => t.id === currentTopicId) || topicsData.topics[topicsData.topics.length - 1];
@@ -1191,7 +1135,6 @@ function renderTopic(){
   currentTopicId = topic.id;
   $('topicTitle').textContent = topic.title;
   $('topicDesc').textContent = topic.desc || '';
-
   const srcMap = { ai: '✨ AI 生成', manual: '✏ 手动创建', fallback: '📚 预置辩题' };
   const srcEl = $('topicSource');
   srcEl.className = 'topic-source ' + (topic.source || 'fallback');
@@ -1199,9 +1142,7 @@ function renderTopic(){
   $('topicWeek').textContent = topic.createdAt ? formatRelative(topic.createdAt) : '';
 }
 
-/* ============================================================
-   我的观点
-   ============================================================ */
+/* 我的观点 */
 function getMyView(){
   if (!session || !currentTopicId) return null;
   return viewsData.views.find(v => v.topicId === currentTopicId && v.username === session.username) || null;
@@ -1229,16 +1170,13 @@ function renderMyViewForm(){
   $('myViewHint').textContent = '';
 }
 
-/* ============================================================
-   观点墙
-   ============================================================ */
+/* 观点墙 */
 function renderViews(){
   if (!currentTopicId){
     $('wallPro').innerHTML = '<div class="empty-state"><span class="ico">💭</span><p>暂无辩题</p></div>';
     $('wallCon').innerHTML = '';
     return;
   }
-
   const all = viewsData.views.filter(v => v.topicId === currentTopicId).sort((a,b) => b.createdAt - a.createdAt);
   const proViews = all.filter(v => v.side === 'A');
   const conViews = all.filter(v => v.side === 'B');
@@ -1286,23 +1224,19 @@ function buildViewItemHtml(v){
   const isMine = session && session.username === v.username;
   const canDel = isAdmin();
   const sideClass = v.side === 'A' ? 'pro' : 'con';
-  const displayName = v.displayName || v.username;
-  const avatarChar = displayName.charAt(0).toUpperCase();
+  const name = v.username;
+  const avatarChar = name.charAt(0);
   const edited = v.updatedAt && v.updatedAt > v.createdAt + 1000;
 
   let actions = '';
-  if (isMine){
-    actions = `<button class="btn-mini primary" data-edit-view="${escapeHtml(v.id)}">✎ 修改</button>`;
-  }
-  if (canDel){
-    actions += `<button class="btn-mini danger" data-del-view="${escapeHtml(v.id)}">删除</button>`;
-  }
+  if (isMine) actions = `<button class="btn-mini primary" data-edit-view="${escapeHtml(v.id)}">✎ 修改</button>`;
+  if (canDel) actions += `<button class="btn-mini danger" data-del-view="${escapeHtml(v.id)}">删除</button>`;
 
   return `
     <div class="view-item ${sideClass} ${isMine ? 'mine' : ''}">
       <div class="view-item-head">
         <div class="view-item-avatar">${escapeHtml(avatarChar)}</div>
-        <div class="view-item-name">${escapeHtml(displayName)}${isMine ? ' <span style="color:var(--accent-3);font-size:.7rem">（我）</span>' : ''}</div>
+        <div class="view-item-name">${escapeHtml(name)}${isMine ? ' <span style="color:var(--accent-3);font-size:.7rem">（我）</span>' : ''}</div>
         <div class="view-item-meta">${formatRelative(v.createdAt)}${edited ? ' · 已修改' : ''}</div>
       </div>
       <div class="view-item-body">${escapeHtml(v.content)}</div>
@@ -1311,14 +1245,11 @@ function buildViewItemHtml(v){
   `;
 }
 
-/* ============================================================
-   提交观点
-   ============================================================ */
+/* 提交观点 */
 async function submitView(){
   if (!session){ toast('请先登录'); return; }
   if (!currentTopicId){ toast('当前没有辩题'); return; }
   if (!pendingSide){ toast('请先选择你的立场'); return; }
-
   const content = $('viewContent').value.trim();
   if (content.length < 5){ toast('观点至少 5 个字'); return; }
 
@@ -1339,7 +1270,6 @@ async function submitView(){
       if (item){
         item.side = pendingSide;
         item.content = content;
-        item.displayName = session.displayName || session.username;
         item.updatedAt = Date.now();
       }
       await writeBin(BIN_VIEWS, viewsData);
@@ -1350,7 +1280,6 @@ async function submitView(){
         topicId: currentTopicId,
         topicTitle,
         username: session.username,
-        displayName: session.displayName || session.username,
         side: pendingSide,
         content,
         createdAt: Date.now(),
@@ -1382,9 +1311,7 @@ async function deleteView(id){
   } catch(e){ toast('删除失败'); }
 }
 
-/* ============================================================
-   登录
-   ============================================================ */
+/* 登录 */
 function openLogin(){
   $('loginUser').value = '';
   $('loginPass').value = '';
@@ -1414,11 +1341,11 @@ async function doLogin(){
       msg.textContent = '密码错误';
       return;
     }
-    session = { username: u, role: 'super', displayName: SUPER_ADMIN.defaultName };
+    session = { username: u, role: 'super' };
     saveSession();
     applySession();
     closeMask('loginMask');
-    toast('欢迎回来，' + session.displayName);
+    toast('欢迎回来，' + u);
     renderMyViewForm();
     renderViews();
     return;
@@ -1431,7 +1358,6 @@ async function doLogin(){
     msg.textContent = '该姓名不在名单中';
     return;
   }
-
   const effectivePass = getEffectivePassword(u);
   if (p !== effectivePass){
     msg.className = 'form-msg show error';
@@ -1442,20 +1368,14 @@ async function doLogin(){
   const wasActivated = isActivated(u);
   const ip = await getIP();
 
-  // 更新云端记录
   if (!usersData.users[u]) usersData.users[u] = {};
   const cu = usersData.users[u];
   cu.activated = true;
-  cu.displayName = cu.displayName || u;
   cu.lastLoginAt = Date.now();
   cu.lastLoginIp = ip;
   try { await writeBin(BIN_USERS, usersData); } catch(e){ console.warn(e); }
 
-  session = {
-    username: u,
-    role: base.role,
-    displayName: cu.displayName || u
-  };
+  session = { username: u, role: base.role };
   saveSession();
   applySession();
   closeMask('loginMask');
@@ -1463,20 +1383,16 @@ async function doLogin(){
   renderViews();
 
   if (!wasActivated){
-    // 首次登录：弹出激活弹窗
     pendingActivateUser = u;
     $('activateDesc').textContent = `欢迎，${u}！请尽快更改初始密码。`;
     $('activateNewPass').value = '';
     $('activateMsg').className = 'form-msg';
     openMask('activateMask');
   } else {
-    toast('欢迎回来，' + session.displayName);
+    toast('欢迎回来，' + u);
   }
 }
 
-/* ============================================================
-   激活弹窗：确认修改
-   ============================================================ */
 async function doActivateChangePwd(){
   const np = $('activateNewPass').value.trim();
   const msg = $('activateMsg');
@@ -1492,10 +1408,8 @@ async function doActivateChangePwd(){
     msg.textContent = '密码至少 6 位';
     return;
   }
-
   const u = pendingActivateUser;
   if (!u) return;
-
   try {
     await loadAll();
     if (!usersData.users[u]) usersData.users[u] = {};
@@ -1510,13 +1424,12 @@ async function doActivateChangePwd(){
   }
 }
 
-/* ============================================================
-   用户信息弹窗
-   ============================================================ */
+/* 用户信息 */
 function openUserInfo(){
   if (!session) return;
-  $('userInfoTitle').textContent = session.displayName || session.username;
-  $('userInfoSub').textContent = `登录名：${session.username} · ${getRoleLabel(session.role)}`;
+  $('userInfoTitle').textContent = session.username;
+  const roleMap = { super: '主管理员', admin: '管理员', student: '学生' };
+  $('userInfoSub').textContent = roleMap[session.role] || '用户';
 
   const myViews = viewsData.views.filter(v => v.username === session.username);
   const cloud = getCloudUser(session.username);
@@ -1538,7 +1451,7 @@ function openUserInfo(){
     html += `
       <div style="margin-top:12px;font-size:.75rem;color:var(--text-mute);line-height:1.9">
         <div>最后登录：${formatDate(cloud.lastLoginAt)}</div>
-        <div>登录 IP：<span class="mono">${escapeHtml(cloud.lastLoginIp || '—')}</span></div>
+        <div>登录 IP：<span class="mono" style="font-family:ui-monospace,Menlo,monospace">${escapeHtml(cloud.lastLoginIp || '—')}</span></div>
       </div>
     `;
   }
@@ -1548,62 +1461,7 @@ function openUserInfo(){
   openMask('userMask');
 }
 
-/* ============================================================
-   改显示名
-   ============================================================ */
-function openEditName(){
-  $('displayNameInput').value = session.displayName || session.username;
-  $('editNameMsg').className = 'form-msg';
-  openMask('editNameMask');
-  setTimeout(() => $('displayNameInput').focus(), 100);
-}
-async function saveDisplayName(){
-  const v = $('displayNameInput').value.trim();
-  const msg = $('editNameMsg');
-  msg.className = 'form-msg';
-
-  if (v.length < 1 || v.length > 20){
-    msg.className = 'form-msg show error';
-    msg.textContent = '显示名需 1-20 个字符';
-    return;
-  }
-  if (v === session.username){
-    msg.className = 'form-msg show error';
-    msg.textContent = '显示名不能和登录名相同';
-    return;
-  }
-
-  try {
-    await loadAll();
-    if (!usersData.users[session.username]) usersData.users[session.username] = {};
-    usersData.users[session.username].displayName = v;
-    await writeBin(BIN_USERS, usersData);
-
-    // 更新本用户已发表观点的显示名
-    let changed = false;
-    viewsData.views.forEach(view => {
-      if (view.username === session.username){
-        view.displayName = v;
-        changed = true;
-      }
-    });
-    if (changed) await writeBin(BIN_VIEWS, viewsData);
-
-    session.displayName = v;
-    saveSession();
-    applySession();
-    toast('显示名已更新');
-    closeMask('editNameMask');
-    renderViews();
-  } catch(e){
-    msg.className = 'form-msg show error';
-    msg.textContent = '保存失败：' + (e.message || '网络错误');
-  }
-}
-
-/* ============================================================
-   用户自己改密码
-   ============================================================ */
+/* 用户自己改密码 */
 function openChangePwd(){
   $('oldPass').value = '';
   $('newPass').value = '';
@@ -1654,9 +1512,7 @@ async function doChangePwd(){
   }
 }
 
-/* ============================================================
-   管理面板
-   ============================================================ */
+/* 管理面板 */
 function openAdmin(){
   if (!isAdmin()) return;
   $('adminSubtitle').textContent = session.role === 'super' ? '主管理员 · ' + session.username : '管理员 · ' + session.username;
@@ -1708,9 +1564,7 @@ function renderTopicList(){
   });
 }
 
-/* ============================================================
-   用户管理
-   ============================================================ */
+/* 用户管理 */
 function renderUserList(){
   // 统计
   const total = BASE_ACCOUNTS.length;
@@ -1720,35 +1574,31 @@ function renderUserList(){
   $('ustatActive').textContent = activeCount;
   $('ustatInactive').textContent = total - activeCount;
 
-  // 筛选 + 搜索
+  // 筛选
   const q = ($('userSearch').value || '').trim().toLowerCase();
   let filtered = BASE_ACCOUNTS.slice();
-  if (currentUserFilter === 'active'){
-    filtered = filtered.filter(a => isActivated(a.username));
-  } else if (currentUserFilter === 'inactive'){
-    filtered = filtered.filter(a => !isActivated(a.username));
-  }
+  if (currentUserFilter === 'active') filtered = filtered.filter(a => isActivated(a.username));
+  else if (currentUserFilter === 'inactive') filtered = filtered.filter(a => !isActivated(a.username));
   if (q){
     filtered = filtered.filter(a => {
       const cloud = getCloudUser(a.username);
-      const hay = (a.username + ' ' + (cloud && cloud.lastLoginIp || '')).toLowerCase();
+      const hay = (a.username + ' ' + ((cloud && cloud.lastLoginIp) || '')).toLowerCase();
       return hay.includes(q);
     });
   }
 
-  const list = $('userList');
-  if (!filtered.length){
-    list.innerHTML = '<div class="empty-state"><span class="pico"></span><p>没有匹配的账号</p></div>';
-    return;
-  }
+  // 分组：主管理员（仅主管理员可见） + 管理员 + 学生
+  const admins = filtered.filter(a => a.role === 'admin');
+  const students = filtered.filter(a => a.role === 'student');
 
+  const list = $('userList');
   list.innerHTML = '';
-  filtered.forEach(a => {
+
+  const buildCard = (a, isSuperRecord) => {
     const cloud = getCloudUser(a.username);
-    const activated = isActivated(a.username);
-    const password = getEffectivePassword(a.username) || a.password;
-    const displayName = (cloud && cloud.displayName) || a.username;
-    const isChangedPwd = cloud && cloud.password;
+    const activated = isSuperRecord ? true : isActivated(a.username);
+    const password = isSuperRecord ? a.password : (getEffectivePassword(a.username) || a.password);
+    const isChangedPwd = !isSuperRecord && cloud && cloud.password;
 
     let dotClass = 'user-dot';
     if (a.role === 'super') dotClass += ' super';
@@ -1756,27 +1606,27 @@ function renderUserList(){
     else if (activated) dotClass += ' active';
     else dotClass += ' inactive';
 
-    let roleTagClass = 'user-role-tag ' + a.role;
-    let roleTagText = a.role === 'admin' ? '管理员' : (a.role === 'super' ? '主管理员' : '学生');
+    const roleTagClass = 'user-role-tag ' + (a.role === 'super' ? 'super' : a.role === 'admin' ? 'admin' : 'student');
+    const roleTagText = a.role === 'super' ? '主管理员' : a.role === 'admin' ? '管理员' : '学生';
 
     let actions = '';
-    if (isSuper()){
-      actions = `
-        <button class="btn-mini primary" data-admin-change-pwd="${escapeHtml(a.username)}">改密码</button>
-      `;
+    if (isSuper() && !isSuperRecord){
+      actions = `<button class="btn-mini primary" data-admin-change-pwd="${escapeHtml(a.username)}">改密码</button>`;
     }
 
-    const el = document.createElement('div');
-    el.className = 'user-card';
-    if (a.role === 'admin') el.classList.add('admin-card');
-    if (!activated) el.classList.add('inactive');
-    el.innerHTML = `
+    const card = document.createElement('div');
+    card.className = 'user-card';
+    if (a.role === 'super') card.classList.add('super-card');
+    else if (a.role === 'admin') card.classList.add('admin-card');
+    if (!activated && !isSuperRecord) card.classList.add('inactive');
+
+    card.innerHTML = `
       <span class="${dotClass}"></span>
       <div class="user-info">
         <div class="user-info-head">
-          <h4>${escapeHtml(displayName)}${displayName !== a.username ? ` <span style="font-size:.7rem;color:var(--text-mute);font-weight:400">（登录名 ${escapeHtml(a.username)}）</span>` : ''}</h4>
+          <h4>${escapeHtml(a.username)}</h4>
           <span class="${roleTagClass}">${roleTagText}</span>
-          ${activated ? '<span style="font-size:.66rem;color:var(--ok);font-weight:700">● 已激活</span>' : '<span style="font-size:.66rem;color:var(--text-mute);font-weight:600">○ 未激活</span>'}
+          ${isSuperRecord ? '' : (activated ? '<span style="font-size:.66rem;color:var(--ok);font-weight:700">● 已激活</span>' : '<span style="font-size:.66rem;color:var(--text-mute);font-weight:600">○ 未激活</span>')}
         </div>
         <div class="user-info-row">
           <span>密码：<span class="pw">${escapeHtml(password)}</span>${isChangedPwd ? ' <span style="color:var(--accent-3);font-size:.66rem">（已改）</span>' : ''}</span>
@@ -1784,14 +1634,49 @@ function renderUserList(){
         ${cloud && cloud.lastLoginAt ? `
           <div class="user-info-row">
             <span>最后登录：${formatDate(cloud.lastLoginAt)}</span>
-            <span>IP：<b>${escapeHtml(cloud.lastLoginIp || '—')}</b></span>
+            <span>IP：<b>${escapeHtml(cloud.lastLoginAt ? (cloud.lastLoginIp || '—') : '—')}</b></span>
           </div>
         ` : ''}
         ${actions ? `<div class="user-card-actions">${actions}</div>` : ''}
       </div>
     `;
-    list.appendChild(el);
-  });
+    return card;
+  };
+
+  // 主管理员分组（仅主管理员自己登录时可见）
+  if (isSuper()){
+    const st = document.createElement('div');
+    st.className = 'user-section-title';
+    st.textContent = '主管理员';
+    list.appendChild(st);
+    list.appendChild(buildCard({
+      username: SUPER_ADMIN.username,
+      password: SUPER_ADMIN.password,
+      role: 'super'
+    }, true));
+  }
+
+  // 管理员分组
+  if (admins.length){
+    const st = document.createElement('div');
+    st.className = 'user-section-title';
+    st.textContent = '管理员（' + admins.length + '）';
+    list.appendChild(st);
+    admins.forEach(a => list.appendChild(buildCard(a, false)));
+  }
+
+  // 学生分组
+  if (students.length){
+    const st = document.createElement('div');
+    st.className = 'user-section-title';
+    st.textContent = '学生（' + students.length + '）';
+    list.appendChild(st);
+    students.forEach(a => list.appendChild(buildCard(a, false)));
+  }
+
+  if (!admins.length && !students.length && !isSuper()){
+    list.innerHTML = '<div class="empty-state"><span class="ico">🔍</span><p>没有匹配的账号</p></div>';
+  }
 
   list.querySelectorAll('[data-admin-change-pwd]').forEach(btn => {
     btn.addEventListener('click', () => openAdminChangePwd(btn.dataset.adminChangePwd));
@@ -1800,7 +1685,6 @@ function renderUserList(){
 
 function openAdminChangePwd(username){
   if (!isSuper()) return;
-  const cloud = getCloudUser(username);
   const current = getEffectivePassword(username);
   $('adminChangePwdDesc').textContent = `为「${username}」设置新密码（当前：${current}）`;
   $('adminNewPass').value = '';
@@ -1817,16 +1701,8 @@ async function saveAdminChangePwd(){
   const msg = $('adminChangePwdMsg');
   msg.className = 'form-msg';
 
-  if (!np){
-    msg.className = 'form-msg show error';
-    msg.textContent = '请输入新密码';
-    return;
-  }
-  if (np.length < 6){
-    msg.className = 'form-msg show error';
-    msg.textContent = '密码至少 6 位';
-    return;
-  }
+  if (!np){ msg.className = 'form-msg show error'; msg.textContent = '请输入新密码'; return; }
+  if (np.length < 6){ msg.className = 'form-msg show error'; msg.textContent = '密码至少 6 位'; return; }
 
   try {
     await loadAll();
@@ -1842,9 +1718,7 @@ async function saveAdminChangePwd(){
   }
 }
 
-/* ============================================================
-   辩题操作
-   ============================================================ */
+/* 辩题操作 */
 async function setCurrentTopic(id){
   try {
     topicsData.weekly.currentTopicId = id;
@@ -1914,9 +1788,7 @@ async function createManualTopic(){
   }
 }
 
-/* ============================================================
-   事件绑定
-   ============================================================ */
+/* 事件绑定 */
 function bindEvents(){
   $('brandBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   $('backToLib').addEventListener('click', () => { location.href = 'index.html'; });
@@ -1937,7 +1809,6 @@ function bindEvents(){
   $('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginPass').focus(); });
   $('loginMask').addEventListener('click', e => { if (e.target === $('loginMask')) closeMask('loginMask'); });
 
-  // 激活弹窗
   $('activateLater').addEventListener('click', () => {
     closeMask('activateMask');
     pendingActivateUser = null;
@@ -1957,16 +1828,10 @@ function bindEvents(){
     renderMyViewForm();
     renderViews();
   });
-  $('editNameBtn').addEventListener('click', () => {
-    closeMask('userMask');
-    setTimeout(() => openEditName(), 80);
-  });
   $('changePwdBtn').addEventListener('click', () => {
     closeMask('userMask');
     setTimeout(() => openChangePwd(), 80);
   });
-  $('editNameSave').addEventListener('click', saveDisplayName);
-  $('editNameMask').addEventListener('click', e => { if (e.target === $('editNameMask')) closeMask('editNameMask'); });
   $('changePwdSave').addEventListener('click', doChangePwd);
   $('changePwdMask').addEventListener('click', e => { if (e.target === $('changePwdMask')) closeMask('changePwdMask'); });
   $('newPass2').addEventListener('keydown', e => { if (e.key === 'Enter') doChangePwd(); });
@@ -2097,7 +1962,7 @@ function bindEvents(){
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape'){
-      ['loginMask','userMask','editNameMask','changePwdMask','adminMask','activateMask','adminChangePwdMask'].forEach(id => {
+      ['loginMask','userMask','changePwdMask','adminMask','activateMask','adminChangePwdMask'].forEach(id => {
         if ($(id).classList.contains('show')) closeMask(id);
       });
     }
@@ -2149,16 +2014,12 @@ function bindEvents(){
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 }
 
-/* ============================================================
-   初始化
-   ============================================================ */
+/* 初始化 */
 async function init(){
   loadSession();
   bindEvents();
 
-  setTimeout(() => {
-    $('loader').classList.add('done');
-  }, 500);
+  setTimeout(() => { $('loader').classList.add('done'); }, 500);
 
   await loadAll();
 
@@ -2175,7 +2036,6 @@ async function init(){
   renderViews();
 
   console.log('%c💬 观点圆桌已就绪', 'color:#a78bfa;font-weight:bold;font-size:14px');
-  console.log('%c共 ' + BASE_ACCOUNTS.length + ' 个学生/老师账号已加载', 'color:#9a9cb2;font-size:12px');
 }
 
 init();
