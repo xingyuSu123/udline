@@ -2,649 +2,1692 @@
 <html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a15" />
 <title>盲打练习 · Touch Typing</title>
 <style>
-:root{
-  --bg:#08080f;
-  --surface:rgba(255,255,255:pointer,.038);
-  --surface-hi:rg;baborder:n(255,255,255,.one075);
-  --border:rgba;(255,255,255,.085);
-  --border-hibackground:rgba(255:n,255,255,.2);
-  --onetext:#eceef6;
-  --text;-dim:#9a9cb2;
-  --colortext-mute:#6a6c:82;
-  --accentinherit:#a78bfa;
-  --accent-2:#5eead4;
-  --accent-3:#f472b6;
-  --ok:#4ade80;
-  --err:#f87171;
-  --warn:#fbbf24;
-  --nav-bg:rgba(8,8,15,.72);
-  --ease:cubic-bezier(.22,1,.36,1);
-  --ease-back:cubic-bezier(.34,1.56,.64,1);
-  --nav-h:70px;
-}
-[data-theme="light"]{
-  --bg:#f5f5f0;
-  --surface:rgba(0,0,0,.026);
-  --surface-hi:rgba(0,0,0,.055);
-  --border:rgba(0,0,0,.09);
-  --border-hi:rgba(0,0,0,.22);
-  --text:#111219;
-  --text-dim:#5a5c6e;
-  --text-mute:#8b8d9c;
-  --accent:#7c3aed;
-  --accent-2:#0d9488;
-  --accent-3:#db2777;
-  --ok:#16a34a;
-  --err:#dc2626;
-  --nav-bg:rgba(245,245,240,.78);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{
-  font-family:"Inter","SF Pro Text",-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
-  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;line-height:1.6;
-  transition:background .6s var(--e}
-input,textarea{font-family:inherit}
-::-webkit-scrollbar{width:10px;height:10px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:99px;border:3px solid var(--bg)}
-::-webkit-scrollbar-thumb:hover{background:var(--accent)}
-
-.bg-orbs{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none}
-.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.28;animation:orbFloat 22s ease-in-out infinite;will-change:transform}
-.o1{width:520px;height:520px;background:var(--accent);top:-160px;left:-140px}
-.o2{width:460px;height:460px;background:var(--accent-2);top:24%;right:-180px;animation-delay:-7s}
-.o3{width:480px;height:480px;background:var(--accent-3);bottom:-200px;left:26%;animation-delay:-14s}
-@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-55px) scale(1.1)}66%{transform:translate(-50px,45px) scale(.94)}}
-.grid-lines{position:fixed;inset:0;z-index:-2;pointer-events:none;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:64px 64px;opacity:.45;-webkit-mask-image:radial-gradient(ellipse 90% 55% at 50% 0%,#000 20%,transparent 85%);mask-image:radial-gradient(ellipse 90% 55% at 50% 0%,#000 20%,transparent 85%)}
-.noise{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-
-.loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:grid;place-items:center;opacity:1;visibility:visible;transition:opacity .7s var(--ease),visibility .7s}
-.loader.done{opacity:0;visibility:hidden}
-.loader-inner{display:flex;flex-direction:column;align-items:center;gap:20px}
-.loader-mark{font-size:clamp(1.3rem,3.6vw,1.8rem);font-weight:700;letter-spacing:-.03em;background:linear-gradient(90deg,var(--text) 0%,var(--accent) 50%,var(--text) 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 1.6s linear infinite}
-@keyframes shimmer{to{background-position:-200% 0}}
-.loader-track{width:180px;height:3px;border-radius:99px;background:var(--surface-hi);overflow:hidden;position:relative}
-.loader-track i{position:absolute;inset:0;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transform-origin:left;animation:loadBar 1.3s var(--ease) infinite}
-@keyframes loadBar{0%{transform:scaleX(0) translateX(0)}50%{transform:scaleX(.7) translateX(20%)}100%{transform:scaleX(1) translateX(120%)}}
-
-.nav{position:sticky;top:0;left:0;right:0;height:var(--nav-h);z-index:900;display:flex;align-items:center;transition:background .45s var(--ease),backdrop-filter .45s,border-color .45s,height .45s var(--ease);border-bottom:1px solid transparent}
-.nav.scrolled{background:var(--nav-bg);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom-color:var(--border);height:62px}
-.nav-inner{width:100%;max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,32px);display:flex;align-items:center;gap:20px}
-.brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:.96rem;letter-spacing:-.02em;cursor:pointer;transition:opacity .3s}
-.brand:hover{opacity:.82}
-.brand-mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:800;font-size:1rem;box-shadow:0 6px 20px -6px rgba(167,139,250,.7);position:relative;overflow:hidden;transition:transform .5s var(--ease)}
-.brand:hover .brand-mark{transform:rotate(-10deg) scale(1.08)}
-.brand-sub{font-size:.72rem;color:var(--text-mute);letter-spacing:.14em;text-transform:uppercase;font-weight:600;padding-left:10px;border-left:1px solid var(--border);margin-left:4px}
-.nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
-.icon-btn{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);font-size:1rem;transition:all .4s var(--ease)}
-.icon-btn:hover{color:var(--accent);border-color:var(--border-hi);transform:translateY(-2px) rotate(180deg)}
-@media (max-width:640px){.brand-sub{display:none}}
-
-.stage{padding:44px clamp(16px,4vw,32px) 80px}
-.stage-inner{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
-.stage-inner > *{opacity:0;transform:translateY(22px);animation:stageIn .85s var(--ease) forwards}
-.stage-inner > *:nth-child(1){animation-delay:.05s}
-.stage-inner > *:nth-child(2){animation-delay:.14s}
-.stage-inner > *:nth-child(3){animation-delay:.22s}
-.stage-inner > *:nth-child(4){animation-delay:.3s}
-.stage-inner > *:nth-child(5){animation-delay:.38s}
-.stage-inner > *:nth-child(6){animation-delay:.46s}
-.stage-inner > *:nth-child(7){animation-delay:.54s}
-@keyframes stageIn{to{opacity:1;transform:none}}
-
-.modes{display:flex;gap:8px;flex-wrap:wrap;padding:6px;border-radius:16px;background:var(--surface);border:1px solid var(--border);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-.mode{flex:1;min-width:120px;padding:12px 16px;border-radius:12px;font-size:.84rem;font-weight:600;color:var(--text-dim);letter-spacing:.02em;transition:all .38s var(--ease);white-space:nowrap;text-align:center;position:relative;overflow:hidden}
-.mode::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--accent),var(--accent-2));opacity:0;transition:opacity .38s var(--ease)}
-.mode span{position:relative;z-index:1}
-.mode:hover{color:var(--text)}
-.mode.active{color:#fff;box-shadow:0 10px 26px -12px rgba(167,139,250,.85)}
-.mode.active::before{opacity:1}
-
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-@media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
-.stat{padding:16px 18px;border-radius:16px;background:var(--surface);border:1px solid var(--border);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:all .35s var(--ease);position:relative;overflow:hidden}
-.stat:hover{border-color:var(--border-hi);transform:translateY(-2px)}
-.stat::after{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
-.stat:hover::after{transform:scaleX(1)}
-.stat b{display:block;font-size:1.5rem;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1;color:var(--text)}
-.stat span{font-size:.68rem;color:var(--text-mute);letter-spacing:.06em;text-transform:uppercase}
-#statCpm{color:var(--accent)}
-#statAcc{color:var(--accent-2)}
-#statProg{color:var(--accent-3)}
-
-.progress-track{height:5px;border-radius:99px;background:var(--surface-hi);overflow:hidden;position:relative;border:1px solid var(--border)}
-.progress-track i{display:block;height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent-3));transform-origin:left;transform:scaleX(0);transition:transform .3s var(--ease);box-shadow:0 0 16px rgba(167,139,250,.7)}
-
-.typing-wrap{position:relative;padding:34px clamp(24px,4vw,40px);border-radius:24px;background:var(--surface);border:1px solid var(--border);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 30px 80px -50px rgba(0,0,0,.95);cursor:text;transition:border-color .4s var(--ease),box-shadow .4s var(--ease)}
-.typing-wrap:focus-within{border-color:var(--border-hi);box-shadow:0 30px 80px -50px rgba(0,0,0,.95),0 0 0 3px rgba(167,139,250,.14)}
-.typing-text{
-  font-family:ui-monospace,"SF Mono","JetBrains Mono","PingFang SC","Microsoft YaHei",Menlo,Consolas,monospace;
-  font-size:clamp(1.15rem,2.5vw,1.6rem);
-  line-height:2;
-  letter-spacing:.01em;
-  word-break:break-word;white-space:pre-wrap;word-wrap:break-word;
-  user-select:none;
-  min-height:5em;
-}
-.typing-text.pop{animation:popIn .4s var(--ease)}
-@keyframes popIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.typing-text .char{color:var(--text-mute);transition:color .14s ease,background .14s ease}
-.typing-text .char.correct{color:var(--accent-2)}
-.typing-text .char.wrong{color:var(--err);background:rgba(248,113,113,.14);border-radius:4px}
-.typing-text .char.current{color:var(--text);position:relative}
-.typing-text .char.current::after{content:"";position:absolute;left:0;right:0;bottom:.08em;height:2px;border-radius:2px;background:var(--accent);animation:cursorBlink .9s steps(2,start) infinite}
-@keyframes cursorBlink{50%{opacity:0}}
-.typing-input{position:absolute;inset:0;width:100%;height:100%;padding:0;border:none;background:transparent;color:transparent;caret-color:transparent;outline:none;resize:none;font-size:16px;opacity:0}
-
-.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.ctrl-btn{padding:12px 22px;border-radius:13px;font-size:.85rem;font-weight:600;color:var(--text);background:var(--surface);border:1px solid var(--border);transition:all .38s var(--ease)}
-.ctrl-btn:hover{transform:translateY(-3px);border-color:var(--border-hi);background:var(--surface-hi);color:var(--accent)}
-.ctrl-btn:active{transform:translateY(-1px) scale(.98)}
-
-.keyboard{display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:20px;background:var(--surface);border:1px solid var(--border);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);overflow-x:auto;overflow-y:hidden}
-.kb-row{display:flex;gap:6px;justify-content:center;min-width:max-content;margin:0 auto}
-.key{min-width:44px;height:44px;padding:0 12px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:var(--surface-hi);border:1px solid var(--border);font-size:.76rem;font-weight:600;color:var(--text-dim);letter-spacing:.02em;transition:all .16s ease;user-select:none;flex-shrink:0}
-.key.wide{min-width:66px}
-.key.wider{min-width:88px}
-.key.space{flex:1;min-width:240px;max-width:420px}
-.key.active{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-color:transparent;transform:translateY(2px);box-shadow:0 0 22px rgba(167,139,250,.7)}
-@media (max-width:720px){
-  .key{min-width:36px;height:38px;padding:0 8px;font-size:.68rem;border-radius:8px}
-  .key.wide{min-width:54px}
-  .key.wider{min-width:70px}
-  .key.space{min-width:180px}
-  .keyboard{padding:12px}
+/* ============================================================
+   基础重置
+============================================================ */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.result-mask{position:fixed;inset:0;z-index:9997;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.7);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .4s var(--ease),visibility .4s}
-.result-mask.show{opacity:1;visibility:visible}
-.result-card{width:min(480px,100%);padding:38px 32px 30px;border-radius:24px;background:var(--bg);border:1px solid var(--border-hi);box-shadow:0 50px 100px -40px rgba(0,0,0,.95);text-align:center;transform:translateY(24px) scale(.95);transition:transform .5s var(--ease-back)}
-.result-mask.show .result-card{transform:none}
-.result-icon{width:72px;height:72px;margin:0 auto 18px;border-radius-sub:50%;display:grid;place-items:{center;font-size:2rem;background:linear-gradient(135fontdeg,var(--accent),var(--accent-2));box-shadow:0 20px 46px -14px rgba(167,139,250,.8);animation:pop .7s var(---sizeease-back)}
-@keyframes pop{0%{transform:scale:.84(0);opacity:0}60%{transform:remscale(1.16)}100%{transform:scale(1);opacity:1;}}
-.result-card h2{font-size:1.5rem;font-weight:800color;:letter-spacing:-.03em;varmargin-bottom:6px}
-.result(--text-mute);margin-bottom:24px}
-.result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:26px}
-.result-stats div{padding:14px 8px;border-radius:14px;background:var(--surface);border:1px solid var(--border)}
-.result-stats b{display:block;font-size:1.5rem;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.15;color:var(--accent)}
-.result-stats div:nth-child(2) b{color:var(--accent-2)}
-.result-stats div:nth-child(3) b{color:var(--accent-3)}
-.result-stats span{font-size:.68rem;color:var(--text-mute);letter-spacing:.05em;text-transform:uppercase}
-.result-actions{display:flex;gap:10px}
-.result-actions button{flex:1;padding:13px 18px;border-radius:13px;font-size:.86rem;font-weight:650;transition:all .4s var(--ease)}
-.result-actions .primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 14px 34px -14px rgba(167,139,250,.8)}
-.result-actions .primary:hover{transform:translateY(-3px);box-shadow:0 22px 48px -14px rgba(167,139,250,.95)}
-.result-actions .ghost{background:var(--surface);border:1px solid var(--border);color:var(--text)}
-.result-actions .ghost:hover{transform:translateY(-3px);border-color:var(--border-hi);background:var(--surface-hi)}
-
-.foot{max-width:1240px;margin:0 auto;padding:30px clamp(16px,4vw,32px) 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:.78rem;color:var(--text-mute)}
-.foot a:hover{color:var(--accent-2)}
-
-.toast{position:fixed;left:50%;bottom:36px;z-index:9998;transform:translate(-50%,20px) scale(.94);display:flex;align-items:center;gap:9px;padding:11px 20px;border-radius:99px;font-size:.83rem;font-weight:500;color:var(--text);background:var(--surface-hi);border:1px solid var(--border-hi);-webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);box-shadow:0 18px 44px -18px rgba(0,0,0,.85);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s var(--ease),transform .5s var(--ease),visibility .4s}
-.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0) scale(1)}
-.toast .tick{width:18px;height:18px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-size:.62rem;font-weight:900}
-
-@media (max-width:640px){
-  .stage{padding-top:24px}
-  .typing-wrap{padding:24px 20px}
-  .result-card{padding:30px 22px 24px}
-  .toast{bottom:22px;font-size:.78rem;padding:10px 16px}
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+
+:root {
+  --bg-0: #07070f;
+  --bg-1: #0c0c1a;
+  --glass: rgba(255, 255, 255, 0.045);
+  --glass-hi: rgba(255, 255, 255, 0.09);
+  --stroke: rgba(255, 255, 255, 0.09);
+  --stroke-hi: rgba(255, 255, 255, 0.22);
+  --text: #eef0f8;
+  --text-2: #a3a6bf;
+  --text-3: #6b6e88;
+  --violet: #a78bfa;
+  --teal: #5eead4;
+  --pink: #f472b6;
+  --lime: #c9f75a;
+  --ok: #4ade80;
+  --err: #f87171;
+  --warn: #fbbf24;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --ease-b: cubic-bezier(.34, 1.56, .64, 1);
+  --ease-i: cubic-bezier(.4, 0, .2, 1);
+  --r-lg: 24px;
+  --r-md: 16px;
+  --r-sm: 10px;
+}
+
+[data-theme="light"] {
+  --bg-0: #f4f4ee;
+  --bg-1: #eeeee6;
+  --glass: rgba(0, 0, 0, 0.03);
+  --glass-hi: rgba(0, 0, 0, 0.06);
+  --stroke: rgba(0, 0, 0, 0.09);
+  --stroke-hi: rgba(0, 0, 0, 0.22);
+  --text: #14151f;
+  --text-2: #555770;
+  --text-3: #8d8fa3;
+  --violet: #7c3aed;
+  --teal: #0d9488;
+  --pink: #db2777;
+  --lime: #65a30d;
+  --ok: #16a34a;
+  --err: #dc2626;
+  --warn: #d97706;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+               "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+               system-ui, sans-serif;
+  background: var(--bg-0);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background .6s var(--ease), color .6s var(--ease);
+}
+
+button {
+  font-family: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+}
+
+input {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--violet);
+  color: #fff;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--stroke-hi);
+  border-radius: 99px;
+  border: 3px solid var(--bg-0);
+  transition: background .3s;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--violet); }
+
+/* ============================================================
+   背景装饰（双层）
+============================================================ */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  overflow: hidden;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: .34;
+  will-change: transform;
+}
+
+[data-theme="light"] .bg-orb { opacity: .16; }
+
+.orb-a {
+  width: 540px; height: 540px;
+  background: radial-gradient(circle, #a78bfa, transparent 68%);
+  top: -180px; left: -140px;
+  animation: drift-a 24s ease-in-out infinite;
+}
+
+.orb-b {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #5eead4, transparent 68%);
+  top: 18%; right: -180px;
+  animation: drift-b 28s ease-in-out infinite;
+}
+
+.orb-c {
+  width: 460px; height: 460px;
+  background: radial-gradient(circle, #f472b6, transparent 68%);
+  bottom: -200px; left: 30%;
+  animation: drift-c 26s ease-in-out infinite;
+}
+
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(80px, -70px) scale(1.15); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-70px, 60px) scale(.9); }
+}
+@keyframes drift-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, 50px) scale(1.1); }
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--stroke) 1px, transparent 1px),
+    linear-gradient(90deg, var(--stroke) 1px, transparent 1px);
+  background-size: 68px 68px;
+  opacity: .5;
+  -webkit-mask-image: radial-gradient(ellipse 90% 55% at 50% 0%, #000 15%, transparent 80%);
+  mask-image: radial-gradient(ellipse 90% 55% at 50% 0%, #000 15%, transparent 80%);
+}
+
+/* ============================================================
+   页面加载动画
+============================================================ */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: var(--bg-0);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .8s var(--ease), visibility .8s;
+}
+
+.preloader.done {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.preloader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.preloader-text {
+  font-size: clamp(1.2rem, 3.4vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -.02em;
+  background: linear-gradient(90deg,
+    var(--text) 0%,
+    var(--violet) 40%,
+    var(--teal) 60%,
+    var(--text) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-sweep 2s linear infinite;
+}
+
+@keyframes text-sweep {
+  to { background-position: -200% 0; }
+}
+
+.preloader-bar {
+  width: 180px;
+  height: 3px;
+  border-radius: 99px;
+  overflow: hidden;
+  background: var(--glass-hi);
+  position: relative;
+}
+
+.preloader-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--violet), var(--teal));
+  transform-origin: left;
+  animation: bar-run 1.4s var(--ease) infinite;
+}
+
+@keyframes bar-run {
+  0%   { transform: scaleX(0) translateX(0); }
+  50%  { transform: scaleX(.7) translateX(20%); }
+  100% { transform: scaleX(1) translateX(120%); }
+}
+
+/* ============================================================
+   顶部导航
+============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 64px;
+  padding: 0 clamp(16px, 4vw, 32px);
+  transition: background .4s var(--ease),
+              backdrop-filter .4s var(--ease),
+              border-color .4s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+
+.topbar.stuck {
+  background: color-mix(in srgb, var(--bg-0) 78%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border-bottom-color: var(--stroke);
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: -.01em;
+  cursor: pointer;
+  transition: opacity .3s var(--ease);
+}
+
+.topbar-brand:hover { opacity: .75; }
+
+.brand-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--violet) 70%, transparent);
+  transition: transform .5s var(--ease-b);
+}
+
+.topbar-brand:hover .brand-icon {
+  transform: rotate(-10deg) scale(1.1);
+}
+
+.brand-label {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-label small {
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.topbar-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  color: var(--text-2);
+  font-size: 1rem;
+  transition: all .35s var(--ease);
+}
+
+.icon-btn:hover {
+  color: var(--violet);
+  border-color: var(--stroke-hi);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px -10px color-mix(in srgb, var(--violet) 60%, transparent);
+}
+
+.icon-btn:active {
+  transform: translateY(0) scale(.92);
+}
+
+/* ============================================================
+   主体
+============================================================ */
+.page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px clamp(16px, 4vw, 32px) 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ============================================================
+   模式选择
+============================================================ */
+.modes {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 18px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  animation: fade-up .8s var(--ease) .05s both;
+}
+
+.modes::-webkit-scrollbar { display: none; }
+
+.mode-btn {
+  position: relative;
+  flex: 1;
+  min-width: 100px;
+  padding: 12px 14px;
+  border-radius: 13px;
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: .01em;
+  white-space: nowrap;
+  text-align: center;
+  transition: color .35s var(--ease);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.mode-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+  opacity: 0;
+  transform: scale(.9);
+  transition: opacity .35s var(--ease), transform .45s var(--ease-b);
+}
+
+.mode-btn:hover {
+  color: var(--text);
+}
+
+.mode-btn:hover::before {
+  opacity: .12;
+  transform: scale(1);
+}
+
+.mode-btn.active {
+  color: #fff;
+}
+
+.mode-btn.active::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.mode-btn.active {
+  box-shadow: 0 10px 28px -12px color-mix(in srgb, var(--violet) 80%, transparent);
+}
+
+/* ============================================================
+   统计栏
+============================================================ */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  animation: fade-up .8s var(--ease) .12s both;
+}
+
+.stat-card {
+  position: relative;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+  transition: all .35s var(--ease);
+}
+
+.stat-card:hover {
+  border-color: var(--stroke-hi);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 40px -24px rgba(0, 0, 0, .9);
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--violet), var(--teal));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .5s var(--ease);
+}
+
+.stat-card:hover::before {
+  transform: scaleX(1);
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.55rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+  transition: color .3s var(--ease);
+}
+
+.stat-card:nth-child(1) .stat-value { color: var(--text); }
+.stat-card:nth-child(2) .stat-value { color: var(--violet); }
+.stat-card:nth-child(3) .stat-value { color: var(--teal); }
+.stat-card:nth-child(4) .stat-value { color: var(--pink); }
+
+.stat-label {
+  display: block;
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+/* 数字变化时的弹跳动效 */
+.stat-value.bump {
+  animation: bump .4s var(--ease-b);
+}
+
+@keyframes bump {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+
+/* ============================================================
+   进度条
+============================================================ */
+.progress-bar {
+  height: 4px;
+  border-radius: 99px;
+  background: var(--glass-hi);
+  overflow: hidden;
+  position: relative;
+  animation: fade-up .8s var(--ease) .18s both;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--violet), var(--teal), var(--pink));
+  background-size: 200% 100%;
+  width: 0%;
+  transition: width .3s var(--ease);
+  animation: prog-sweep 3s linear infinite;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--violet) 60%, transparent);
+}
+
+@keyframes prog-sweep {
+  to { background-position: 200% 0; }
+}
+
+/* ============================================================
+   打字卡片
+============================================================ */
+.typing-card {
+  position: relative;
+  padding: clamp(28px, 4vw, 44px) clamp(24px, 4vw, 48px);
+  min-height: 200px;
+  border-radius: var(--r-lg);
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 40px 90px -60px rgba(0, 0, 0, 1);
+  cursor: text;
+  overflow: hidden;
+  transition: border-color .4s var(--ease),
+              box-shadow .4s var(--ease),
+              transform .5s var(--ease);
+  animation: fade-up .8s var(--ease) .24s both;
+}
+
+.typing-card:hover {
+  border-color: var(--stroke-hi);
+}
+
+.typing-card.focused {
+  border-color: color-mix(in srgb, var(--violet) 45%, var(--stroke));
+  box-shadow:
+    0 40px 90px -60px rgba(0, 0, 0, 1),
+    0 0 0 3px color-mix(in srgb, var(--violet) 14%, transparent);
+}
+
+.typing-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  pointer-events: none;
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--violet) 10%, transparent),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity .45s var(--ease);
+}
+
+.typing-card:hover::before { opacity: 1; }
+
+/* 焦点提示 */
+.focus-hint {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  opacity: 0;
+  transition: opacity .4s var(--ease);
+  pointer-events: none;
+}
+
+.typing-card:not(.focused) .focus-hint {
+  opacity: 1;
+  animation: hint-pulse 2s var(--ease) infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: .35; }
+  50% { opacity: .9; }
+}
+
+/* 打字文本 */
+.typing-text {
+  font-family: "JetBrains Mono", "SF Mono", ui-monospace, "Cascadia Mono",
+               "PingFang SC", "Microsoft YaHei", Menlo, Consolas, monospace;
+  font-size: clamp(1.15rem, 2.6vw, 1.7rem);
+  line-height: 1.95;
+  letter-spacing: .01em;
+  word-break: break-word;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  user-select: none;
+  -webkit-user-select: none;
+  min-height: 4.5em;
+  transition: opacity .3s var(--ease);
+}
+
+.typing-text.fading {
+  opacity: 0;
+}
+
+/* 单个字符 */
+.char {
+  position: relative;
+  color: var(--text-3);
+  transition: color .16s var(--ease), background-color .16s var(--ease);
+}
+
+.char.correct {
+  color: var(--teal);
+}
+
+.char.wrong {
+  color: var(--err);
+  background: color-mix(in srgb, var(--err) 16%, transparent);
+  border-radius: 4px;
+  animation: shake .3s var(--ease);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+.char.current {
+  color: var(--text);
+}
+
+.char.current::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: .06em;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--violet);
+  box-shadow: 0 0 12px var(--violet);
+  animation: caret 1s var(--ease-i) infinite;
+}
+
+@keyframes caret {
+  0%, 45% { opacity: 1; transform: scaleX(1); }
+  55%, 100% { opacity: .1; transform: scaleX(.7); }
+}
+
+/* 隐藏输入框 */
+.typing-input {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  outline: none;
+  resize: none;
+  font-size: 16px; /* 防止 iOS 自动缩放 */
+  opacity: 0;
+  cursor: text;
+}
+
+/* ============================================================
+   操作按钮
+============================================================ */
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fade-up .8s var(--ease) .3s both;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 14px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  transition: all .4s var(--ease);
+}
+
+.action-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--stroke-hi);
+  background: var(--glass-hi);
+  color: var(--violet);
+  box-shadow: 0 14px 30px -14px color-mix(in srgb, var(--violet) 70%, transparent);
+}
+
+.action-btn:active {
+  transform: translateY(-1px) scale(.97);
+}
+
+.action-btn .key-hint {
+  font-family: ui-monospace, monospace;
+  font-size: .7rem;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--glass-hi);
+  color: var(--text-3);
+  font-weight: 700;
+}
+
+/* ============================================================
+   虚拟键盘
+============================================================ */
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 18px;
+  border-radius: 22px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  overflow-x: auto;
+  animation: fade-up .8s var(--ease) .36s both;
+}
+
+.keyboard::-webkit-scrollbar { display: none; }
+
+.kb-row {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+  min-width: max-content;
+}
+
+.kb-key {
+  min-width: 44px;
+  height: 46px;
+  padding: 0 12px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--glass-hi);
+  border: 1px solid var(--stroke);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: var(--text-2);
+  user-select: none;
+  transition: all .16s var(--ease);
+  flex-shrink: 0;
+}
+
+.kb-key.wide { min-width: 68px; }
+.kb-key.wider { min-width: 92px; }
+.kb-key.space { flex: 1; min-width: 220px; max-width: 400px; }
+
+.kb-key.active {
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(3px) scale(.96);
+  box-shadow:
+    0 0 24px color-mix(in srgb, var(--violet) 60%, transparent),
+    inset 0 0 12px rgba(255, 255, 255, .2);
+}
+
+/* ============================================================
+   结果弹窗
+============================================================ */
+.result-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, .68);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .4s var(--ease), visibility .4s;
+}
+
+.result-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.result-panel {
+  width: min(460px, 100%);
+  padding: 40px 32px 32px;
+  border-radius: 28px;
+  background: var(--bg-1);
+  border: 1px solid var(--stroke-hi);
+  box-shadow: 0 60px 120px -40px rgba(0, 0, 0, 1);
+  text-align: center;
+  transform: translateY(30px) scale(.94);
+  transition: transform .5s var(--ease-b);
+}
+
+.result-overlay.show .result-panel {
+  transform: none;
+}
+
+.result-badge {
+  width: 78px;
+  height: 78px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 2.2rem;
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+  box-shadow: 0 22px 50px -16px color-mix(in srgb, var(--violet) 80%, transparent);
+  animation: badge-in .8s var(--ease-b);
+}
+
+@keyframes badge-in {
+  0%   { transform: scale(0) rotate(-180deg); opacity: 0; }
+  60%  { transform: scale(1.18) rotate(10deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.result-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  margin-bottom: 4px;
+}
+
+.result-sub {
+  font-size: .86rem;
+  color: var(--text-3);
+  margin-bottom: 26px;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.result-cell {
+  padding: 16px 10px;
+  border-radius: 16px;
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  opacity: 0;
+  transform: translateY(12px);
+  animation: cell-in .5s var(--ease) forwards;
+}
+
+.result-cell:nth-child(1) { animation-delay: .15s; }
+.result-cell:nth-child(2) { animation-delay: .24s; }
+.result-cell:nth-child(3) { animation-delay: .33s; }
+
+@keyframes cell-in {
+  to { opacity: 1; transform: none; }
+}
+
+.result-cell b {
+  display: block;
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.result-cell:nth-child(1) b { color: var(--violet); }
+.result-cell:nth-child(2) b { color: var(--teal); }
+.result-cell:nth-child(3) b { color: var(--pink); }
+
+.result-cell span {
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.result-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.result-btns button {
+  flex: 1;
+  padding: 13px 18px;
+  border-radius: 14px;
+  font-size: .86rem;
+  font-weight: 700;
+  transition: all .4s var(--ease);
+}
+
+.rb-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--violet), var(--teal));
+  box-shadow: 0 14px 34px -14px color-mix(in srgb, var(--violet) 80%, transparent);
+}
+
+.rb-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 48px -14px color-mix(in srgb, var(--violet) 100%, transparent);
+}
+
+.rb-ghost {
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  color: var(--text);
+}
+
+.rb-ghost:hover {
+  transform: translateY(-3px);
+  border-color: var(--stroke-hi);
+  background: var(--glass-hi);
+}
+
+/* ============================================================
+   页脚
+============================================================ */
+.foot {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 30px clamp(16px, 4vw, 32px) 40px;
+  border-top: 1px solid var(--stroke);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: .78rem;
+  color: var(--text-3);
+}
+
+.foot a {
+  color: inherit;
+  text-decoration: none;
+  transition: color .3s;
+}
+
+.foot a:hover { color: var(--teal); }
+
+/* ============================================================
+   通用动画
+============================================================ */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   响应式
+============================================================ */
+@media (max-width: 720px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .keyboard {
+    display: none;
+  }
+
+  .typing-text {
+    font-size: 1.1rem;
+    line-height: 1.9;
+  }
+
+  .typing-card {
+    min-height: 180px;
+    padding: 24px 22px;
+  }
+
+  .result-panel {
+    padding: 32px 22px 24px;
+    border-radius: 24px;
+  }
+
+  .brand-label small {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
 }
 </style>
 </head>
 <body>
 
-<div class="loader" id="loader">
-  <div class="loader-inner">
-    <div class="loader-mark">盲打练习 · Touch Typing</div>
-    <div class="loader-track"><i></i></div>
+<!-- ============ 加载动画 ============ -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="preloader-text">盲打练习 · Touch Typing</div>
+    <div class="preloader-bar"></div>
   </div>
 </div>
 
-<div class="bg-orbs">
-  <span class="orb o1"></span>
-  <span class="orb o2"></span>
-  <span class="orb o3"></span>
+<!-- ============ 背景装饰 ============ -->
+<div class="bg-layer">
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="bg-orb orb-c"></div>
 </div>
-<div class="grid-lines"></div>
-<div class="noise"></div>
+<div class="bg-grid"></div>
 
-<header class="nav" id="nav">
-  <div class="nav-inner">
-    <div class="brand" id="brandBtn">
-      <span class="brand-mark">⌨</span>
+<!-- ============ 顶部导航 ============ -->
+<header class="topbar" id="topbar">
+  <div class="topbar-brand" id="brandBtn">
+    <span class="brand-icon">⌨</span>
+    <span class="brand-label">
       <span>盲打练习</span>
-      <span class="brand-sub">Touch Typing</span>
-    </div>
-    <div class="nav-actions">
-      <button class="icon-btn" id="themeBtn" aria-label="切换主题">◐</button>
-    </div>
+      <small>Touch Typing</small>
+    </span>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="themeBtn" aria-label="切换主题">◐</button>
   </div>
 </header>
 
-<main class="stage">
-  <div class="stage-inner">
+<!-- ============ 主体 ============ -->
+<main class="page">
 
-    <div class="modes" id="modes">
-      <button class="mode active" data-mode="cn_words"><span>中文 · 词语</span></button>
-      <button class="mode" data-mode="cn_sentences"><span>中文 · 句子</span></button>
-      <button class="mode" data-mode="en_words"><span>英文 · 词语</span></button>
-      <button class="mode" data-mode="en_sentences"><span>英文 · 句子</span></button>
+  <!-- 模式选择 -->
+  <nav class="modes" id="modes">
+    <button class="mode-btn active" data-mode="cn_words">中文 · 词语</button>
+    <button class="mode-btn" data-mode="cn_sentences">中文 · 句子</button>
+    <button class="mode-btn" data-mode="en_words">英文 · 词语</button>
+    <button class="mode-btn" data-mode="en_sentences">英文 · 句子</button>
+  </nav>
+
+  <!-- 统计栏 -->
+  <section class="stats">
+    <div class="stat-card">
+      <b class="stat-value" id="statTime">0.0</b>
+      <span class="stat-label">时间 / 秒</span>
     </div>
-
-    <div class="stats">
-      <div class="stat"><b id="statTime">0.0</b><span>时间 / 秒</span></div>
-      <div class="stat"><b id="statCpm">0</b><span>速度 / CPM</span></div>
-      <div class="stat"><b id="statAcc">100%</b><span>正确率</span></div>
-      <div class="stat"><b id="statProg">0%</b><span>完成度</span></div>
+    <div class="stat-card">
+      <b class="stat-value" id="statCpm">0</b>
+      <span class="stat-label">速度 / CPM</span>
     </div>
-
-    <div class="progress-track"><i id="progressBar"></i></div>
-
-    <div class="typing-wrap" id="typingWrap">
-      <div class="typing-text" id="typingText"></div>
-      <input class="typing-input" id="typingInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    <div class="stat-card">
+      <b class="stat-value" id="statAcc">100%</b>
+      <span class="stat-label">正确率</span>
     </div>
-
-    <div class="controls">
-      <button class="ctrl-btn" id="restartBtn">↺ 重新开始</button>
-      <button class="ctrl-btn" id="nextBtn">⇥ 换一段</button>
+    <div class="stat-card">
+      <b class="stat-value" id="statProg">0%</b>
+      <span class="stat-label">完成度</span>
     </div>
+  </section>
 
-    <div class="keyboard" id="keyboard"></div>
-
+  <!-- 进度条 -->
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
   </div>
+
+  <!-- 打字卡片 -->
+  <section class="typing-card" id="typingCard">
+    <span class="focus-hint">点击开始</span>
+    <div class="typing-text" id="typingText"></div>
+    <input
+      class="typing-input"
+      id="typingInput"
+      type="text"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+      inputmode="text"
+    />
+  </section>
+
+  <!-- 操作按钮 -->
+  <div class="actions">
+    <button class="action-btn" id="restartBtn">
+      <span>↺</span> 重新开始 <span class="key-hint">Esc</span>
+    </button>
+    <button class="action-btn" id="nextBtn">
+      <span>⇥</span> 换一段 <span class="key-hint">Tab</span>
+    </button>
+  </div>
+
+  <!-- 虚拟键盘 -->
+  <section class="keyboard" id="keyboard"></section>
+
 </main>
 
+<!-- ============ 页脚 ============ -->
 <footer class="foot">
   <span>© 2026 · My_Underline</span>
   <a href="index.html">← 返回资源库</a>
 </footer>
 
-<div class="result-mask" id="resultMask">
-  <div class="result-card">
-    <div class="result-icon">🎉</div>
-    <h2>本轮完成</h2>
+<!-- ============ 结果弹窗 ============ -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-panel">
+    <div class="result-badge">🎉</div>
+    <h2 class="result-title">本轮完成</h2>
     <p class="result-sub" id="resultSub">继续保持节奏</p>
-    <div class="result-stats">
-      <div><b id="resCpm">0</b><span>CPM</span></div>
-      <div><b id="resAcc">100%</b><span>正确率</span></div>
-      <div><b id="resTime">0s</b><span>用时</span></div>
+    <div class="result-grid">
+      <div class="result-cell">
+        <b id="resCpm">0</b>
+        <span>CPM</span>
+      </div>
+      <div class="result-cell">
+        <b id="resAcc">100%</b>
+        <span>正确率</span>
+      </div>
+      <div class="result-cell">
+        <b id="resTime">0s</b>
+        <span>用时</span>
+      </div>
     </div>
-    <div class="result-actions">
-      <button class="primary" id="againBtn">再来一次</button>
-      <button class="ghost" id="nextRoundBtn">换一段</button>
+    <div class="result-btns">
+      <button class="rb-primary" id="againBtn">再来一次</button>
+      <button class="rb-ghost" id="nextRoundBtn">换一段</button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"><span class="tick">✓</span><span id="toastText">已完成</span></div>
-
 <script>
-(() => {
-'use strict';
+(function () {
+  "use strict";
 
-const $ = id => document.getElementById(id);
+  /* ============================================================
+     工具
+  ============================================================ */
+  var $ = function (id) { return document.getElementById(id); };
 
-const DATA = {
-  cn_words: [
-    '你好','世界','朋友','时间','生活','学习','工作','快乐','音乐','电影',
-    '城市','山水','风景','天空','大海','阳光','月光','星星','春风','秋雨',
-    '夏日','冬雪','学校','老师','同学','家庭','父母','兄弟','姐妹','健康',
-    '运动','阅读','写作','旅行','美食','咖啡','茶叶','苹果','香蕉','橙子',
-    '葡萄','西瓜','草莓','森林','河流','高山','草原','沙漠','海洋','岛屿',
-    '云端','彩虹','雨伞','书包','铅笔','橡皮','尺子','笔记','电脑','手机',
-    '相机','时钟','眼镜','帽子','围巾','手套','鞋子','袜子','外套','衬衫',
-    '长裤','项链','戒指','手链','耳环','钱包','钥匙','公交','地铁','火车',
-    '飞机','轮船','汽车','电车','马路','桥梁','公园','广场','商场','超市',
-    '医院','银行','邮局','餐厅','书店','图书','报纸','杂志','新闻','广告',
-    '评论','观点','想法','灵感','创意','梦想','希望','勇气','坚持','努力',
-    '成功','失败','挑战','机会','选择','决定','计划','目标','方向','道路',
-    '旅程','终点','起点','故事','回忆','思念','情感','心情','微笑','泪水',
-    '拥抱','告别','相遇','相知','青春','岁月','时光','记忆','温度','沉默',
-    '喧闹','安静','温柔','坚强','认真','专注','从容','自在','淡然','优雅',
-    '质朴','纯粹','活力','热情','冷静','理性','感性','幽默','沉稳','灵动'
-  ],
-  cn_sentences: [
-    '今天的天气真好，适合出门散步。',
-    '生活不止眼前的苟且，还有诗和远方。',
-    '把每一件简单的事做好，就是不简单。',
-    '认真的人最可爱，坚持的人最幸运。',
-    '时间不会辜负每一个努力的人。',
-    '与其抱怨黑暗，不如点亮一支蜡烛。',
-    '所有的不期而遇，都是蓄谋已久的重逢。',
-    '慢慢来，比较快。',
-    '读书是为了遇见更好的自己。',
-    '愿你走出半生，归来仍是少年。',
-    '世界上只有一种真正的英雄主义，就是认清生活的真相后依然热爱它。',
-    '路漫漫其修远兮，吾将上下而求索。',
-    '千里之行，始于足下。',
-    '不积跬步，无以至千里。',
-    '天生我材必有用，千金散尽还复来。',
-    '少壮不努力，老大徒伤悲。',
-    '书山有路勤为径，学海无涯苦作舟。',
-    '一寸光阴一寸金，寸金难买寸光阴。',
-    '三人行，必有我师焉。',
-    '学而不思则罔，思而不学则殆。',
-    '海内存知己，天涯若比邻。',
-    '落霞与孤鹜齐飞，秋水共长天一色。',
-    '会当凌绝顶，一览众山小。',
-    '长风破浪会有时，直挂云帆济沧海。',
-    '既然选择了远方，便只顾风雨兼程。',
-    '愿你被这世界温柔以待。',
-    '把日子过成诗，把生活过成歌。',
-    '每一次努力，都是幸运的伏笔。',
-    '山川是不卷收的文章，日月为你掌灯伴读。',
-    '真正的光明决不是永没有黑暗的时间，只是永不被黑暗所掩蔽罢了。'
-  ],
-  en_words: [
-    'the','be','to','of','and','a','in','that','have','it',
-    'for','not','on','with','he','as','you','do','at','this',
-    'but','his','by','from','they','we','say','her','she','or',
-    'an','will','my','one','all','would','there','their','what','so',
-    'up','out','if','about','who','get','which','go','me','when',
-    'make','can','like','time','no','just','him','know','take','people',
-    'into','year','your','good','some','could','them','see','other','than',
-    'then','now','look','only','come','its','over','think','also','back',
-    'after','use','two','how','our','work','first','well','way','even',
-    'new','want','because','any','these','give','day','most','us','is',
-    'apple','book','car','door','eye','fish','girl','hand','idea','job',
-    'key','light','moon','night','open','page','quiet','rain','sun','tree',
-    'wind','blue','green','red','white','black','yellow','purple','orange','silver',
-    'happy','sad','angry','calm','bright','dark','warm','cold','soft','hard',
-    'dream','hope','courage','change','choice','story','moment','memory','future','music'
-  ],
-  en_sentences: [
-    'The quick brown fox jumps over the lazy dog.',
-    'Practice makes perfect, but only if you practice right.',
-    'Every journey of a thousand miles begins with a single step.',
-    'The best way to predict the future is to create it.',
-    'Stay hungry, stay foolish.',
-    'Simplicity is the ultimate sophistication.',
-    'Talk is cheap. Show me the code.',
-    'The only way to do great work is to love what you do.',
-    'Life is what happens when you are busy making other plans.',
-    'Be the change that you wish to see in the world.',
-    'The greatest glory in living lies not in never falling, but in rising every time we fall.',
-    'In the middle of difficulty lies opportunity.',
-    'What you do today can improve all your tomorrows.',
-    'A journey is best measured in friends, rather than miles.',
-    'Not all those who wander are lost.',
-    'The mind is everything. What you think you become.',
-    'Do what you can, with what you have, where you are.',
-    'Two roads diverged in a wood, and I took the one less traveled by.',
-    'It does not matter how slowly you go as long as you do not stop.',
-    'Success is not final, failure is not fatal: it is the courage to continue that counts.',
-    'The future belongs to those who believe in the beauty of their dreams.',
-    'Imagination is more important than knowledge.',
-    'I think, therefore I am.',
-    'The only thing we have to fear is fear itself.',
-    'That which does not kill us makes us stronger.',
-    'We are what we repeatedly do. Excellence, then, is not an act, but a habit.',
-    'Happiness is not something ready made. It comes from your own actions.',
-    'The best time to plant a tree was twenty years ago. The second best time is now.',
-    'You miss one hundred percent of the shots you do not take.',
-    'The journey is the reward.'
-  ]
-};
+  /* ============================================================
+     数据资源
+  ============================================================ */
+  var DATA = {
+    cn_words: [
+      "你好","世界","朋友","时间","生活","学习","工作","快乐","音乐","电影",
+      "城市","山水","风景","天空","大海","阳光","月光","星星","春风","秋雨",
+      "夏日","冬雪","学校","老师","同学","家庭","父母","兄弟","姐妹","健康",
+      "运动","阅读","写作","旅行","美食","咖啡","茶叶","苹果","香蕉","橙子",
+      "葡萄","西瓜","草莓","森林","河流","高山","草原","沙漠","海洋","岛屿",
+      "云端","彩虹","雨伞","书包","铅笔","橡皮","尺子","笔记","电脑","手机",
+      "相机","时钟","眼镜","帽子","围巾","手套","鞋子","袜子","外套","衬衫",
+      "长裤","项链","戒指","手链","耳环","钱包","钥匙","公交","地铁","火车",
+      "飞机","轮船","汽车","电车","马路","桥梁","公园","广场","商场","超市",
+      "医院","银行","邮局","餐厅","书店","图书","报纸","杂志","新闻","广告",
+      "评论","观点","想法","灵感","创意","梦想","希望","勇气","坚持","努力",
+      "成功","失败","挑战","机会","选择","决定","计划","目标","方向","道路",
+      "旅程","终点","起点","故事","回忆","思念","情感","心情","微笑","泪水",
+      "拥抱","告别","相遇","相知","青春","岁月","时光","记忆","温度","沉默",
+      "喧闹","安静","温柔","坚强","认真","专注","从容","自在","淡然","优雅",
+      "质朴","纯粹","活力","热情","冷静","理性","感性","幽默","沉稳","灵动"
+    ],
+    cn_sentences: [
+      "今天的天气真好，适合出门散步。",
+      "生活不止眼前的苟且，还有诗和远方。",
+      "把每一件简单的事做好，就是不简单。",
+      "认真的人最可爱，坚持的人最幸运。",
+      "时间不会辜负每一个努力的人。",
+      "与其抱怨黑暗，不如点亮一支蜡烛。",
+      "所有的不期而遇，都是蓄谋已久的重逢。",
+      "慢慢来，比较快。",
+      "读书是为了遇见更好的自己。",
+      "愿你走出半生，归来仍是少年。",
+      "世界上只有一种真正的英雄主义，就是认清生活的真相后依然热爱它。",
+      "路漫漫其修远兮，吾将上下而求索。",
+      "千里之行，始于足下。",
+      "不积跬步，无以至千里。",
+      "天生我材必有用，千金散尽还复来。",
+      "少壮不努力，老大徒伤悲。",
+      "书山有路勤为径，学海无涯苦作舟。",
+      "一寸光阴一寸金，寸金难买寸光阴。",
+      "三人行，必有我师焉。",
+      "学而不思则罔，思而不学则殆。",
+      "海内存知己，天涯若比邻。",
+      "落霞与孤鹜齐飞，秋水共长天一色。",
+      "会当凌绝顶，一览众山小。",
+      "长风破浪会有时，直挂云帆济沧海。",
+      "既然选择了远方，便只顾风雨兼程。",
+      "愿你被这世界温柔以待。",
+      "把日子过成诗，把生活过成歌。",
+      "每一次努力，都是幸运的伏笔。",
+      "山川是不卷收的文章，日月为你掌灯伴读。",
+      "真正的光明决不是永没有黑暗的时间，只是永不被黑暗所掩蔽罢了。"
+    ],
+    en_words: [
+      "the","be","to","of","and","a","in","that","have","it",
+      "for","not","on","with","he","as","you","do","at","this",
+      "but","his","by","from","they","we","say","her","she","or",
+      "an","will","my","one","all","would","there","their","what","so",
+      "up","out","if","about","who","get","which","go","me","when",
+      "make","can","like","time","no","just","him","know","take","people",
+      "into","year","your","good","some","could","them","see","other","than",
+      "then","now","look","only","come","its","over","think","also","back",
+      "after","use","two","how","our","work","first","well","way","even",
+      "new","want","because","any","these","give","day","most","us","is",
+      "apple","book","car","door","eye","fish","girl","hand","idea","job",
+      "key","light","moon","night","open","page","quiet","rain","sun","tree",
+      "wind","blue","green","red","white","black","yellow","purple","orange","silver",
+      "happy","sad","angry","calm","bright","dark","warm","cold","soft","hard",
+      "dream","hope","courage","change","choice","story","moment","memory","future","music"
+    ],
+    en_sentences: [
+      "The quick brown fox jumps over the lazy dog.",
+      "Practice makes perfect, but only if you practice right.",
+      "Every journey of a thousand miles begins with a single step.",
+      "The best way to predict the future is to create it.",
+      "Stay hungry, stay foolish.",
+      "Simplicity is the ultimate sophistication.",
+      "Talk is cheap. Show me the code.",
+      "The only way to do great work is to love what you do.",
+      "Life is what happens when you are busy making other plans.",
+      "Be the change that you wish to see in the world.",
+      "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+      "In the middle of difficulty lies opportunity.",
+      "What you do today can improve all your tomorrows.",
+      "A journey is best measured in friends, rather than miles.",
+      "Not all those who wander are lost.",
+      "The mind is everything. What you think you become.",
+      "Do what you can, with what you have, where you are.",
+      "Two roads diverged in a wood, and I took the one less traveled by.",
+      "It does not matter how slowly you go as long as you do not stop.",
+      "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+      "The future belongs to those who believe in the beauty of their dreams.",
+      "Imagination is more important than knowledge.",
+      "I think, therefore I am.",
+      "The only thing we have to fear is fear itself.",
+      "That which does not kill us makes us stronger.",
+      "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
+      "Happiness is not something ready made. It comes from your own actions.",
+      "The best time to plant a tree was twenty years ago. The second best time is now.",
+      "You miss one hundred percent of the shots you do not take.",
+      "The journey is the reward."
+    ]
+  };
 
-const KB_LAYOUT = [
-  ['`','1','2','3','4','5','6','7','8','9','0','-','=','backspace'],
-  ['tab','q','w','e','r','t','y','u','i','o','p','[',']','\\'],
-  ['caps','a','s','d','f','g','h','j','k','l',';',"'",'enter'],
-  ['shift','z','x','c','v','b','n','m',',','.','/','shift'],
-  ['space']
-];
-const KB_LABEL = {
-  backspace:'⌫ Backspace', tab:'Tab', caps:'Caps',
-  enter:'Enter ↵', shift:'⇧ Shift', space:'Space'
-};
+  /* ============================================================
+     虚拟键盘布局
+  ============================================================ */
+  var KB_LAYOUT = [
+    ["`","1","2","3","4","5","6","7","8","9","0","-","=","backspace"],
+    ["tab","q","w","e","r","t","y","u","i","o","p","[","]","\\"],
+    ["caps","a","s","d","f","g","h","j","k","l",";","'","enter"],
+    ["shift","z","x","c","v","b","n","m",",",".","/","shift"],
+    ["space"]
+  ];
 
-const inputEl = $('typingInput');
-const textEl  = $('typingText');
-const progressBar = $('progressBar');
+  var KB_LABEL = {
+    backspace: "⌫",
+    tab: "Tab",
+    caps: "Caps",
+    enter: "↵",
+    shift: "⇧",
+    space: "Space"
+  };
 
-let mode = 'cn_words';
-let targetText = '';
-let startTime = null;
-let timerInterval = null;
-let finished = false;
-let inputStarted = false;
+  /* ============================================================
+     状态
+  ============================================================ */
+  var inputEl = $("typingInput");
+  var textEl = $("typingText");
+  var cardEl = $("typingCard");
+  var progressFill = $("progressFill");
 
-function pickRandom(arr, n){
-  const out = [];
-  for (let i = 0; i < n; i++){
-    out.push(arr[Math.floor(Math.random() * arr.length)]);
+  var mode = "cn_words";
+  var target = "";
+  var startTime = null;
+  var timerId = null;
+  var finished = false;
+  var started = false;
+  var charSpans = [];  // 缓存每个字符的 span
+  var lastStats = { time: "0.0", cpm: "0", acc: "100%", prog: "0%" };
+
+  /* ============================================================
+     工具函数
+  ============================================================ */
+  function randInt(max) {
+    return Math.floor(Math.random() * max);
   }
-  return out;
-}
-function generateText(){
-  if (mode === 'cn_words')       return pickRandom(DATA.cn_words, 12).join(' ');
-  if (mode === 'cn_sentences')   return pickRandom(DATA.cn_sentences, 1)[0];
-  if (mode === 'en_words')       return pickRandom(DATA.en_words, 15).join(' ');
-  if (mode === 'en_sentences')   return pickRandom(DATA.en_sentences, 1)[0];
-  return '';
-}
 
-function escapeChar(c){
-  if (c === '<') return '&lt;';
-  if (c === '>') return '&gt;';
-  if (c === '&') return '&amp;';
-  return c;
-}
-function render(){
-  const val = inputEl.value;
-  const target = targetText;
-  let html = '';
-  for (let i = 0; i < target.length; i++){
-    const ch = target[i];
-    let cls = 'char';
-    if (i < val.length){
-      cls += val[i] === ch ? ' correct' : ' wrong';
-    } else if (i === val.length){
-      cls += ' current';
+  function pickMany(arr, n) {
+    var out = [];
+    for (var i = 0; i < n; i++) {
+      out.push(arr[randInt(arr.length)]);
     }
-    html += `<span class="${cls}">${escapeChar(ch)}</span>`;
-  }
-  textEl.innerHTML = html;
-}
-
-function updateStats(){
-  const val = inputEl.value;
-  const target = targetText;
-  const elapsed = startTime ? (Date.now() - startTime) / 1000 : 0;
-
-  let correct = 0;
-  for (let i = 0; i < val.length; i++){
-    if (val[i] === target[i]) correct++;
+    return out;
   }
 
-  const cpm = elapsed > 0.3 ? Math.round(correct / elapsed * 60) : 0;
-  const acc = val.length > 0 ? Math.round(correct / val.length * 100) : 100;
-  const prog = target.length > 0 ? Math.min(val.length / target.length, 1) : 0;
-
-  $('statTime').textContent = elapsed.toFixed(1);
-  $('statCpm').textContent = cpm;
-  $('statAcc').textContent = acc + '%';
-  $('statProg').textContent = Math.round(prog * 100) + '%';
-  progressBar.style.transform = `scaleX(${prog})`;
-}
-
-function highlightKey(ch){
-  document.querySelectorAll('.key.active').forEach(k => k.classList.remove('active'));
-  if (!ch) return;
-  const name = ch === ' ' ? 'space' : ch.toLowerCase();
-  const key = document.querySelector(`.key[data-key="${CSS.escape(name)}"]`);
-  if (key){
-    key.classList.add('active');
-    clearTimeout(key._t);
-    key._t = setTimeout(() => key.classList.remove('active'), 150);
+  function genText() {
+    if (mode === "cn_words") return pickMany(DATA.cn_words, 12).join(" ");
+    if (mode === "cn_sentences") return DATA.cn_sentences[randInt(DATA.cn_sentences.length)];
+    if (mode === "en_words") return pickMany(DATA.en_words, 15).join(" ");
+    if (mode === "en_sentences") return DATA.en_sentences[randInt(DATA.en_sentences.length)];
+    return "";
   }
-  if (/[A-Z]/.test(ch)){
-    const shift = document.querySelector('.key[data-key="shift"]');
-    if (shift){
-      shift.classList.add('active');
-      clearTimeout(shift._t);
-      shift._t = setTimeout(() => shift.classList.remove('active'), 150);
+
+  function escapeHtml(ch) {
+    if (ch === "<") return "&lt;";
+    if (ch === ">") return "&gt;";
+    if (ch === "&") return "&amp;";
+    if (ch === " ") return "&nbsp;";
+    return ch;
+  }
+
+  function setStat(el, val) {
+    if (el.textContent === val) return;
+    el.textContent = val;
+    el.classList.remove("bump");
+    void el.offsetWidth;
+    el.classList.add("bump");
+  }
+
+  /* ============================================================
+     渲染
+  ============================================================ */
+  function buildText() {
+    var html = "";
+    for (var i = 0; i < target.length; i++) {
+      html += '<span class="char">' + escapeHtml(target[i]) + "</span>";
+    }
+    textEl.innerHTML = html;
+    charSpans = textEl.querySelectorAll(".char");
+  }
+
+  function render() {
+    var val = inputEl.value;
+    var len = target.length;
+    for (var i = 0; i < len; i++) {
+      var span = charSpans[i];
+      if (!span) continue;
+      var cls = "char";
+      if (i < val.length) {
+        cls += val[i] === target[i] ? " correct" : " wrong";
+      } else if (i === val.length) {
+        cls += " current";
+      }
+      if (span.className !== cls) {
+        span.className = cls;
+      }
     }
   }
-}
 
-function newRound(){
-  clearInterval(timerInterval);
-  timerInterval = null;
-  targetText = generateText();
-  inputEl.value = '';
-  startTime = null;
-  inputStarted = false;
-  finished = false;
+  /* ============================================================
+     统计
+  ============================================================ */
+  function updateStats() {
+    var val = inputEl.value;
+    var elapsed = startTime ? (Date.now() - startTime) / 1000 : 0;
 
-  $('resultMask').classList.remove('show');
+    var correct = 0;
+    var minLen = Math.min(val.length, target.length);
+    for (var i = 0; i < minLen; i++) {
+      if (val[i] === target[i]) correct++;
+    }
 
-  render();
-  updateStats();
+    var cpm = elapsed > 0.3 ? Math.round(correct / elapsed * 60) : 0;
+    var acc = val.length > 0 ? Math.round(correct / val.length * 100) : 100;
+    var prog = target.length > 0 ? Math.min(val.length / target.length, 1) : 0;
 
-  textEl.classList.remove('pop');
-  void textEl.offsetWidth;
-  textEl.classList.add('pop');
+    var timeStr = elapsed.toFixed(1);
+    var cpmStr = String(cpm);
+    var accStr = acc + "%";
+    var progStr = Math.round(prog * 100) + "%";
 
-  if (!window.matchMedia('(hover: none)').matches){
+    if (timeStr !== lastStats.time) {
+      setStat($("statTime"), timeStr);
+      lastStats.time = timeStr;
+    }
+    if (cpmStr !== lastStats.cpm) {
+      setStat($("statCpm"), cpmStr);
+      lastStats.cpm = cpmStr;
+    }
+    if (accStr !== lastStats.acc) {
+      setStat($("statAcc"), accStr);
+      lastStats.acc = accStr;
+    }
+    if (progStr !== lastStats.prog) {
+      setStat($("statProg"), progStr);
+      lastStats.prog = progStr;
+    }
+
+    progressFill.style.width = (prog * 100) + "%";
+  }
+
+  /* ============================================================
+     键盘高亮
+  ============================================================ */
+  var keyMap = {};
+
+  function buildKeyboard() {
+    var kb = $("keyboard");
+    kb.innerHTML = "";
+    keyMap = {};
+
+    KB_LAYOUT.forEach(function (row) {
+      var rowEl = document.createElement("div");
+      rowEl.className = "kb-row";
+      row.forEach(function (k) {
+        var keyEl = document.createElement("div");
+        keyEl.className = "kb-key";
+        if (k === "backspace" || k === "enter") keyEl.classList.add("wider");
+        if (k === "tab" || k === "caps") keyEl.classList.add("wide");
+        if (k === "shift") keyEl.classList.add("wider");
+        if (k === "space") keyEl.classList.add("space");
+        keyEl.setAttribute("data-key", k);
+        keyEl.textContent = KB_LABEL[k] || k.toUpperCase();
+        rowEl.appendChild(keyEl);
+        if (!keyMap[k]) keyMap[k] = [];
+        keyMap[k].push(keyEl);
+      });
+      kb.appendChild(rowEl);
+    });
+  }
+
+  function flashKey(ch) {
+    // 清除所有 active
+    var active = document.querySelectorAll(".kb-key.active");
+    for (var i = 0; i < active.length; i++) active[i].classList.remove("active");
+
+    if (!ch) return;
+    var name = ch === " " ? "space" : ch.toLowerCase();
+    var keys = keyMap[name];
+    if (keys) {
+      keys.forEach(function (k) {
+        k.classList.add("active");
+        clearTimeout(k._t);
+        k._t = setTimeout(function () {
+          k.classList.remove("active");
+        }, 160);
+      });
+    }
+    // 大写时点亮 shift
+    if (/[A-Z]/.test(ch)) {
+      var shifts = keyMap["shift"] || [];
+      shifts.forEach(function (k) {
+        k.classList.add("active");
+        clearTimeout(k._t);
+        k._t = setTimeout(function () {
+          k.classList.remove("active");
+        }, 160);
+      });
+    }
+  }
+
+  /* ============================================================
+     一轮
+  ============================================================ */
+  function newRound() {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+
+    target = genText();
+    inputEl.value = "";
+    startTime = null;
+    started = false;
+    finished = false;
+    lastStats = { time: "0.0", cpm: "0", acc: "100%", prog: "0%" };
+
+    $("resultOverlay").classList.remove("show");
+
+    // 淡入动画
+    textEl.classList.add("fading");
+    setTimeout(function () {
+      buildText();
+      render();
+      updateStats();
+      progressFill.style.width = "0%";
+      textEl.classList.remove("fading");
+    }, 140);
+
+    // 重置统计显示
+    $("statTime").textContent = "0.0";
+    $("statCpm").textContent = "0";
+    $("statAcc").textContent = "100%";
+    $("statProg").textContent = "0%";
+
+    if (!window.matchMedia("(hover: none)").matches) {
+      inputEl.focus();
+    }
+  }
+
+  function finish() {
+    if (finished) return;
+    finished = true;
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+
+    var elapsed = startTime ? (Date.now() - startTime) / 1000 : 0;
+    var val = inputEl.value;
+    var correct = 0;
+    var minLen = Math.min(val.length, target.length);
+    for (var i = 0; i < minLen; i++) {
+      if (val[i] === target[i]) correct++;
+    }
+    var cpm = elapsed > 0.3 ? Math.round(correct / elapsed * 60) : 0;
+    var acc = val.length > 0 ? Math.round(correct / val.length * 100) : 100;
+
+    var sub = "继续保持节奏";
+    if (cpm >= 400) sub = "🔥 手速惊人，可以去打比赛了";
+    else if (cpm >= 260) sub = "⚡ 速度很快，节奏很稳";
+    else if (cpm >= 160) sub = "✨ 已经不错了，再来一轮";
+    else if (cpm >= 80) sub = "🌱 稳扎稳打，继续加油";
+    else sub = "🐢 慢一点没关系，准确更重要";
+
+    $("resCpm").textContent = cpm;
+    $("resAcc").textContent = acc + "%";
+    $("resTime").textContent = elapsed.toFixed(1) + "s";
+    $("resultSub").textContent = sub;
+
+    setTimeout(function () {
+      $("resultOverlay").classList.add("show");
+    }, 280);
+  }
+
+  /* ============================================================
+     事件绑定
+  ============================================================ */
+  inputEl.addEventListener("input", function () {
+    if (finished) return;
+
+    if (inputEl.value.length > target.length) {
+      inputEl.value = inputEl.value.slice(0, target.length);
+    }
+
+    if (!started && inputEl.value.length > 0) {
+      started = true;
+      startTime = Date.now();
+      timerId = setInterval(updateStats, 100);
+    }
+
+    render();
+    updateStats();
+
+    var last = inputEl.value.slice(-1);
+    if (last) flashKey(last);
+
+    if (inputEl.value.length >= target.length) {
+      finish();
+    }
+  });
+
+  inputEl.addEventListener("focus", function () {
+    cardEl.classList.add("focused");
+  });
+
+  inputEl.addEventListener("blur", function () {
+    cardEl.classList.remove("focused");
+  });
+
+  cardEl.addEventListener("click", function () {
     inputEl.focus();
-  }
-}
-
-function finishRound(){
-  if (finished) return;
-  finished = true;
-  clearInterval(timerInterval);
-  timerInterval = null;
-
-  const elapsed = startTime ? (Date.now() - startTime) / 1000 : 0;
-  const val = inputEl.value;
-  let correct = 0;
-  for (let i = 0; i < val.length; i++){
-    if (val[i] === targetText[i]) correct++;
-  }
-  const cpm = elapsed > 0.3 ? Math.round(correct / elapsed * 60) : 0;
-  const acc = val.length > 0 ? Math.round(correct / val.length * 100) : 100;
-
-  let sub = '继续保持节奏';
-  if (cpm >= 400) sub = '🔥 手速惊人，可以去打比赛了';
-  else if (cpm >= 260) sub = '⚡ 速度很快，节奏很稳';
-  else if (cpm >= 160) sub = '✨ 已经不错了，再来一轮';
-  else if (cpm >= 80) sub = '🌱 稳扎稳打，继续加油';
-  else sub = '🐢 慢一点没关系，准确更重要';
-
-  $('resCpm').textContent = cpm;
-  $('resAcc').textContent = acc + '%';
-  $('resTime').textContent = elapsed.toFixed(1) + 's';
-  $('resultSub').textContent = sub;
-
-  setTimeout(() => $('resultMask').classList.add('show'), 320);
-}
-
-function buildKeyboard(){
-  const kb = $('keyboard');
-  kb.innerHTML = '';
-  KB_LAYOUT.forEach(row => {
-    const rowEl = document.createElement('div');
-    rowEl.className = 'kb-row';
-    row.forEach(k => {
-      const keyEl = document.createElement('div');
-      keyEl.className = 'key';
-      keyEl.dataset.key = k;
-      if (k === 'backspace' || k === 'enter') keyEl.classList.add('wider');
-      if (k === 'tab' || k === 'caps') keyEl.classList.add('wide');
-      if (k === 'shift') keyEl.classList.add('wider');
-      if (k === 'space') keyEl.classList.add('space');
-      keyEl.textContent = KB_LABEL[k] || k.toUpperCase();
-      rowEl.appendChild(keyEl);
-    });
-    kb.appendChild(rowEl);
   });
-}
 
-inputEl.addEventListener('input', () => {
-  if (finished) return;
-
-  if (inputEl.value.length > targetText.length){
-    inputEl.value = inputEl.value.slice(0, targetText.length);
-  }
-
-  if (!inputStarted && inputEl.value.length > 0){
-    inputStarted = true;
-    startTime = Date.now();
-    timerInterval = setInterval(updateStats, 100);
-  }
-
-  render();
-  updateStats();
-  highlightKey(inputEl.value.slice(-1));
-
-  if (inputEl.value.length >= targetText.length){
-    finishRound();
-  }
-});
-
-inputEl.addEventListener('keydown', (e) => {
-  if (e.key === 'Tab'){
-    e.preventDefault();
-    newRound();
-  }
-});
-
-$('typingWrap').addEventListener('click', () => inputEl.focus());
-
-$('restartBtn').addEventListener('click', newRound);
-$('nextBtn').addEventListener('click', newRound);
-$('againBtn').addEventListener('click', newRound);
-$('nextRoundBtn').addEventListener('click', newRound);
-
-document.querySelectorAll('.mode').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.mode').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    mode = btn.dataset.mode;
-    newRound();
+  // 鼠标跟随光效
+  cardEl.addEventListener("mousemove", function (e) {
+    var r = cardEl.getBoundingClientRect();
+    cardEl.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100) + "%");
+    cardEl.style.setProperty("--my", ((e.clientY - r.top) / r.height * 100) + "%");
   });
-});
 
-const savedTheme = localStorage.getItem('mu-theme');
-if (savedTheme) document.documentElement.dataset.theme = savedTheme;
-$('themeBtn').addEventListener('click', () => {
-  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  document.documentElement.dataset.theme = next;
-  localStorage.setItem('mu-theme', next);
-});
-
-$('brandBtn').addEventListener('click', () => { location.href = 'index.html'; });
-
-let ticking = false;
-window.addEventListener('scroll', () => {
-  if (!ticking){
-    ticking = true;
-    requestAnimationFrame(() => {
-      $('nav').classList.toggle('scrolled', window.scrollY > 20);
-      ticking = false;
+  // 模式切换
+  var modeBtns = document.querySelectorAll(".mode-btn");
+  for (var i = 0; i < modeBtns.length; i++) {
+    modeBtns[i].addEventListener("click", function () {
+      var btns = document.querySelectorAll(".mode-btn");
+      for (var j = 0; j < btns.length; j++) btns[j].classList.remove("active");
+      this.classList.add("active");
+      mode = this.getAttribute("data-mode");
+      newRound();
     });
   }
-}, { passive: true });
 
-function init(){
-  buildKeyboard();
-  newRound();
-  setTimeout(() => $('loader').classList.add('done'), 550);
-}
+  // 按钮
+  $("restartBtn").addEventListener("click", newRound);
+  $("nextBtn").addEventListener("click", newRound);
+  $("againBtn").addEventListener("click", newRound);
+  $("nextRoundBtn").addEventListener("click", newRound);
 
-init();
+  // 键盘快捷键
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      newRound();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      newRound();
+    }
+  });
+
+  // 主题
+  var savedTheme = localStorage.getItem("mu-theme");
+  if (savedTheme) {
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  }
+
+  $("themeBtn").addEventListener("click", function () {
+    var current = document.documentElement.getAttribute("data-theme");
+    var next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("mu-theme", next);
+  });
+
+  // 返回资源库
+  $("brandBtn").addEventListener("click", function () {
+    location.href = "index.html";
+  });
+
+  // 滚动
+  var ticking = false;
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(function () {
+        $("topbar").classList.toggle("stuck", window.scrollY > 12);
+        ticking = false;
+      });
+    }
+  }, { passive: true });
+
+  /* ============================================================
+     初始化
+  ============================================================ */
+  function init() {
+    buildKeyboard();
+    newRound();
+
+    // 加载动画
+    setTimeout(function () {
+      $("preloader").classList.add("done");
+    }, 600);
+  }
+
+  // 等待字体加载
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(init);
+  } else {
+    init();
+  }
 })();
 </script>
 </body>
