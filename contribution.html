@@ -95,6 +95,15 @@ input,textarea,select{font-family:inherit}
 .btn-nav:hover{color:var(--orange);border-color:var(--border-hi);transform:translateY(-1px)}
 .btn-nav.primary{background:linear-gradient(135deg,var(--orange),var(--gold));color:#fff;border-color:transparent;box-shadow:0 8px 22px -10px rgba(251,146,60,.7)}
 .btn-nav.primary:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(251,146,60,.9);color:#fff}
+.btn-nav.admin{background:linear-gradient(135deg,var(--violet),var(--pink));color:#fff;border-color:transparent;box-shadow:0 8px 22px -10px rgba(167,139,250,.7)}
+.btn-nav.admin:hover{color:#fff;transform:translateY(-2px)}
+
+.user-chip{display:inline-flex;align-items:center;gap:8px;padding:5px 14px 5px 5px;border-radius:99px;font-size:.78rem;font-weight:600;background:var(--surface);border:1px solid var(--border);color:var(--text);cursor:pointer;transition:all .35s var(--ease)}
+.user-chip:hover{border-color:var(--border-hi);transform:translateY(-1px)}
+.user-chip .avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--gold));display:grid;place-items:center;font-size:.72rem;color:#fff;font-weight:800}
+.user-chip.super .avatar{background:linear-gradient(135deg,var(--violet),var(--pink))}
+.user-chip .role{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--violet);color:#fff;letter-spacing:.05em;text-transform:uppercase}
+.user-chip.super .role{background:linear-gradient(135deg,var(--violet),var(--pink))}
 
 .wrap{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
 .hero{padding:clamp(40px,8vw,90px) 0 clamp(30px,5vw,60px);text-align:center;position:relative}
@@ -171,6 +180,7 @@ input,textarea,select{font-family:inherit}
 .modal{width:min(560px,100%);background:var(--bg);border:1px solid var(--border-hi);border-radius:22px;padding:34px 30px;box-shadow:0 50px 100px -40px rgba(0,0,0,.9);transform:scale(.95) translateY(20px);transition:transform .45s var(--ease-b);max-height:90vh;overflow-y:auto;position:relative}
 .mask.show .modal{transform:none}
 .modal.read{width:min(760px,100%);padding:44px clamp(28px,5vw,52px)}
+.modal.wide{width:min(900px,100%)}
 .modal h2{font-size:1.25rem;font-weight:750;letter-spacing:-.03em;margin-bottom:6px}
 .modal .desc{font-size:.82rem;color:var(--text-mute);margin-bottom:22px}
 .modal-close{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--surface-hi);border:1px solid var(--border);color:var(--text-dim);font-size:1rem;transition:all .3s var(--ease);cursor:pointer;z-index:2}
@@ -206,6 +216,36 @@ input,textarea,select{font-family:inherit}
 .read-actions{margin-top:28px;padding-top:20px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap}
 .read-actions .btn{flex:1;min-width:140px;justify-content:center}
 
+/* ============ 管理面板 ============ */
+.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.astat{padding:16px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--border);text-align:center;transition:all .3s var(--ease)}
+.astat:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+.astat b{display:block;font-size:1.5rem;font-weight:800;color:var(--orange);font-variant-numeric:tabular-nums;line-height:1.1}
+.astat span{font-size:.68rem;color:var(--text-mute);letter-spacing:.05em;text-transform:uppercase}
+.admin-toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.admin-toolbar .search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:11px;background:var(--surface);border:1px solid var(--border);transition:all .3s var(--ease)}
+.admin-toolbar .search:focus-within{border-color:var(--orange);box-shadow:0 0 0 3px rgba(251,146,60,.13)}
+.admin-toolbar .search svg{width:15px;height:15px;color:var(--text-mute);flex-shrink:0}
+.admin-toolbar .search input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:.85rem;min-width:0}
+.admin-toolbar .search input::placeholder{color:var(--text-mute)}
+.admin-list{display:flex;flex-direction:column;gap:10px;max-height:55vh;overflow-y:auto;padding-right:4px;margin-right:-4px}
+.admin-item{padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);transition:all .3s var(--ease)}
+.admin-item:hover{border-color:var(--border-hi);background:var(--surface-hi)}
+.admin-item-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.admin-item-head h4{font-size:.94rem;font-weight:700;flex:1;min-width:0;word-break:break-word;line-height:1.4}
+.admin-item-meta{font-size:.72rem;color:var(--text-mute);display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.admin-item-meta b{color:var(--text-dim);font-weight:600}
+.admin-item-body{font-size:.78rem;color:var(--text-dim);line-height:1.7;padding:10px 12px;background:var(--surface-hi);border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;word-break:break-word;max-height:90px;overflow-y:auto}
+.admin-item-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.btn-mini{padding:6px 12px;border-radius:8px;font-size:.72rem;font-weight:600;background:var(--surface-hi);border:1px solid var(--border);color:var(--text-dim);transition:all .3s var(--ease);cursor:pointer}
+.btn-mini:hover{border-color:var(--border-hi);color:var(--text);transform:translateY(-1px)}
+.btn-mini.danger{color:var(--err);border-color:rgba(248,113,113,.3)}
+.btn-mini.danger:hover{background:var(--err);color:#fff;border-color:var(--err)}
+.btn-mini.primary{color:var(--orange);border-color:rgba(251,146,60,.35)}
+.btn-mini.primary:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+.admin-empty{text-align:center;padding:40px 20px;color:var(--text-mute);font-size:.85rem}
+.admin-empty span{font-size:2rem;display:block;margin-bottom:10px;filter:grayscale(.4)}
+
 .foot{border-top:1px solid var(--border);padding:36px 0 40px;margin-top:20px}
 .foot-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center;font-size:.78rem;color:var(--text-mute)}
 .foot-inner a{cursor:pointer;transition:color .3s}
@@ -225,6 +265,7 @@ input,textarea,select{font-family:inherit}
   .modal.read{padding:32px 22px}
   .to-top{right:16px;bottom:16px;width:44px;height:44px}
   .toast{bottom:22px;font-size:.78rem;padding:10px 16px}
+  .admin-stats{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
@@ -257,6 +298,13 @@ input,textarea,select{font-family:inherit}
     </div>
     <div class="nav-actions">
       <button class="btn-nav" id="themeBtn">◐</button>
+      <button class="btn-nav" id="loginBtn">登录</button>
+      <button class="btn-nav admin" id="adminBtn" style="display:none">管理</button>
+      <div class="user-chip" id="userChip" style="display:none">
+        <span class="avatar" id="userAvatar">M</span>
+        <span id="userName">—</span>
+        <span class="role" id="userRole" style="display:none">ADMIN</span>
+      </div>
       <button class="btn-nav primary" id="writeBtn">✎ 我要投稿</button>
     </div>
   </div>
@@ -309,6 +357,7 @@ input,textarea,select{font-family:inherit}
 
 <button class="to-top" id="toTop">↑</button>
 
+<!-- 投稿 -->
 <div class="mask" id="writeMask">
   <div class="modal">
     <button class="modal-close" data-close="writeMask">✕</button>
@@ -349,6 +398,7 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
+<!-- 阅读 -->
 <div class="mask" id="readMask">
   <div class="modal read">
     <button class="modal-close" data-close="readMask">✕</button>
@@ -368,6 +418,72 @@ input,textarea,select{font-family:inherit}
   </div>
 </div>
 
+<!-- 登录 -->
+<div class="mask" id="loginMask">
+  <div class="modal">
+    <button class="modal-close" data-close="loginMask">✕</button>
+    <h2>管理员登录</h2>
+    <p class="desc">登录后可查看和管理全部投稿稿件。</p>
+
+    <div class="field">
+      <label class="field-label">用户名</label>
+      <input class="input" type="text" id="loginUser" placeholder="请输入用户名" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label class="field-label">密码</label>
+      <input class="input" type="password" id="loginPass" placeholder="请输入密码" autocomplete="off">
+    </div>
+
+    <div class="form-msg" id="loginMsg"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" data-close="loginMask">取消</button>
+      <button class="btn btn-primary" type="button" id="loginSubmit">登录</button>
+    </div>
+  </div>
+</div>
+
+<!-- 用户信息 -->
+<div class="mask" id="userMask">
+  <div class="modal">
+    <button class="modal-close" data-close="userMask">✕</button>
+    <h2 id="userInfoTitle">账号信息</h2>
+    <p class="desc" id="userInfoSub">—</p>
+    <div id="userInfoBody" style="font-size:.85rem;color:var(--text-dim);line-height:2"></div>
+    <div class="modal-actions" style="margin-top:22px">
+      <button class="btn btn-ghost" type="button" id="logoutBtn" style="color:var(--err);border-color:rgba(248,113,113,.3)">退出登录</button>
+    </div>
+  </div>
+</div>
+
+<!-- 管理面板 -->
+<div class="mask" id="adminMask">
+  <div class="modal wide">
+    <button class="modal-close" data-close="adminMask">✕</button>
+    <h2>稿件管理</h2>
+    <p class="desc" id="adminSubtitle">—</p>
+
+    <div class="admin-stats">
+      <div class="astat"><b id="stTotal">0</b><span>全部稿件</span></div>
+      <div class="astat"><b id="stWeek">0</b><span>本周新增</span></div>
+      <div class="astat"><b id="stAuthors">0</b><span>作者数</span></div>
+    </div>
+
+    <div class="admin-toolbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="text" id="adminSearch" placeholder="搜索标题、作者、正文…" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="admin-list" id="adminList"></div>
+
+    <div class="modal-actions" style="margin-top:20px">
+      <button class="btn btn-ghost" type="button" data-close="adminMask">关闭</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span class="tick">✓</span><span id="toastText">已完成</span></div>
 
 <script>
@@ -382,6 +498,24 @@ const $ = id => document.getElementById(id);
 const BIN_POSTS  = '6ab5f889ac6210605af331c4';
 const JSONBIN_KEY  = '$2a$10$8a1mjO5sFu4ZZetBfd6Npu5FC8s50I36xx70DBUjKenDK1AasAVOO';
 const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
+
+/* ============================================================
+   账号配置
+   ============================================================ */
+const SUPER_ADMIN = { username: 'My_Underline', password: 'kk20140119', role: 'super' };
+
+const ADMINS = [
+  { username: 'zyy', password: '202506' },
+  { username: 'ldl', password: '202506' },
+  { username: 'cyj', password: '202506' },
+  { username: 'wyh', password: '202506' },
+  { username: 'qyh', password: '202506' },
+  { username: 'yjh', password: '202506' },
+  { username: 'xy',  password: '202506' },
+  { username: 'zcy', password: '202506' }
+];
+
+const SESSION_KEY = 'class6-journal-session';
 
 /* ============================================================
    JSONBin 读写
@@ -421,6 +555,12 @@ function fmtDate(ts){
   const p = n => String(n).padStart(2,'0');
   return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
 }
+function fmtDateTime(ts){
+  if (!ts) return '—';
+  const d = new Date(ts);
+  const p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
 function fmtRelative(ts){
   if (!ts) return '—';
   const diff = Date.now() - ts;
@@ -446,6 +586,56 @@ function toast(text){
 let posts = [];
 let currentFilter = 'all';
 let readingPost = null;
+let session = null;   // { username, role: 'super' | 'admin' }
+
+/* ============================================================
+   会话
+   ============================================================ */
+function loadSession(){
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (raw) session = JSON.parse(raw);
+  } catch(e){}
+}
+function saveSession(){
+  try {
+    if (session) localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    else localStorage.removeItem(SESSION_KEY);
+  } catch(e){}
+}
+function isAdmin(){ return session && (session.role === 'super' || session.role === 'admin'); }
+function isSuper(){ return session && session.role === 'super'; }
+
+/* ============================================================
+   应用会话到界面
+   ============================================================ */
+function applySession(){
+  const chip = $('userChip');
+  const loginBtn = $('loginBtn');
+  const adminBtn = $('adminBtn');
+
+  if (session){
+    chip.style.display = 'inline-flex';
+    loginBtn.style.display = 'none';
+    adminBtn.style.display = '';
+    $('userName').textContent = session.username;
+    $('userAvatar').textContent = session.username.charAt(0).toUpperCase();
+    if (session.role === 'super'){
+      $('userRole').style.display = 'inline-block';
+      $('userRole').textContent = 'SUPER';
+      chip.classList.add('super');
+    } else {
+      $('userRole').style.display = 'inline-block';
+      $('userRole').textContent = 'ADMIN';
+      chip.classList.remove('super');
+    }
+  } else {
+    chip.style.display = 'none';
+    loginBtn.style.display = '';
+    adminBtn.style.display = 'none';
+    chip.classList.remove('super');
+  }
+}
 
 /* ============================================================
    渲染
@@ -552,6 +742,90 @@ function closeMask(id){
 }
 
 /* ============================================================
+   登录
+   ============================================================ */
+function openLogin(){
+  $('loginUser').value = '';
+  $('loginPass').value = '';
+  $('loginMsg').className = 'form-msg';
+  openMask('loginMask');
+  setTimeout(() => $('loginUser').focus(), 120);
+}
+
+function doLogin(){
+  const u = $('loginUser').value.trim();
+  const p = $('loginPass').value;
+  const msg = $('loginMsg');
+  msg.className = 'form-msg';
+
+  if (!u || !p){
+    msg.className = 'form-msg show error';
+    msg.textContent = '请输入用户名和密码';
+    return;
+  }
+
+  // 主管理员
+  if (u === SUPER_ADMIN.username){
+    if (p !== SUPER_ADMIN.password){
+      msg.className = 'form-msg show error';
+      msg.textContent = '密码错误';
+      return;
+    }
+    session = { username: u, role: 'super' };
+    saveSession();
+    applySession();
+    closeMask('loginMask');
+    toast('欢迎回来，' + u);
+    return;
+  }
+
+  // 管理员
+  const found = ADMINS.find(a => a.username === u);
+  if (!found){
+    msg.className = 'form-msg show error';
+    msg.textContent = '用户名不存在';
+    return;
+  }
+  if (found.password !== p){
+    msg.className = 'form-msg show error';
+    msg.textContent = '密码错误';
+    return;
+  }
+
+  session = { username: u, role: 'admin' };
+  saveSession();
+  applySession();
+  closeMask('loginMask');
+  toast('欢迎，' + u);
+}
+
+function logout(){
+  session = null;
+  saveSession();
+  applySession();
+  closeMask('userMask');
+  closeMask('adminMask');
+  toast('已退出登录');
+}
+
+function openUserInfo(){
+  if (!session) return;
+  $('userInfoTitle').textContent = session.username;
+  $('userInfoSub').textContent = session.role === 'super' ? '主管理员 · 全部权限' : '管理员 · 可查看和管理投稿';
+  $('userInfoBody').innerHTML = `
+    <div style="padding:12px;border-radius:10px;background:var(--surface-hi);border:1px solid var(--border);text-align:center">
+      <b style="display:block;font-size:1.3rem;color:var(--orange)">${session.role === 'super' ? '主管理员' : '管理员'}</b>
+      <span style="font-size:.7rem;color:var(--text-mute)">当前身份</span>
+    </div>
+    <div style="margin-top:12px;font-size:.78rem;color:var(--text-mute);line-height:1.9">
+      <div>用户名：<b style="color:var(--text-dim)">${escapeHtml(session.username)}</b></div>
+      <div>权限：${session.role === 'super' ? '查看稿件 / 删除稿件 / 全部操作' : '查看稿件 / 删除稿件'}</div>
+    </div>
+  `;
+  openMask('userMask');
+}
+
+/* ============================================================
    投稿
    ============================================================ */
 function openWrite(){
@@ -640,6 +914,94 @@ async function copyRead(){
 }
 
 /* ============================================================
+   管理面板
+   ============================================================ */
+function openAdmin(){
+  if (!isAdmin()) return;
+  $('adminSubtitle').textContent = session.role === 'super'
+    ? '主管理员 · ' + session.username
+    : '管理员 · ' + session.username;
+  $('adminSearch').value = '';
+  renderAdminList();
+  openMask('adminMask');
+}
+
+function renderAdminStats(){
+  const weekStart = Date.now() - 7*86400*1000;
+  const weekCount = posts.filter(p => p.createdAt >= weekStart).length;
+  const authors = new Set(posts.map(p => p.author).filter(Boolean));
+  $('stTotal').textContent = posts.length;
+  $('stWeek').textContent = weekCount;
+  $('stAuthors').textContent = authors.size;
+}
+
+function renderAdminList(){
+  renderAdminStats();
+
+  const q = ($('adminSearch').value || '').trim().toLowerCase();
+  let list = posts.slice().sort((a,b) => b.createdAt - a.createdAt);
+  if (q){
+    list = list.filter(p =>
+      (p.title + ' ' + p.author + ' ' + p.body + ' ' + p.type).toLowerCase().includes(q)
+    );
+  }
+
+  const el = $('adminList');
+
+  if (!list.length){
+    el.innerHTML = `<div class="admin-empty"><span>📭</span>${posts.length ? '没有匹配的稿件' : '暂无投稿稿件'}</div>`;
+    return;
+  }
+
+  el.innerHTML = '';
+  list.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'admin-item';
+    item.innerHTML = `
+      <div class="admin-item-head">
+        <span class="type-tag ${escapeHtml(p.type)}">${escapeHtml(p.type)}</span>
+        <h4>${escapeHtml(p.title)}</h4>
+      </div>
+      <div class="admin-item-meta">
+        <span>作者：<b>${escapeHtml(p.author || '匿名')}</b></span>
+        <span>提交时间：<b>${fmtDateTime(p.createdAt)}</b></span>
+        <span>字数：<b>${p.body.length}</b></span>
+      </div>
+      <div class="admin-item-body">${escapeHtml(p.body.slice(0, 220))}${p.body.length > 220 ? '…' : ''}</div>
+      <div class="admin-item-actions">
+        <button class="btn-mini primary" data-view="${escapeHtml(p.id)}">查看全文</button>
+        <button class="btn-mini danger" data-del="${escapeHtml(p.id)}">删除稿件</button>
+      </div>
+    `;
+    item.querySelector('[data-view]').addEventListener('click', () => openRead(p));
+    item.querySelector('[data-del]').addEventListener('click', () => deletePost(p.id, p.title));
+    el.appendChild(item);
+  });
+}
+
+async function deletePost(id, title){
+  if (!isAdmin()) return;
+  if (!confirm(`确定删除《${title}》吗？此操作不可恢复。`)) return;
+  try {
+    const data = await readPosts();
+    const before = data.posts.length;
+    data.posts = data.posts.filter(p => p.id !== id);
+    if (data.posts.length === before){
+      toast('未找到该稿件');
+      return;
+    }
+    await writePosts(data);
+    posts = data.posts;
+    renderStats();
+    render();
+    renderAdminList();
+    toast('已删除');
+  } catch(e){
+    toast('删除失败：' + (e.message || '网络错误'));
+  }
+}
+
+/* ============================================================
    事件绑定
    ============================================================ */
 function bindEvents(){
@@ -655,6 +1017,21 @@ function bindEvents(){
   const saved = localStorage.getItem('mu-theme');
   if (saved) document.documentElement.dataset.theme = saved;
 
+  // 登录
+  $('loginBtn').addEventListener('click', openLogin);
+  $('loginSubmit').addEventListener('click', doLogin);
+  $('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  $('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginPass').focus(); });
+
+  // 用户信息
+  $('userChip').addEventListener('click', openUserInfo);
+  $('logoutBtn').addEventListener('click', logout);
+
+  // 管理
+  $('adminBtn').addEventListener('click', openAdmin);
+  $('adminSearch').addEventListener('input', renderAdminList);
+
+  // 投稿
   $('writeBtn').addEventListener('click', openWrite);
   $('writeBtn2').addEventListener('click', openWrite);
   $('submitPost').addEventListener('click', submitPost);
@@ -688,7 +1065,7 @@ function bindEvents(){
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape'){
-      ['writeMask','readMask'].forEach(id => {
+      ['writeMask','readMask','loginMask','userMask','adminMask'].forEach(id => {
         if ($(id).classList.contains('show')) closeMask(id);
       });
     }
@@ -715,7 +1092,10 @@ function bindEvents(){
    初始化
    ============================================================ */
 async function init(){
+  loadSession();
   bindEvents();
+  applySession();
+
   try {
     const data = await readPosts();
     posts = data.posts || [];
@@ -726,6 +1106,7 @@ async function init(){
   }
   renderStats();
   render();
+
   setTimeout(() => $('loader').classList.add('done'), 500);
   console.log('%c✎ 6班投稿已就绪', 'color:#fb923c;font-weight:bold;font-size:13px');
 }
