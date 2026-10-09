@@ -224,13 +224,6 @@ select.input:focus{background-color:var(--bg)}
 .form-msg.success{color:var(--ok);background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.28)}
 .form-msg.info{color:var(--accent-2);background:rgba(94,234,212,.08);border:1px solid rgba(94,234,212,.28)}
 
-.activate-modal{text-align:center}
-.activate-icon{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;font-size:2rem;background:linear-gradient(135deg,var(--accent-3),var(--accent-2));box-shadow:0 16px 40px -12px rgba(167,139,250,.7);animation:popIn .6s var(--ease-back)}
-@keyframes popIn{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
-.activate-modal h2{font-size:1.35rem;margin-bottom:8px;text-align:center}
-.activate-modal .desc{text-align:center;margin-bottom:22px}
-.activate-modal .field{text-align:left}
-
 .tabs{display:flex;gap:4px;margin-bottom:22px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;overflow-x:auto}
 .tab{flex:1;padding:9px 14px;border-radius:9px;font-size:.8rem;font-weight:600;color:var(--text-dim);transition:all .35s var(--ease);text-align:center;cursor:pointer;white-space:nowrap}
 .tab:hover{color:var(--text)}
@@ -259,8 +252,8 @@ select.input:focus{background-color:var(--bg)}
 .user-stat{padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);text-align:center}
 .user-stat b{display:block;font-size:1.3rem;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;line-height:1.1}
 .user-stat span{font-size:.68rem;color:var(--text-mute);letter-spacing:.05em}
-.user-stat.active b{color:var(--ok)}
-.user-stat.inactive b{color:var(--text-mute)}
+.user-stat.admins b{color:var(--accent-4)}
+.user-stat.students b{color:var(--accent-2)}
 
 .user-list{display:flex;flex-direction:column;gap:10px}
 .user-section-title{
@@ -283,15 +276,13 @@ select.input:focus{background-color:var(--bg)}
 .user-card:hover{border-color:var(--border-hi);background:var(--surface-hi)}
 .user-card.super-card{border-color:rgba(251,146,60,.4);background:rgba(251,146,60,.06)}
 .user-card.admin-card{border-color:rgba(244,114,182,.3);background:rgba(244,114,182,.05)}
-.user-card.inactive{opacity:.72}
 .user-dot{
   width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px;
   background:var(--text-mute);
 }
-.user-dot.active{background:var(--ok);box-shadow:0 0 8px var(--ok)}
-.user-dot.inactive{background:var(--text-mute)}
 .user-dot.super{background:linear-gradient(135deg,var(--accent-5),var(--accent-4));box-shadow:0 0 8px rgba(251,146,60,.6)}
 .user-dot.admin{background:linear-gradient(135deg,var(--accent-4),#db2777);box-shadow:0 0 8px rgba(244,114,182,.6)}
+.user-dot.student{background:linear-gradient(135deg,var(--accent-3),var(--accent-2));box-shadow:0 0 8px rgba(167,139,250,.5)}
 .user-info{flex:1;min-width:0}
 .user-info-head{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
 .user-info-head h4{font-size:.94rem;font-weight:700;letter-spacing:-.01em}
@@ -350,7 +341,7 @@ select.input:focus{background-color:var(--bg)}
 
 <header class="nav" id="nav">
   <div class="nav-inner">
-    <div class="brand" id="brandBtn">
+    <div class="brand" id="brandBtn" title="返回首页">
       <span class="brand-mark">💬</span>
       <span>观点圆桌</span>
       <span class="nav-sub">Round Table</span>
@@ -498,24 +489,6 @@ select.input:focus{background-color:var(--bg)}
   </div>
 </div>
 
-<!-- 首次登录激活弹窗 -->
-<div class="mask" id="activateMask">
-  <div class="modal activate-modal">
-    <div class="activate-icon">🎉</div>
-    <h2>账号已激活</h2>
-    <p class="desc" id="activateDesc">欢迎！请尽快更改初始密码。</p>
-    <div class="field" style="text-align:left">
-      <label class="field-label">新密码 <span class="hint">至少 6 位，留空则暂不修改</span></label>
-      <input class="input" type="password" id="activateNewPass" placeholder="输入新密码" autocomplete="off">
-    </div>
-    <div class="form-msg" id="activateMsg"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" type="button" id="activateLater">以后再说</button>
-      <button class="btn btn-primary" type="button" id="activateConfirm">确认修改</button>
-    </div>
-  </div>
-</div>
-
 <!-- 用户信息 -->
 <div class="mask" id="userMask">
   <div class="modal">
@@ -584,7 +557,7 @@ select.input:focus{background-color:var(--bg)}
   <div class="modal">
     <button class="modal-close" data-close="addUserMask">✕</button>
     <h2>新增用户</h2>
-    <p class="desc">新账号首次登录后会自动激活，可随时改密码。</p>
+    <p class="desc">新账号可直接登录，登录后可自行修改密码。</p>
     <div class="field">
       <label class="field-label">姓名<span class="req">*</span></label>
       <input class="input" type="text" id="addUserName" maxlength="20" placeholder="请输入姓名" autocomplete="off">
@@ -654,8 +627,8 @@ select.input:focus{background-color:var(--bg)}
     <div class="panel" id="panelUsers">
       <div class="user-stats">
         <div class="user-stat"><b id="ustatTotal">0</b><span>全部账号</span></div>
-        <div class="user-stat active"><b id="ustatActive">0</b><span>已激活</span></div>
-        <div class="user-stat inactive"><b id="ustatInactive">0</b><span>未激活</span></div>
+        <div class="user-stat admins"><b id="ustatAdmins">0</b><span>管理员</span></div>
+        <div class="user-stat students"><b id="ustatStudents">0</b><span>学生</span></div>
       </div>
 
       <div class="user-toolbar">
@@ -664,8 +637,8 @@ select.input:focus{background-color:var(--bg)}
           <input type="text" id="userSearch" placeholder="搜索姓名或 IP…" autocomplete="off">
         </div>
         <button class="filter-chip active" data-user-filter="all">全部</button>
-        <button class="filter-chip" data-user-filter="active">已激活</button>
-        <button class="filter-chip" data-user-filter="inactive">未激活</button>
+        <button class="filter-chip" data-user-filter="admin">管理员</button>
+        <button class="filter-chip" data-user-filter="student">学生</button>
         <button class="btn-mini primary" id="addUserBtn" style="display:none;padding:8px 14px;border-radius:99px">＋ 新增用户</button>
       </div>
 
@@ -790,7 +763,6 @@ let pendingSide = null;
 let scrollLockCount = 0;
 let savedScrollY = 0;
 let isGenerating = false;
-let pendingActivateUser = null;
 
 function lockScroll(){
   if (scrollLockCount === 0){
@@ -1016,10 +988,6 @@ function getEffectivePassword(username){
   if (cloud && cloud.password) return cloud.password;
   const base = findBaseAccount(username);
   return base ? base.password : null;
-}
-function isActivated(username){
-  const cloud = getCloudUser(username);
-  return !!(cloud && cloud.activated);
 }
 
 async function callDeepSeek(){
@@ -1395,12 +1363,10 @@ async function doLogin(){
     return;
   }
 
-  const wasActivated = isActivated(u);
   const ip = await getIP();
 
   if (!usersData.users[u]) usersData.users[u] = {};
   const cu = usersData.users[u];
-  cu.activated = true;
   cu.lastLoginAt = Date.now();
   cu.lastLoginIp = ip;
   try { await writeBin(BIN_USERS, usersData); } catch(e){ console.warn(e); }
@@ -1411,47 +1377,7 @@ async function doLogin(){
   closeMask('loginMask');
   renderMyViewForm();
   renderViews();
-
-  if (!wasActivated){
-    pendingActivateUser = u;
-    $('activateDesc').textContent = `欢迎，${u}！请尽快更改初始密码。`;
-    $('activateNewPass').value = '';
-    $('activateMsg').className = 'form-msg';
-    openMask('activateMask');
-  } else {
-    toast('欢迎回来，' + u);
-  }
-}
-
-async function doActivateChangePwd(){
-  const np = $('activateNewPass').value.trim();
-  const msg = $('activateMsg');
-  msg.className = 'form-msg';
-
-  if (!np){
-    msg.className = 'form-msg show error';
-    msg.textContent = '请输入新密码，或点「以后再说」';
-    return;
-  }
-  if (np.length < 6){
-    msg.className = 'form-msg show error';
-    msg.textContent = '密码至少 6 位';
-    return;
-  }
-  const u = pendingActivateUser;
-  if (!u) return;
-  try {
-    await loadAll();
-    if (!usersData.users[u]) usersData.users[u] = {};
-    usersData.users[u].password = np;
-    await writeBin(BIN_USERS, usersData);
-    closeMask('activateMask');
-    pendingActivateUser = null;
-    toast('密码已更新');
-  } catch(e){
-    msg.className = 'form-msg show error';
-    msg.textContent = '修改失败：' + (e.message || '网络错误');
-  }
+  toast('欢迎回来，' + u);
 }
 
 function openUserInfo(){
@@ -1461,18 +1387,18 @@ function openUserInfo(){
   $('userInfoSub').textContent = roleMap[session.role] || '用户';
 
   const myViews = viewsData.views.filter(v => v.username === session.username);
+  const topicViews = myViews.filter(v => v.topicId === currentTopicId);
   const cloud = getCloudUser(session.username);
-  const activated = session.role === 'super' ? true : isActivated(session.username);
 
   let html = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div style="padding:12px;border-radius:10px;background:var(--surface-hi);border:1px solid var(--border);text-align:center">
         <b style="display:block;font-size:1.3rem;color:var(--accent-3)">${myViews.length}</b>
-        <span style="font-size:.7rem;color:var(--text-mute)">已发表观点</span>
+        <span style="font-size:.7rem;color:var(--text-mute)">累计发表观点</span>
       </div>
       <div style="padding:12px;border-radius:10px;background:var(--surface-hi);border:1px solid var(--border);text-align:center">
-        <b style="display:block;font-size:1.3rem;color:${activated ? 'var(--ok)' : 'var(--text-mute)'}">${activated ? '已激活' : '未激活'}</b>
-        <span style="font-size:.7rem;color:var(--text-mute)">账号状态</span>
+        <b style="display:block;font-size:1.3rem;color:var(--accent-2)">${topicViews.length}</b>
+        <span style="font-size:.7rem;color:var(--text-mute)">当前辩题观点</span>
       </div>
     </div>
   `;
@@ -1587,18 +1513,20 @@ function renderTopicList(){
 /* 用户管理 —— IP 只对主管理员显示；主管理员可改密码 / 新增 / 删除 */
 function renderUserList(){
   const all = getAllAccounts();
-  let activeCount = 0;
-  all.forEach(a => { if (isActivated(a.username)) activeCount++; });
+  const adminsAll = all.filter(a => a.role === 'admin');
+  const studentsAll = all.filter(a => a.role === 'student');
+
   $('ustatTotal').textContent = all.length;
-  $('ustatActive').textContent = activeCount;
-  $('ustatInactive').textContent = all.length - activeCount;
+  $('ustatAdmins').textContent = adminsAll.length;
+  $('ustatStudents').textContent = studentsAll.length;
 
   $('addUserBtn').style.display = isSuper() ? '' : 'none';
 
   const q = ($('userSearch').value || '').trim().toLowerCase();
   let filtered = all.slice();
-  if (currentUserFilter === 'active') filtered = filtered.filter(a => isActivated(a.username));
-  else if (currentUserFilter === 'inactive') filtered = filtered.filter(a => !isActivated(a.username));
+  if (currentUserFilter === 'admin') filtered = filtered.filter(a => a.role === 'admin');
+  else if (currentUserFilter === 'student') filtered = filtered.filter(a => a.role === 'student');
+
   if (q){
     filtered = filtered.filter(a => {
       const cloud = getCloudUser(a.username);
@@ -1619,15 +1547,13 @@ function renderUserList(){
 
   const buildCard = (a, isSuperRecord) => {
     const cloud = getCloudUser(a.username);
-    const activated = isSuperRecord ? true : isActivated(a.username);
     const password = isSuperRecord ? a.password : (getEffectivePassword(a.username) || a.password);
     const isChangedPwd = !isSuperRecord && !a.custom && cloud && cloud.password;
 
     let dotClass = 'user-dot';
     if (a.role === 'super') dotClass += ' super';
     else if (a.role === 'admin') dotClass += ' admin';
-    else if (activated) dotClass += ' active';
-    else dotClass += ' inactive';
+    else dotClass += ' student';
 
     const roleTagClass = 'user-role-tag ' + (a.role === 'super' ? 'super' : a.role === 'admin' ? 'admin' : 'student');
     const roleTagText = a.role === 'super' ? '主管理员' : a.role === 'admin' ? '管理员' : '学生';
@@ -1644,7 +1570,6 @@ function renderUserList(){
     card.className = 'user-card';
     if (a.role === 'super') card.classList.add('super-card');
     else if (a.role === 'admin') card.classList.add('admin-card');
-    if (!activated && !isSuperRecord) card.classList.add('inactive');
 
     card.innerHTML = `
       <span class="${dotClass}"></span>
@@ -1653,7 +1578,6 @@ function renderUserList(){
           <h4>${escapeHtml(a.username)}</h4>
           <span class="${roleTagClass}">${roleTagText}</span>
           ${a.custom ? '<span class="user-tag-custom">自定义</span>' : ''}
-          ${isSuperRecord ? '' : (activated ? '<span style="font-size:.66rem;color:var(--ok);font-weight:700">● 已激活</span>' : '<span style="font-size:.66rem;color:var(--text-mute);font-weight:600">○ 未激活</span>')}
         </div>
         <div class="user-info-row">
           <span>密码：<span class="pw">${escapeHtml(password)}</span>${isChangedPwd ? ' <span style="color:var(--accent-3);font-size:.66rem">（已改）</span>' : ''}</span>
@@ -1698,7 +1622,8 @@ function renderUserList(){
     students.forEach(a => list.appendChild(buildCard(a, false)));
   }
 
-  if (!admins.length && !students.length && !isSuper()){
+  const nothingMatched = !admins.length && !students.length && (!isSuper() || !!q || currentUserFilter !== 'all');
+  if (nothingMatched){
     list.innerHTML = '<div class="empty-state"><span class="ico">🔍</span><p>没有匹配的账号</p></div>';
   }
 
@@ -1775,7 +1700,6 @@ async function saveAddUser(){
       custom: true,
       role,
       password: pass,
-      activated: false,
       createdAt: Date.now(),
       createdBy: session.username
     };
@@ -1873,7 +1797,8 @@ async function createManualTopic(){
 }
 
 function bindEvents(){
-  $('brandBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  // 左上角图标 → 返回 index.html
+  $('brandBtn').addEventListener('click', () => { location.href = 'index.html'; });
   $('backToLib').addEventListener('click', () => { location.href = 'index.html'; });
   $('toTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
@@ -1891,14 +1816,6 @@ function bindEvents(){
   $('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
   $('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') $('loginPass').focus(); });
   $('loginMask').addEventListener('click', e => { if (e.target === $('loginMask')) closeMask('loginMask'); });
-
-  $('activateLater').addEventListener('click', () => {
-    closeMask('activateMask');
-    pendingActivateUser = null;
-    toast('好的，可随时在个人主页修改密码');
-  });
-  $('activateConfirm').addEventListener('click', doActivateChangePwd);
-  $('activateNewPass').addEventListener('keydown', e => { if (e.key === 'Enter') doActivateChangePwd(); });
 
   $('userChip').addEventListener('click', openUserInfo);
   $('userMask').addEventListener('click', e => { if (e.target === $('userMask')) closeMask('userMask'); });
@@ -2017,7 +1934,7 @@ function bindEvents(){
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape'){
-      ['loginMask','userMask','changePwdMask','adminMask','activateMask','adminChangePwdMask','addUserMask'].forEach(id => {
+      ['loginMask','userMask','changePwdMask','adminMask','adminChangePwdMask','addUserMask'].forEach(id => {
         if ($(id).classList.contains('show')) closeMask(id);
       });
     }
