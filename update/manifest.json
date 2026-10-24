@@ -1,0 +1,12 @@
+{
+  "latest": "4.0.0",
+  "versions": [
+    {
+      "version": "4.0.0",
+      "url": "https://udline.de5.net/update/2DGame_v4.0.0.exe",
+      "size": 26213672,
+      "sha256": "809DAB3187A183D02ECCF8EB7855DA438222EDF5B3838A4AF5A53D727F0B00C2",
+      "notes": "新增 StarWars 数据目录；存档、最高分、Mod 统一存放"
+    }
+  ]
+}
