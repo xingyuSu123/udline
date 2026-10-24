@@ -1,2 +1,2 @@
-https://github.com/xingyuSu123/udline/releases/download/4.0.1/StarWars_v4.0.1.exe
-f1fa7c04abc402857f5a8e2e77b748d74d297dd6ea2a27eac81009c05e5854b5
+https://github.com/xingyuSu123/udline/releases/download/4.0.2/StarWars_v4.0.2.exe
+bae015c231e540205a8a249ab0fac16f7cbc04a9e1edfe5a64af54af37ddc6cc
